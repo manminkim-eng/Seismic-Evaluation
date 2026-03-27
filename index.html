@@ -1794,6 +1794,8 @@ function toast(m) {
   clearTimeout(_tt);
   _tt = setTimeout(() => e.classList.remove('show'), 2600);
 }
+</script>
+
 <!-- ════════ PWA 설치 배너 ════════ -->
 <div id="pwa-banner" role="dialog" aria-label="앱 설치 안내">
   <img src="icons/icon-192x192.png" alt="내진성능 아이콘" class="pwa-icon">
@@ -1802,8 +1804,8 @@ function toast(m) {
     <div class="pwa-desc">홈 화면에 추가 · 오프라인 지원</div>
   </div>
   <div class="pwa-btns">
-    <button class="pwa-install-btn" onclick="pwaTriggerInstall()">설치하기</button>
-    <button class="pwa-dismiss-btn" onclick="pwaDismiss()">닫기</button>
+    <button class="pwa-install-btn" id="pwa-install-btn">설치하기</button>
+    <button class="pwa-dismiss-btn" id="pwa-dismiss-btn">닫기</button>
   </div>
 </div>
 
@@ -1818,41 +1820,80 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ════════ PWA 설치 프롬프트 ════════ */
-let _deferredPrompt = null;
-const _banner = document.getElementById('pwa-banner');
+(function () {
+  let _deferredPrompt = null;
+  const _banner      = document.getElementById('pwa-banner');
+  const _installBtn  = document.getElementById('pwa-install-btn');
+  const _dismissBtn  = document.getElementById('pwa-dismiss-btn');
 
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _deferredPrompt = e;
-  // 3초 후 배너 표시 (처음 방문 시)
-  if (!sessionStorage.getItem('pwa-dismissed')) {
-    setTimeout(() => _banner.classList.add('show'), 3000);
+  /* beforeinstallprompt — 브라우저가 설치 가능 상태일 때 발생 */
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();           // 기본 미니 인포바 억제
+    _deferredPrompt = e;
+    console.log('[PWA] beforeinstallprompt 수신 ✅');
+
+    /* localStorage 로 닫기 기록 유지 (탭 닫아도 기억) */
+    if (!localStorage.getItem('pwa-dismissed-v2')) {
+      setTimeout(function () {
+        _banner.classList.add('show');
+      }, 2000);
+    }
+  });
+
+  /* 설치하기 버튼 */
+  _installBtn.addEventListener('click', async function () {
+    if (!_deferredPrompt) {
+      toast('이미 설치되었거나 브라우저가 설치를 지원하지 않습니다');
+      _hideBanner();
+      return;
+    }
+    try {
+      _deferredPrompt.prompt();
+      const { outcome } = await _deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        toast('✅ "내진성능" 앱이 설치되었습니다!');
+      } else {
+        toast('설치를 취소했습니다');
+      }
+    } catch (err) {
+      console.warn('[PWA] prompt 오류:', err);
+      toast('설치 중 오류가 발생했습니다');
+    }
+    _deferredPrompt = null;
+    _hideBanner();
+  });
+
+  /* 닫기 버튼 */
+  _dismissBtn.addEventListener('click', function () {
+    _hideBanner();
+  });
+
+  function _hideBanner() {
+    _banner.classList.remove('show');
+    localStorage.setItem('pwa-dismissed-v2', '1');
   }
-});
 
-async function pwaTriggerInstall() {
-  if (!_deferredPrompt) {
-    toast('이미 설치되었거나 브라우저가 설치를 지원하지 않습니다');
-    pwaDismiss();
-    return;
+  /* 설치 완료 이벤트 */
+  window.addEventListener('appinstalled', function () {
+    toast('✅ "내진성능" 홈 화면에 추가 완료!');
+    _banner.classList.remove('show');
+    console.log('[PWA] 설치 완료 ✅');
+  });
+
+  /* ── iOS Safari 수동 안내 (beforeinstallprompt 미지원) ── */
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandalone = window.navigator.standalone === true;
+  if (isIOS && !isInStandalone && !localStorage.getItem('pwa-dismissed-v2')) {
+    setTimeout(function () {
+      /* iOS는 prompt 없이 안내 텍스트만 표시 */
+      document.querySelector('#pwa-banner .pwa-desc').textContent =
+        'Safari → 공유 버튼 → "홈 화면에 추가"';
+      _installBtn.textContent = '확인';
+      _installBtn.addEventListener('click', function () { _hideBanner(); }, { once: true });
+      _banner.classList.add('show');
+    }, 2500);
   }
-  _deferredPrompt.prompt();
-  const { outcome } = await _deferredPrompt.userChoice;
-  if (outcome === 'accepted') toast('✅ "내진성능" 앱이 설치되었습니다!');
-  else toast('설치를 취소했습니다');
-  _deferredPrompt = null;
-  pwaDismiss();
-}
-
-function pwaDismiss() {
-  _banner.classList.remove('show');
-  sessionStorage.setItem('pwa-dismissed', '1');
-}
-
-window.addEventListener('appinstalled', () => {
-  toast('✅ "내진성능" 홈 화면에 추가 완료!');
-  _banner.classList.remove('show');
-});
+})();
 </script>
 </body>
 </html>
