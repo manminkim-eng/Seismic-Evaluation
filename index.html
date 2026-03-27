@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#ef4444">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="내진성능">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="내진성능">
+<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN-Ver.2.0">
+<title>내진성능 [MANMIN-Ver.2.0]</title>
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+<!-- Favicon & Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   MANMIN Design System Ver.2.0
+   폰트: Pretendard (본문) + JetBrains Mono (코드·레이블)
+   레이아웃: 데스크탑 2-col / 태블릿·모바일 1-col
+═══════════════════════════════════════════════════ */
+:root {
+  /* 배경 */
+  --bg0: #06090f;
+  --bg1: #0c0f1a;
+  --bg2: #111521;
+  --bg3: #171b28;
+  --bg4: #1d2132;
+  --bg5: #242840;
+
+  /* 테두리 */
+  --bd0: rgba(255,255,255,0.05);
+  --bd1: rgba(255,255,255,0.09);
+  --bd2: rgba(255,255,255,0.16);
+  --bd3: rgba(255,255,255,0.24);
+
+  /* 텍스트 — 가독성 최우선 */
+  --t0: #ffffff;
+  --t1: #edf1fc;      /* 본문 메인 */
+  --t2: #9ba6c0;      /* 보조 텍스트 */
+  --t3: #515e7a;      /* 힌트·라벨 */
+  --t4: #2e3650;
+
+  /* 포인트 컬러 */
+  --red:    #f04040;
+  --red2:   #d63030;
+  --red3:   #b52020;
+  --rbg:    rgba(240,64,64,0.09);
+  --rbd:    rgba(240,64,64,0.24);
+
+  --green:  #22c55e;
+  --gbg:    rgba(34,197,94,0.08);
+  --gbd:    rgba(34,197,94,0.26);
+
+  --blue:   #4a8cf5;
+  --bbg:    rgba(74,140,245,0.09);
+  --bbd:    rgba(74,140,245,0.24);
+
+  --amber:  #f0b429;
+  --abg:    rgba(240,180,41,0.08);
+  --abd:    rgba(240,180,41,0.26);
+
+  --orange: #f97316;
+  --obg:    rgba(249,115,22,0.08);
+  --obd:    rgba(249,115,22,0.26);
+
+  /* 폰트 */
+  --font: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono: 'JetBrains Mono', 'Source Code Pro', 'Noto Sans KR', monospace;
+
+  /* 반경 */
+  --rsm: 6px;
+  --rmd: 10px;
+  --rlg: 14px;
+  --rxl: 20px;
+
+  /* 그림자 */
+  --sh1: 0 1px 4px rgba(0,0,0,.35);
+  --sh2: 0 4px 16px rgba(0,0,0,.45);
+  --sh3: 0 8px 32px rgba(0,0,0,.55);
+  --sh4: 0 20px 60px rgba(0,0,0,.65);
+}
+
+/* ── 리셋 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg0);
+  color: var(--t1);
+  font-family: var(--font);
+  font-size: 16px;          /* ✦ 기본 폰트 크기 상향 */
+  line-height: 1.7;
+  letter-spacing: -0.01em;  /* ✦ Pretendard 자간 최적화 */
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(74,140,245,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,140,245,0.018) 1px, transparent 1px);
+  background-size: 52px 52px;
+}
+.page-center {
+  width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 1;
+}
+
+/* ════════════════ HEADER ════════════════ */
+.site-header {
+  width: 100%;
+  background: rgba(6,9,15,0.96);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--bd0);
+  position: sticky; top: 0; z-index: 300;
+}
+.hinner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 1rem 1.75rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.hlogo-wrap { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.logo-img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: 10px;
+}
+
+.logo-mark {
+  width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--rbd);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+#pwa-banner {
+  position: fixed; bottom: 5rem; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  width: min(420px, calc(100vw - 2rem));
+  background: var(--bg2);
+  border: 1px solid var(--rbd);
+  border-radius: var(--rxl);
+  padding: 1.125rem 1.25rem;
+  display: flex; align-items: center; gap: 1rem;
+  box-shadow: var(--sh4), 0 0 0 1px var(--rbd);
+  z-index: 900;
+  transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .4s;
+  opacity: 0; pointer-events: none;
+}
+#pwa-banner.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1; pointer-events: all;
+}
+#pwa-banner .pwa-icon {
+  width: 52px; height: 52px; border-radius: 12px;
+  object-fit: cover; flex-shrink: 0;
+  border: 1px solid var(--rbd);
+}
+#pwa-banner .pwa-info { flex: 1; min-width: 0; }
+#pwa-banner .pwa-name {
+  font-size: 15px; font-weight: 700; color: var(--t0);
+  letter-spacing: -0.02em; margin-bottom: 2px;
+}
+#pwa-banner .pwa-desc {
+  font-size: 11.5px; color: var(--t3); font-family: var(--mono);
+}
+#pwa-banner .pwa-btns { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
+.pwa-install-btn {
+  padding: .52rem 1.1rem; border-radius: var(--rsm);
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  color: #fff; border: none; font-size: 13px; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  font-family: var(--font); letter-spacing: -0.01em;
+  transition: filter .15s;
+}
+.pwa-install-btn:hover { filter: brightness(1.1); }
+.pwa-dismiss-btn {
+  padding: .42rem .8rem; border-radius: var(--rsm);
+  background: transparent; border: 1px solid var(--bd2);
+  color: var(--t3); font-size: 12px; cursor: pointer;
+  font-family: var(--font); text-align: center;
+  transition: all .15s;
+}
+.pwa-dismiss-btn:hover { color: var(--t1); border-color: var(--bd3); }
+
+.htext { min-width: 0; }
+.hseries {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
+  color: var(--red); text-transform: uppercase; margin-bottom: 3px;
+}
+.htitle {
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  font-weight: 700; color: var(--t0); line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: -0.02em;
+}
+.htitle em { color: var(--red); font-style: normal; }
+.hsub-line {
+  font-size: 11px; color: var(--t3); font-family: var(--mono);
+  margin-top: 3px; letter-spacing: .04em; display: none;
+}
+@media (min-width: 600px) { .hsub-line { display: block; } }
+.hright { display: flex; align-items: center; gap: .625rem; flex-shrink: 0; }
+.hbadge {
+  font-family: var(--mono); font-size: 10.5px;
+  padding: 4px 10px; border-radius: var(--rsm); white-space: nowrap;
+}
+.hbadge-ver { border: 1px solid var(--bd2); color: var(--t2); display: none; }
+@media (min-width: 520px) { .hbadge-ver { display: inline-block; } }
+.hbadge-law { background: var(--rbg); border: 1px solid var(--rbd); color: var(--red); }
+
+/* ════════════════ TABBAR ════════════════ */
+.tab-bar {
+  width: 100%;
+  background: var(--bg1);
+  border-bottom: 1px solid var(--bd1);
+  position: sticky; top: 61px; z-index: 299;
+}
+.tab-inner {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-inner::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: .75rem 1.25rem;
+  font-size: 14px;           /* ✦ 탭 폰트 크기 */
+  font-family: var(--font); font-weight: 500;
+  color: var(--t3); background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: color .15s, border-color .15s; flex-shrink: 0;
+}
+.tab-btn:hover { color: var(--t2); }
+.tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ════════════════ MAIN WRAP ════════════════ */
+.main-wrap {
+  max-width: 1280px; width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.75rem 6rem;
+}
+
+/* ✦ 섹션 타이틀 */
+.sec-title {
+  font-size: 12px; font-family: var(--mono); letter-spacing: .14em;
+  color: var(--t3); text-transform: uppercase; margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-title::before {
+  content: ''; display: inline-block;
+  width: 3px; height: 14px; background: var(--red); border-radius: 2px;
+}
+
+/* ════════════════ ✦ 2-COLUMN JUDGE LAYOUT ════════════════ */
+/* 데스크탑(≥1024px): 좌 입력 / 우 결과 */
+.judge-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+@media (min-width: 1024px) {
+  .judge-layout {
+    display: grid;
+    grid-template-columns: 480px 1fr;
+    grid-template-rows: auto;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .judge-left  { grid-column: 1; }
+  .judge-right { grid-column: 2; }
+}
+
+/* 판정 버튼 - 왼쪽 열 하단 */
+.judge-btn {
+  width: 100%;
+  padding: 1.1rem 1.5rem;
+  border: none; border-radius: var(--rmd);
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  color: #fff;
+  font-size: 16px; font-weight: 700; font-family: var(--font);
+  letter-spacing: -0.01em;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 4px 20px rgba(240,64,64,.32);
+}
+.judge-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 28px rgba(240,64,64,.44);
+  transform: translateY(-1px);
+}
+.judge-btn:active { transform: translateY(0); }
+
+/* ✦ 우측 결과 컬럼 — 판정 전 플레이스홀더 */
+.result-placeholder {
+  background: var(--bg1);
+  border: 1px dashed var(--bd1);
+  border-radius: var(--rxl);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 340px; text-align: center; gap: 1rem;
+  padding: 2rem;
+}
+.result-placeholder .rp-icon { font-size: 52px; opacity: .25; }
+.result-placeholder p {
+  color: var(--t3); font-size: 14px; line-height: 1.75;
+}
+.result-placeholder p strong { color: var(--t2); }
+
+/* ════════════════ CARDS ════════════════ */
+.card {
+  background: var(--bg1); border: 1px solid var(--bd0);
+  border-radius: var(--rxl); padding: 1.625rem;
+  margin-bottom: 1rem;
+}
+.card:last-child { margin-bottom: 0; }
+.card-title {
+  font-size: 15px; font-weight: 700; color: var(--t0);
+  margin-bottom: 1.375rem;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  letter-spacing: -0.02em;
+}
+.cbadge {
+  font-size: 10px; font-family: var(--mono);
+  padding: 2px 8px; background: var(--rbg); border: 1px solid var(--rbd);
+  color: var(--red); border-radius: 4px;
+}
+
+/* ════════════════ FORM ════════════════ */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.125rem; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+.form-group { display: flex; flex-direction: column; gap: .45rem; }
+.form-label {
+  font-size: 12px; font-family: var(--mono); color: var(--t2);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  letter-spacing: .04em;
+}
+.form-label .req { color: var(--red); font-size: 11px; }
+.form-label .hint {
+  font-size: 10px; color: var(--t3); font-family: var(--font);
+  background: var(--bg3); padding: 1px 6px; border-radius: 4px;
+  letter-spacing: 0;
+}
+.form-input, .form-select {
+  background: var(--bg2); border: 1px solid var(--bd1);
+  border-radius: var(--rmd);
+  padding: .75rem 1rem;
+  color: var(--t0); font-size: 15px; font-family: var(--font);
+  letter-spacing: -0.01em;
+  transition: border-color .15s, box-shadow .15s;
+  width: 100%; -webkit-appearance: none; appearance: none;
+}
+.form-input:focus, .form-select:focus {
+  outline: none; border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(240,64,64,.12);
+}
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23515e7a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .9rem center;
+  padding-right: 2.5rem;
+}
+.form-select option { background: var(--bg2); color: var(--t0); }
+.form-note { font-size: 11px; color: var(--t3); margin-top: 3px; }
+
+/* ── 슬라이더 ── */
+.range-wrap { display: flex; align-items: center; gap: .875rem; }
+.range-display { display: flex; align-items: baseline; gap: 3px; flex-shrink: 0; }
+.range-val {
+  font-family: var(--mono); font-size: 22px; font-weight: 600;
+  color: var(--t0); min-width: 44px; text-align: right;
+}
+.range-unit { font-size: 11px; color: var(--t3); }
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 4px; border-radius: 2px;
+  background: linear-gradient(to right,
+    var(--red) 0%, var(--red) var(--pct, 0%),
+    var(--bg5) var(--pct, 0%), var(--bg5) 100%);
+  outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--red);
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  cursor: pointer; transition: transform .1s;
+}
+input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 5px rgba(240,64,64,.18), 0 2px 8px rgba(0,0,0,.4); }
+input[type=range]::-webkit-slider-thumb:active { transform: scale(1.12); }
+input[type=range]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--red); cursor: pointer;
+}
+
+/* ════════════════ RESULT PANEL ════════════════ */
+.result-panel {
+  border-radius: var(--rxl); padding: 1.625rem;
+  display: none; border: 1px solid var(--bd1);
+  animation: fadeUp .38s ease;
+}
+.result-panel.show { display: block; }
+.result-panel.mandatory {
+  background: linear-gradient(160deg, rgba(240,64,64,.08) 0%, rgba(240,64,64,.02) 100%);
+  border-color: rgba(240,64,64,.22);
+}
+.result-panel.exempt {
+  background: linear-gradient(160deg, rgba(34,197,94,.08) 0%, rgba(34,197,94,.02) 100%);
+  border-color: rgba(34,197,94,.22);
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 판정 헤더 */
+.result-verdict {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 1.375rem; padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--bd0); flex-wrap: wrap;
+}
+.verdict-icon {
+  width: 62px; height: 62px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+}
+.mandatory .verdict-icon { background: var(--rbg); border: 1px solid var(--rbd); }
+.exempt    .verdict-icon { background: var(--gbg); border: 1px solid var(--gbd); }
+.verdict-label {
+  font-size: 11px; font-family: var(--mono); letter-spacing: .13em;
+  margin-bottom: 5px;
+}
+.mandatory .verdict-label { color: var(--red); }
+.exempt    .verdict-label { color: var(--green); }
+.verdict-main {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: 700; color: var(--t0);
+  letter-spacing: -0.03em;
+}
+
+/* 등급 행 */
+.grade-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: .75rem; margin-bottom: 1.25rem;
+}
+.grade-box {
+  background: var(--bg2); border-radius: var(--rmd);
+  padding: 1rem 1.125rem; border: 1px solid var(--bd0);
+}
+.grade-box-label {
+  font-size: 10px; font-family: var(--mono); color: var(--t3);
+  margin-bottom: .35rem; letter-spacing: .07em;
+}
+.grade-box-val {
+  font-size: 15px; font-weight: 700; color: var(--t0);
+  line-height: 1.3; letter-spacing: -0.02em;
+}
+.gv-special { color: var(--red); }
+.gv-1       { color: var(--orange); }
+.gv-2       { color: var(--amber); }
+.gv-blue    { color: var(--blue); font-size: 12px !important; font-weight: 600; }
+
+/* 판정 근거 */
+.basis-list {
+  display: flex; flex-direction: column;
+  gap: .5rem; margin-bottom: 1.25rem;
+}
+.basis-item {
+  display: flex; align-items: flex-start; gap: 11px;
+  padding: .8rem 1rem; border-radius: var(--rsm);
+  background: var(--bg2); border: 1px solid var(--bd0);
+  font-size: 13.5px;            /* ✦ 근거 텍스트 크기 */
+  line-height: 1.6;
+}
+.bi-icon {
+  width: 24px; height: 24px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0; margin-top: 1px;
+}
+.basis-item.pass .bi-icon { background: var(--gbg); color: var(--green); }
+.basis-item.fail .bi-icon { background: var(--rbg); color: var(--red); }
+.basis-item.warn .bi-icon { background: var(--abg); color: var(--amber); }
+.basis-item.info .bi-icon { background: var(--bbg); color: var(--blue); }
+.bi-law {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--t3); margin-bottom: 2px; letter-spacing: .04em;
+}
+.bi-text { color: var(--t1); }
+
+/* 안내 박스 */
+.notice-box {
+  background: var(--bg2); border-radius: var(--rmd);
+  padding: 1.125rem 1.25rem; border: 1px solid var(--bd0);
+  font-size: 13.5px; color: var(--t2); line-height: 1.8;
+}
+.notice-box strong { color: var(--amber); font-weight: 600; }
+
+/* 입력 요약 칩 */
+.input-summary { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.25rem; }
+.is-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--bg3); border: 1px solid var(--bd1);
+  border-radius: 20px; padding: .32rem .8rem;
+  font-size: 12px; color: var(--t2);
+}
+.is-chip span { color: var(--t0); font-weight: 600; }
+
+/* 결과 액션 버튼 */
+.result-actions { display: flex; gap: .625rem; flex-wrap: wrap; margin-top: 1.125rem; }
+.action-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: .7rem 1.25rem; border-radius: var(--rsm);
+  font-size: 14px; font-family: var(--font); font-weight: 600;
+  cursor: pointer; transition: all .15s;
+  border: 1px solid var(--bd1); background: var(--bg2); color: var(--t2);
+  letter-spacing: -0.01em;
+}
+.action-btn:hover { border-color: var(--bd2); color: var(--t0); background: var(--bg3); }
+.action-btn.primary { background: var(--rbg); border-color: var(--rbd); color: var(--red); }
+.action-btn.primary:hover { background: rgba(240,64,64,.16); }
+
+/* ════════════════ LAW CARDS ════════════════ */
+.law-card {
+  background: var(--bg1); border: 1px solid var(--bd0);
+  border-radius: var(--rlg); margin-bottom: .875rem; overflow: hidden;
+}
+.law-card-header {
+  padding: 1.125rem 1.5rem;
+  display: flex; align-items: center; gap: .875rem;
+  cursor: pointer; transition: background .15s;
+}
+.law-card-header:hover { background: var(--bg2); }
+.law-num {
+  font-family: var(--mono); font-size: 10.5px;
+  padding: 3px 9px; background: var(--rbg); border: 1px solid var(--rbd);
+  color: var(--red); border-radius: 4px; flex-shrink: 0;
+}
+.law-title { font-size: 14.5px; font-weight: 600; color: var(--t0); flex: 1; letter-spacing: -0.01em; }
+.law-toggle { color: var(--t3); font-size: 13px; transition: transform .22s; flex-shrink: 0; }
+.law-toggle.open { transform: rotate(180deg); }
+.law-body {
+  padding: 1.375rem 1.5rem; display: none;
+  font-size: 14px; color: var(--t2); line-height: 1.85;
+  border-top: 1px solid var(--bd0);
+}
+.law-body.open { display: block; }
+.law-body p { margin-bottom: .8rem; }
+.law-body p:last-child { margin-bottom: 0; }
+.law-body .sub-item {
+  padding-left: 1.25rem; border-left: 2px solid var(--bd1); margin: .5rem 0;
+}
+.law-body .highlight {
+  background: var(--rbg); border: 1px solid var(--rbd);
+  border-radius: var(--rsm); padding: .75rem 1rem;
+  color: var(--t1); margin: .875rem 0; font-size: 13px; line-height: 1.7;
+}
+
+/* ════════════════ TIMELINE ════════════════ */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item {
+  display: flex; gap: 1rem;
+  padding-bottom: 1.625rem; position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 14px; top: 30px; bottom: 0;
+  width: 1px; background: var(--bd1);
+}
+.tl-dot {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  background: var(--bg3); border: 2px solid var(--bd2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; color: var(--t3); font-family: var(--mono); font-weight: 600;
+}
+.tl-dot.active { background: var(--rbg); border-color: var(--red); color: var(--red); }
+.tl-content { flex: 1; padding-top: 3px; }
+.tl-year { font-family: var(--mono); font-size: 11.5px; color: var(--blue); margin-bottom: .25rem; }
+.tl-title { font-size: 14.5px; font-weight: 700; color: var(--t0); margin-bottom: .3rem; letter-spacing: -0.01em; }
+.tl-desc { font-size: 13.5px; color: var(--t2); line-height: 1.7; }
+
+/* ════════════════ TABLES ════════════════ */
+.std-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 1rem; }
+.std-table th {
+  background: var(--bg3); padding: .7rem 1rem;
+  text-align: left; font-size: 11px; font-family: var(--mono);
+  color: var(--t3); letter-spacing: .06em; font-weight: 500;
+  border-bottom: 1px solid var(--bd1);
+}
+.std-table td {
+  padding: .8rem 1rem; border-bottom: 1px solid var(--bd0);
+  color: var(--t1); vertical-align: top; line-height: 1.6;
+}
+.std-table tr:last-child td { border-bottom: none; }
+.std-table tr:hover td { background: var(--bg2); }
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 10px; font-family: var(--mono); font-weight: 600;
+}
+.tag-red    { background: var(--rbg); border: 1px solid var(--rbd); color: var(--red); }
+.tag-green  { background: var(--gbg); border: 1px solid var(--gbd); color: var(--green); }
+.tag-amber  { background: var(--abg); border: 1px solid var(--abd); color: var(--amber); }
+.tag-blue   { background: var(--bbg); border: 1px solid var(--bbd); color: var(--blue); }
+
+/* ════════════════ SHARE TAB ════════════════ */
+.share-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 340px; text-align: center; gap: 1rem;
+}
+.share-empty .ei { font-size: 52px; opacity: .3; }
+.share-empty p { color: var(--t3); font-size: 14px; line-height: 1.8; }
+.share-empty p strong { color: var(--t2); }
+
+.mob-preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+
+/* ── Galaxy S24 Ultra 실제 스펙 기반 프레임
+   물리 해상도: 1440×3120px | 비율 19.5:9 (~2.167:1)
+   CSS 뷰포트: 384×824px    | DPR: 3.75
+   디스플레이: 6.8인치 Dynamic LTPO AMOLED 2X
+   프레임 너비 360px → 높이 360×(3120/1440) = 780px (내부 스크린)
+   상단 펀치홀 노치 30px + 하단 홈바 24px 포함
+────────────────────────────────────────── */
+.mob-device {
+  width: 360px;                        /* CSS 뷰포트 384px 근사 (프레임 포함) */
+  background: var(--bg0);
+  border-radius: 46px;                 /* S24 Ultra 평면 엣지, 각진 라운드 */
+  border: 2px solid rgba(255,255,255,0.22);
+  box-shadow:
+    0 0 0 5px var(--bg2),
+    0 0 0 7px rgba(255,255,255,.07),
+    0 24px 64px rgba(0,0,0,.75);
+  overflow: hidden; position: relative; flex-shrink: 0;
+}
+/* S24 Ultra 특징: 카메라 펀치홀 중앙 원형 */
+.mob-device-notch {
+  width: 100%; height: 30px; background: var(--bg0);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.mob-notch-pill {
+  /* S24 Ultra: 펀치홀 카메라 — 원형 */
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--bg4); border: 1px solid var(--bd2);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+}
+/* 스크린 영역: 360px 너비 × 19.5:9 비율 = 780px
+   max-height로 실제 뷰에서 스크롤 가능하게 */
+.mob-device-screen {
+  width: 100%;
+  height: 780px;                      /* 360 × (3120/1440) ≈ 780px */
+  max-height: 65vh;                   /* 작은 화면에서 넘치지 않게 */
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: thin; scrollbar-color: var(--bd2) transparent;
+  background: var(--bg0);
+}
+.mob-device-screen::-webkit-scrollbar { width: 3px; }
+.mob-device-screen::-webkit-scrollbar-thumb { background: var(--bd2); border-radius: 2px; }
+.mob-screen-inner { padding: 14px 13px; min-height: 100%; }
+/* S24 Ultra: 네비게이션 바 (제스처) */
+.mob-device-home {
+  width: 100%; height: 24px; background: var(--bg0);
+  display: flex; align-items: center; justify-content: center;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+.mob-home-bar { width: 80px; height: 3px; background: var(--bd2); border-radius: 2px; }
+
+/* ── S24 Ultra 화면 좌우 약간 둥근 표시 ── */
+.mob-device::before {
+  content: '';
+  position: absolute; top: 30px; bottom: 24px;
+  left: 0; width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.04) 80%, transparent);
+  z-index: 10; pointer-events: none;
+}
+.mob-device::after {
+  content: '';
+  position: absolute; top: 30px; bottom: 24px;
+  right: 0; width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.04) 80%, transparent);
+  z-index: 10; pointer-events: none;
+}
+
+/* ── 사양 표시 배지 ── */
+.mob-spec-badge {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  flex-wrap: wrap;
+}
+.mob-spec-chip {
+  font-family: var(--mono); font-size: 10px;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--bg3); border: 1px solid var(--bd1);
+  color: var(--t3);
+}
+.mob-spec-chip.accent { color: var(--blue); border-color: var(--bbd); background: var(--bbg); }
+
+/* ── 컴팩트 공유 버튼 — 좌우 2열 배치 ── */
+.share-actions-row {
+  width: 360px;                       /* 디바이스 너비와 동일 */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .625rem;
+}
+.share-btn-compact {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: .5rem;
+  padding: .875rem .75rem;
+  border-radius: var(--rmd);
+  border: 1px solid var(--bd1); background: var(--bg2);
+  color: var(--t1); font-family: var(--font);
+  cursor: pointer; transition: all .15s;
+}
+.share-btn-compact:hover { border-color: var(--bd2); background: var(--bg3); }
+.share-btn-compact.primary {
+  background: linear-gradient(135deg, rgba(240,64,64,.15), rgba(240,64,64,.07));
+  border-color: var(--rbd);
+}
+.share-btn-compact.primary:hover {
+  background: linear-gradient(135deg, rgba(240,64,64,.24), rgba(240,64,64,.14));
+}
+.sbc-icon { font-size: 22px; line-height: 1; }
+.sbc-label {
+  font-size: 13px; font-weight: 700; color: var(--t0);
+  letter-spacing: -0.01em; white-space: nowrap;
+}
+
+@media (max-width: 400px) {
+  .mob-device { width: 100%; }
+  .share-actions-row { width: 100%; }
+}
+
+/* ════════════════ FAB ════════════════ */
+.fab-wrap {
+  position: fixed; bottom: 1.875rem; right: 1.875rem;
+  z-index: 500;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .5rem;
+}
+.fab-tip {
+  background: var(--bg3); border: 1px solid var(--bd2);
+  color: var(--t0); font-size: 11.5px; font-family: var(--mono);
+  padding: .35rem .8rem; border-radius: var(--rsm);
+  opacity: 0; transform: translateX(8px);
+  transition: all .18s; pointer-events: none; white-space: nowrap;
+  box-shadow: var(--sh2);
+}
+.fab-wrap:hover .fab-tip { opacity: 1; transform: translateX(0); }
+.fab-main {
+  position: relative;
+  width: 54px; height: 54px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 23px; color: #fff;
+  box-shadow: 0 4px 20px rgba(240,64,64,.42), var(--sh3);
+  transition: all .2s;
+}
+.fab-main:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(240,64,64,.56); }
+.fab-main:active { transform: scale(.95); }
+/* 삼각자 뾰족이 */
+.fab-main::after {
+  content: ''; position: absolute; right: -3px; bottom: -3px;
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-bottom: 12px solid var(--bg0);
+}
+
+/* ════════════════ ✦ CENTER MODAL ════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;          /* ✦ 세로 중앙 */
+  justify-content: center;      /* ✦ 가로 중앙 */
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal-box {
+  width: 100%; max-width: 560px;
+  background: var(--bg1);
+  border-radius: var(--rxl);          /* ✦ 전체 라운드 */
+  border: 1px solid var(--bd2);
+  padding: 2rem 2rem 2.5rem;
+  max-height: 88vh; overflow-y: auto;
+  transform: scale(.96) translateY(8px);
+  transition: transform .3s cubic-bezier(.16,1,.3,1);
+  box-shadow: var(--sh4);
+}
+.modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
+
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; padding-bottom: 1.125rem;
+  border-bottom: 1px solid var(--bd0);
+}
+.modal-title {
+  font-size: 17px; font-weight: 700; color: var(--t0);
+  display: flex; align-items: center; gap: 8px;
+  letter-spacing: -0.02em;
+}
+.modal-close {
+  width: 32px; height: 32px; border-radius: 9px;
+  background: var(--bg3); border: 1px solid var(--bd1);
+  color: var(--t3); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.modal-close:hover { border-color: var(--bd2); color: var(--t1); }
+
+/* Help 섹션 */
+.help-sec { margin-bottom: 1.625rem; }
+.help-sec-title {
+  font-size: 11px; font-family: var(--mono); letter-spacing: .12em;
+  color: var(--red); text-transform: uppercase; margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.help-sec-title::before {
+  content: ''; width: 3px; height: 13px;
+  background: var(--red); border-radius: 2px; display: inline-block;
+}
+.help-step {
+  display: flex; gap: 11px; margin-bottom: .75rem;
+  background: var(--bg2); border-radius: var(--rsm);
+  padding: .875rem 1rem; border: 1px solid var(--bd0);
+  font-size: 13.5px; line-height: 1.65;
+}
+.hstep-n {
+  min-width: 24px; height: 24px; border-radius: 50%;
+  background: var(--rbg); border: 1px solid var(--rbd);
+  color: var(--red); font-family: var(--mono); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.hstep-t { color: var(--t2); }
+.hstep-t strong { color: var(--t0); font-weight: 600; }
+
+.law-mini-list { display: flex; flex-direction: column; gap: .5rem; }
+.law-mini-item {
+  display: flex; align-items: flex-start; gap: 11px;
+  background: var(--bg2); border-radius: var(--rsm);
+  padding: .875rem 1rem; border: 1px solid var(--bd0);
+}
+.law-mini-badge {
+  font-family: var(--mono); font-size: 9.5px;
+  padding: 2px 8px; background: var(--rbg); border: 1px solid var(--rbd);
+  color: var(--red); border-radius: 4px; flex-shrink: 0;
+  margin-top: 2px; white-space: nowrap;
+}
+.law-mini-t { font-size: 13px; color: var(--t2); line-height: 1.7; }
+.law-mini-t strong { color: var(--t0); font-weight: 600; }
+
+/* ════════════════ TOAST ════════════════ */
+.toast {
+  position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--bg4); border: 1px solid var(--bd2);
+  color: var(--t0); padding: .75rem 1.5rem;
+  border-radius: var(--rmd); font-size: 13.5px;
+  z-index: 700; opacity: 0;
+  transition: opacity .2s; pointer-events: none;
+  white-space: nowrap; box-shadow: var(--sh3); max-width: 90vw;
+}
+.toast.show { opacity: 1; }
+
+/* ════════════════ RESPONSIVE ════════════════ */
+@media (max-width: 1023px) {
+  .judge-layout { flex-direction: column; }
+  .result-placeholder { min-height: 160px; display: none; } /* 모바일에선 숨김 */
+}
+@media (max-width: 768px) {
+  .hinner { padding: .875rem 1.125rem; }
+  .main-wrap { padding: 1.375rem 1.125rem 5rem; }
+  .card { padding: 1.25rem; }
+  .tab-btn { padding: .7rem .9rem; font-size: 13px; }
+  .grade-row { grid-template-columns: 1fr 1fr; }
+  .modal-box { padding: 1.5rem 1.375rem 2rem; max-height: 92vh; }
+  .modal-overlay { padding: 1rem; }
+  .fab-wrap { bottom: 1.25rem; right: 1.25rem; }
+  .fab-main { width: 50px; height: 50px; font-size: 21px; }
+  .mob-device { max-width: 100%; }
+  .share-actions { max-width: 100%; }
+  body { font-size: 15px; }
+}
+@media (max-width: 480px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .std-table { font-size: 12.5px; }
+  .std-table th, .std-table td { padding: .6rem .7rem; }
+  .htitle { font-size: .95rem; }
+  body { font-size: 15px; }
+}
+@media (min-width: 1280px) {
+  .tab-btn { padding: .8rem 1.5rem; font-size: 14.5px; }
+  .main-wrap { padding: 2.5rem 1.75rem 6rem; }
+}
+</style>
+</head>
+<body>
+<div class="page-center">
+
+<!-- ════════ HEADER ════════ -->
+<header class="site-header">
+  <div class="hinner">
+    <div class="hlogo-wrap">
+      <div class="logo-mark"><img src="header-logo.jpg" alt="내진성능 로고" class="logo-img"></div>
+      <div class="htext">
+        <div class="hseries">내진설계판정기 · MANMIN-Ver.2.0</div>
+        <div class="htitle">내진설계 <em>의무대상</em> 판정기</div>
+        <div class="hsub-line">건축법 §48 · 시행령 §32 · KDS 41 17 00 : 2018</div>
+      </div>
+    </div>
+    <div class="hright">
+      <div class="hbadge hbadge-ver">Ver 2.0.0</div>
+      <div class="hbadge hbadge-law">KDS 41 17 00</div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════ TABBAR ════════ -->
+<nav class="tab-bar">
+  <div class="tab-inner">
+    <button class="tab-btn active"  onclick="goTab('judge',this)">⚡ 판정</button>
+    <button class="tab-btn"         onclick="goTab('share',this)">📱 미리보기·공유</button>
+    <button class="tab-btn"         onclick="goTab('law',this)">📋 법조문</button>
+    <button class="tab-btn"         onclick="goTab('history',this)">📅 연혁</button>
+    <button class="tab-btn"         onclick="goTab('guide',this)">📖 기준표</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     TAB 1 : 판정 — 데스크탑 2-col 레이아웃
+══════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-judge">
+<div class="main-wrap">
+  <div class="sec-title">입력 정보</div>
+
+  <!-- ✦ 2-col wrapper -->
+  <div class="judge-layout">
+
+    <!-- LEFT : 입력 -->
+    <div class="judge-left">
+
+      <!-- 준공연도 카드 -->
+      <div class="card">
+        <div class="card-title">
+          🏗️ 준공연도 (건축허가 기준)
+          <span class="cbadge">1988 · 2005 · 2017 기준점</span>
+        </div>
+        <div class="form-group">
+          <div class="form-label">준공연도 <span class="req">*</span><span class="hint">허가일 기준</span></div>
+          <div class="range-wrap">
+            <input type="range" id="yearSlider" min="1950" max="2025" value="2010" oninput="syncYear('s',this.value)">
+            <div class="range-display">
+              <span class="range-val" id="yearVal">2010</span>
+              <span class="range-unit">년</span>
+            </div>
+          </div>
+          <input type="number" class="form-input" id="yearInput"
+            min="1950" max="2025" value="2010" placeholder="연도 직접 입력"
+            oninput="syncYear('i',this.value)" style="margin-top:.625rem">
+        </div>
+      </div>
+
+      <!-- 건물 정보 카드 -->
+      <div class="card">
+        <div class="card-title">🏢 건물 정보</div>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <div class="form-label">구조형식 <span class="req">*</span></div>
+            <select class="form-select" id="structType">
+              <option value="">-- 구조형식 선택 --</option>
+              <optgroup label="■ 철근콘크리트">
+                <option value="RC_FRAME">RC 라멘조</option>
+                <option value="RC_WALL">RC 벽식구조</option>
+                <option value="RC_FLAT">RC 플랫슬래브</option>
+              </optgroup>
+              <optgroup label="■ 철골">
+                <option value="STEEL_FRAME">철골조</option>
+                <option value="STEEL_BRACED">철골 가새골조</option>
+                <option value="STEEL_MOMENT">철골 모멘트골조</option>
+              </optgroup>
+              <optgroup label="■ 합성구조">
+                <option value="SRC">철골철근콘크리트 (SRC)</option>
+                <option value="CFT">CFT (콘크리트충전강관)</option>
+              </optgroup>
+              <optgroup label="■ 기타">
+                <option value="MASONRY">조적조 (벽돌·블록)</option>
+                <option value="WOOD">목구조</option>
+                <option value="PRECAST">프리캐스트 콘크리트 (PC)</option>
+                <option value="OTHER">기타</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">지상 층수 <span class="req">*</span></div>
+            <div class="range-wrap">
+              <input type="range" id="floorSlider" min="1" max="50" value="5" oninput="syncFloor('s',this.value)">
+              <div class="range-display">
+                <span class="range-val" id="floorVal">5</span>
+                <span class="range-unit">층</span>
+              </div>
+            </div>
+            <input type="number" class="form-input" id="floorInput"
+              min="1" max="200" value="5" placeholder="층수 입력"
+              oninput="syncFloor('i',this.value)" style="margin-top:.625rem">
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">연면적 (㎡) <span class="req">*</span></div>
+            <input type="number" class="form-input" id="areaInput"
+              min="0" value="3000" placeholder="전체 연면적 ㎡">
+            <div class="form-note">※ 목구조는 500㎡ 기준 별도 적용</div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">건물 용도 <span class="req">*</span></div>
+            <select class="form-select" id="buildingUse">
+              <option value="">-- 용도 선택 --</option>
+              <optgroup label="■ 특수·중요시설">
+                <option value="CRITICAL">특수시설 (원전·댐·방재거점)</option>
+                <option value="HOSPITAL">의료시설 (병원·응급센터)</option>
+                <option value="SCHOOL">교육시설 (학교·유치원)</option>
+                <option value="OFFICE_LARGE">공공청사·관공서</option>
+              </optgroup>
+              <optgroup label="■ 일반시설">
+                <option value="APARTMENT">공동주택 (아파트·빌라)</option>
+                <option value="COMMERCIAL">상업시설 (판매·업무)</option>
+                <option value="INDUSTRIAL">산업시설 (공장·창고)</option>
+                <option value="RESIDENTIAL">단독주택</option>
+                <option value="RELIGIOUS">종교시설</option>
+                <option value="OTHER_USE">기타 일반시설</option>
+              </optgroup>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 판정 버튼 -->
+      <button class="judge-btn" onclick="runJudge()">
+        ⚡ &nbsp;내진설계 의무대상 여부 즉시 판별
+      </button>
+
+    </div><!-- /judge-left -->
+
+    <!-- RIGHT : 결과 -->
+    <div class="judge-right">
+
+      <!-- 판정 전 플레이스홀더 (데스크탑) -->
+      <div class="result-placeholder" id="resultPlaceholder">
+        <div class="rp-icon">🏢</div>
+        <p>
+          <strong>좌측에서 건물 정보를 입력하고<br>⚡ 판별 버튼을 누르면</strong><br><br>
+          내진설계 의무 여부 · 내진등급 · 판정 근거가<br>
+          이 영역에 즉시 표시됩니다.
+        </p>
+      </div>
+
+      <!-- 결과 패널 -->
+      <div class="result-panel" id="resultPanel">
+        <div class="input-summary"  id="inputSummary"></div>
+        <div class="result-verdict" id="verdictArea"></div>
+        <div class="grade-row"      id="gradeRow"></div>
+        <div class="basis-list"     id="basisList"></div>
+        <div class="notice-box"     id="noticeBox"></div>
+        <div class="result-actions">
+          <button class="action-btn primary" onclick="openShareTab()">📱 모바일 미리보기 · 공유하기</button>
+        </div>
+      </div>
+
+    </div><!-- /judge-right -->
+  </div><!-- /judge-layout -->
+
+</div>
+</div><!-- /tab-judge -->
+
+<!-- ══ TAB: 미리보기·공유 ══ -->
+<div class="tab-panel" id="tab-share">
+<div class="main-wrap">
+  <div class="sec-title">Galaxy S24 Ultra 미리보기 · 공유</div>
+
+  <div id="shareEmpty" class="card">
+    <div class="share-empty">
+      <div class="ei">📱</div>
+      <p>
+        <strong>판정 탭에서 먼저 판정을 실행하세요.</strong><br><br>
+        판정 완료 후 이 탭에서<br>
+        <strong>Galaxy S24 Ultra</strong> 규격 (6.8" · 1440×3120 · DPR 3.75)<br>
+        모바일 미리보기와 JPG 저장 · 공유하기를 이용할 수 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <div id="shareReady" style="display:none">
+    <div class="mob-preview-wrap">
+
+      <!-- S24 Ultra 스펙 배지 -->
+      <div class="mob-spec-badge">
+        <span class="mob-spec-chip accent">Galaxy S24 Ultra</span>
+        <span class="mob-spec-chip">6.8" · 1440×3120</span>
+        <span class="mob-spec-chip">DPR 3.75 · 19.5:9</span>
+        <span class="mob-spec-chip">CSS 384×824px</span>
+      </div>
+
+      <!-- 디바이스 프레임 -->
+      <div class="mob-device" id="mobDevice">
+        <div class="mob-device-notch"><div class="mob-notch-pill"></div></div>
+        <div class="mob-device-screen"><div class="mob-screen-inner" id="mobScreenInner"></div></div>
+        <div class="mob-device-home"><div class="mob-home-bar"></div></div>
+      </div>
+
+      <!-- 컴팩트 공유 버튼 2열 -->
+      <div class="share-actions-row">
+        <button class="share-btn-compact primary" onclick="downloadJPG()">
+          <span class="sbc-icon">💾</span>
+          <span class="sbc-label">JPG 저장</span>
+        </button>
+        <button class="share-btn-compact" onclick="nativeShare()">
+          <span class="sbc-icon">🔗</span>
+          <span class="sbc-label">공유하기</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB: 법조문 ══ -->
+<div class="tab-panel" id="tab-law">
+<div class="main-wrap">
+  <div class="sec-title">관련 법조문</div>
+
+  <div class="law-card">
+    <div class="law-card-header" onclick="toggleLaw('l1')">
+      <span class="law-num">건축법 제48조</span>
+      <span class="law-title">구조내력 등 — 내진설계 의무 근거</span>
+      <span class="law-toggle" id="lt-l1">▼</span>
+    </div>
+    <div class="law-body" id="lb-l1">
+      <p>① 건축물은 고정하중, 적재하중, 적설하중, 풍압, 지진, 그 밖의 진동 및 충격 등에 대하여 안전한 구조를 가져야 한다.</p>
+      <p>② 제11조 제1항에 따른 건축물을 건축하거나 대수선하는 경우에는 대통령령으로 정하는 기준에 따라 <strong style="color:var(--red)">내진설계를 하여야</strong> 한다. 다만, 국토교통부령으로 정하는 소규모 건축물의 경우에는 그러하지 아니하다.</p>
+      <p>③ 제2항에 따른 내진설계는 지진구역을 고려하여야 한다.</p>
+      <div class="highlight">⚠️ <strong>핵심:</strong> 시행령 제32조가 정하는 규모 이상의 건축물은 내진설계 의무 적용</div>
+    </div>
+  </div>
+
+  <div class="law-card">
+    <div class="law-card-header" onclick="toggleLaw('l2')">
+      <span class="law-num">시행령 제32조</span>
+      <span class="law-title">구조 안전의 확인 — 내진설계 적용 대상</span>
+      <span class="law-toggle" id="lt-l2">▼</span>
+    </div>
+    <div class="law-body" id="lb-l2">
+      <p>① 다음 각 호의 어느 하나에 해당하는 건축물에 내진설계를 하여야 한다. <span style="color:var(--amber);font-size:12px">(2017.2.3 개정)</span></p>
+      <div class="sub-item">
+        <p>1. <strong style="color:var(--t0)">층수 2층 이상</strong>인 건축물</p>
+        <p>2. <strong style="color:var(--t0)">연면적 200㎡ 이상</strong> (목구조 500㎡ 이상)</p>
+        <p>3. <strong style="color:var(--t0)">높이 13m 이상</strong></p>
+        <p>4. <strong style="color:var(--t0)">처마높이 9m 이상</strong></p>
+        <p>5. <strong style="color:var(--t0)">경간 10m 이상</strong></p>
+        <p>6. 용도 및 규모를 고려한 중요도가 높은 건축물</p>
+      </div>
+      <div class="highlight">⚠️ <strong>2017.2.3 개정:</strong> 층수 3층 → <strong>2층</strong>, 연면적 500㎡ → <strong>200㎡</strong> 이상으로 강화 (경주지진 후속)</div>
+    </div>
+  </div>
+
+  <div class="law-card">
+    <div class="law-card-header" onclick="toggleLaw('l3')">
+      <span class="law-num">KDS 41 17 00</span>
+      <span class="law-title">건축물 내진설계 기준 (2018.12.31 제정)</span>
+      <span class="law-toggle" id="lt-l3">▼</span>
+    </div>
+    <div class="law-body" id="lb-l3">
+      <p><strong style="color:var(--t0)">1.1 목적:</strong> 지진으로 인한 재해로부터 국민의 생명과 재산 보호</p>
+      <p><strong style="color:var(--t0)">4.1 내진등급 분류:</strong></p>
+      <div class="sub-item">
+        <p>· <strong style="color:var(--red)">내진특등급</strong> — 즉시기능 유지 (원자력·방재거점·주요병원) 재현주기 2,400년</p>
+        <p>· <strong style="color:var(--orange)">내진Ⅰ등급</strong> — 인명보호+신속복구 (학교·공공건물·16층↑) 재현주기 1,000년</p>
+        <p>· <strong style="color:var(--amber)">내진Ⅱ등급</strong> — 인명보호 (일반 건축물) 재현주기 500년</p>
+      </div>
+      <div class="highlight">ℹ️ KDS 17 10 00 폐지 후 2018.12.31 통합 제정. 시설별 분산 기준 일원화.</div>
+    </div>
+  </div>
+
+  <div class="law-card">
+    <div class="law-card-header" onclick="toggleLaw('l4')">
+      <span class="law-num">지진·화산재해대책법</span>
+      <span class="law-title">기존 건축물 내진보강 의무</span>
+      <span class="law-toggle" id="lt-l4">▼</span>
+    </div>
+    <div class="law-body" id="lb-l4">
+      <p><strong style="color:var(--t0)">제16조 (기존 시설물 내진보강)</strong></p>
+      <p>시설물이 내진설계기준에 미달하는 경우 내진보강을 하여야 한다.</p>
+      <div class="sub-item">
+        <p>· 1988년 이전 준공: 공공건물 의무, 민간 권고</p>
+        <p>· 공공건축물(학교·청사): 2009년~ 단계적 의무화</p>
+      </div>
+      <div class="highlight">ℹ️ 기존 건물도 용도변경·증축·대수선 시 현행 기준 재적용 필요</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB: 연혁 ══ -->
+<div class="tab-panel" id="tab-history">
+<div class="main-wrap">
+  <div class="sec-title">내진설계 법령 연혁</div>
+  <div class="card">
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">88</div>
+        <div class="tl-content">
+          <div class="tl-year">1988년</div>
+          <div class="tl-title">국내 최초 내진설계 법제화</div>
+          <div class="tl-desc">건축법 시행령 개정 — 6층 이상 또는 연면적 10만㎡ 이상 건축물에 내진설계 최초 의무화.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">95</div>
+        <div class="tl-content">
+          <div class="tl-year">1995년</div>
+          <div class="tl-title">내진기준 강화 논의 본격화</div>
+          <div class="tl-desc">성수대교 붕괴로 구조 안전 이슈 급부상. 적용 범위 확대 논의.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">05</div>
+        <div class="tl-content">
+          <div class="tl-year">2005년</div>
+          <div class="tl-title">3층 이상 / 1,000㎡ 이상으로 확대</div>
+          <div class="tl-desc">내진설계 의무 범위 대폭 확대. 지진구역 개념 도입.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">09</div>
+        <div class="tl-content">
+          <div class="tl-year">2009년</div>
+          <div class="tl-title">기존 건축물 내진보강 제도 도입</div>
+          <div class="tl-desc">지진·화산재해대책법 제정. 학교시설 내진보강 의무화 시작.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">16</div>
+        <div class="tl-content">
+          <div class="tl-year">2016년 9월 12일</div>
+          <div class="tl-title">경주 지진 규모 5.8 — 역대 최강</div>
+          <div class="tl-desc">내진설계 사각지대 문제 부각. 법령 개정 착수.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active">17</div>
+        <div class="tl-content">
+          <div class="tl-year">2017년 2월 3일 ★ 현행 핵심 기준</div>
+          <div class="tl-title">시행령 제32조 전면 개정</div>
+          <div class="tl-desc">
+            <strong style="color:var(--red)">층수: 3층 → 2층 이상</strong> &nbsp;|&nbsp;
+            <strong style="color:var(--red)">면적: 500㎡ → 200㎡ 이상</strong><br>
+            처마 9m · 높이 13m · 경간 10m 기준 신설.
+          </div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">17</div>
+        <div class="tl-content">
+          <div class="tl-year">2017년 11월 15일</div>
+          <div class="tl-title">포항 지진 규모 5.4</div>
+          <div class="tl-desc">내진이행 실태 전수조사. 기존 건물 내진보강 지원 확대.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active">18</div>
+        <div class="tl-content">
+          <div class="tl-year">2018년 12월 31일 ★ 현행 설계기준</div>
+          <div class="tl-title">KDS 41 17 00 제정 — 내진기준 통합</div>
+          <div class="tl-desc">KDS 17 10 00 폐지 후 통합 제정. 내진등급(특·Ⅰ·Ⅱ) 체계 정비.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">현재</div>
+        <div class="tl-content">
+          <div class="tl-year">현재 (2024~)</div>
+          <div class="tl-title">내진보강 지속 추진</div>
+          <div class="tl-desc">공공건축물·민간 다중이용시설 내진보강 지원 확대. 소규모 건축물 지원 강화.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TAB: 기준표 ══ -->
+<div class="tab-panel" id="tab-guide">
+<div class="main-wrap">
+  <div class="sec-title">내진설계 적용 기준표</div>
+
+  <div class="card">
+    <div class="card-title">📐 의무 적용 규모 기준 (시행령 제32조)</div>
+    <div style="overflow-x:auto">
+      <table class="std-table">
+        <thead>
+          <tr><th>구분</th><th>2017.2.3~ 현행</th><th>2005~2017.2.2</th><th>1988~2004</th><th>1988 이전</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>층수</strong></td><td><span class="tag tag-red">2층 이상</span></td><td>3층 이상</td><td>6층 이상</td><td>미적용</td></tr>
+          <tr><td><strong>연면적</strong></td><td><span class="tag tag-red">200㎡ 이상</span><br><span style="font-size:11px;color:var(--t3)">(목구조 500㎡)</span></td><td>1,000㎡ 이상</td><td>10만㎡ 이상</td><td>미적용</td></tr>
+          <tr><td><strong>높이</strong></td><td><span class="tag tag-red">13m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>처마높이</strong></td><td><span class="tag tag-red">9m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>경간</strong></td><td><span class="tag tag-red">10m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">🏆 내진등급 분류 (KDS 41 17 00)</div>
+    <div style="overflow-x:auto">
+      <table class="std-table">
+        <thead>
+          <tr><th>내진등급</th><th>적용 시설</th><th>성능목표</th><th>설계 재현주기</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="tag tag-red">내진특등급</span></td><td>원자력·방재거점·주요병원·댐</td><td>즉시기능 유지</td><td>2,400년</td></tr>
+          <tr>
+            <td><span class="tag" style="background:var(--obg);border:1px solid var(--obd);color:var(--orange)">내진Ⅰ등급</span></td>
+            <td>학교·공공청사·16층↑·30,000㎡↑</td><td>인명보호+신속복구</td><td>1,000년</td>
+          </tr>
+          <tr><td><span class="tag tag-amber">내진Ⅱ등급</span></td><td>일반 건축물 (위 등급 외)</td><td>인명보호</td><td>500년</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">🔧 구조형식별 내진 특성</div>
+    <div style="overflow-x:auto">
+      <table class="std-table">
+        <thead><tr><th>구조형식</th><th>내진 특성</th><th>권장 적용</th></tr></thead>
+        <tbody>
+          <tr><td>RC 라멘조</td><td>연성 우수, 에너지 흡수 양호</td><td>5~30층</td></tr>
+          <tr><td>RC 벽식구조</td><td>강성 높음, 연성 제한</td><td>15층 이하 아파트</td></tr>
+          <tr><td>철골 모멘트골조</td><td>연성 매우 우수</td><td>10층 이상</td></tr>
+          <tr><td>철골 가새골조</td><td>강성 높음, 좌굴 제어 필요</td><td>산업시설·중층</td></tr>
+          <tr><td>조적조</td><td><span class="tag tag-red">취성 파괴 위험</span></td><td>저층 2층↓, 보강 필수</td></tr>
+          <tr><td>목구조</td><td>경량, 연성 양호</td><td>3층 이하 주거</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /page-center -->
+
+<!-- ════════ FAB ════════ -->
+<div class="fab-wrap">
+  <div class="fab-tip">사용법 · 관련법규</div>
+  <button class="fab-main" onclick="openHelp()" aria-label="사용법 및 관련법규">📐</button>
+</div>
+
+<!-- ════════ HELP MODAL (화면 정중앙) ════════ -->
+<div class="modal-overlay" id="helpModal" onclick="modalBgClose(event)">
+  <div class="modal-box" id="helpBox">
+    <div class="modal-header">
+      <div class="modal-title">📐 사용법 &amp; 관련법규</div>
+      <button class="modal-close" onclick="closeHelp()">✕</button>
+    </div>
+
+    <div class="help-sec">
+      <div class="help-sec-title">사용 방법</div>
+      <div class="help-step">
+        <div class="hstep-n">1</div>
+        <div class="hstep-t"><strong>준공연도 입력</strong> — 슬라이더 또는 직접 입력. 건축허가 신청일 기준으로 입력하세요.</div>
+      </div>
+      <div class="help-step">
+        <div class="hstep-n">2</div>
+        <div class="hstep-t"><strong>건물 정보 입력</strong> — 구조형식·지상층수·연면적·용도를 모두 선택·입력하세요.</div>
+      </div>
+      <div class="help-step">
+        <div class="hstep-n">3</div>
+        <div class="hstep-t"><strong>⚡ 판별 버튼 클릭</strong> — 데스크탑에서는 우측에, 모바일에서는 아래쪽에 즉시 결과가 표시됩니다.</div>
+      </div>
+      <div class="help-step">
+        <div class="hstep-n">4</div>
+        <div class="hstep-t"><strong>📱 공유 탭</strong> — Galaxy S24 Ultra 규격 미리보기 확인 후 JPG 저장·공유하기를 이용하세요.</div>
+      </div>
+    </div>
+
+    <div class="help-sec">
+      <div class="help-sec-title">관련 법규</div>
+      <div class="law-mini-list">
+        <div class="law-mini-item">
+          <span class="law-mini-badge">건축법 §48</span>
+          <div class="law-mini-t"><strong>구조내력 등</strong> — 내진설계 의무의 모법 근거. 대통령령 기준 이상 건물은 내진설계 필수.</div>
+        </div>
+        <div class="law-mini-item">
+          <span class="law-mini-badge">시행령 §32</span>
+          <div class="law-mini-t"><strong>2017.2.3 개정</strong> — 2층↑ / 200㎡↑ / 높이 13m↑ / 처마 9m↑ / 경간 10m↑ 해당 시 의무 적용.</div>
+        </div>
+        <div class="law-mini-item">
+          <span class="law-mini-badge">KDS 41 17 00</span>
+          <div class="law-mini-t"><strong>2018.12.31 제정</strong> — 내진특·Ⅰ·Ⅱ등급 분류. 성능기반 내진설계 기준 통합.</div>
+        </div>
+        <div class="law-mini-item">
+          <span class="law-mini-badge">지진화산법</span>
+          <div class="law-mini-t"><strong>제16조</strong> — 기존 시설물 내진보강 의무. 공공건물·학교 단계적 내진보강 추진.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-sec" style="margin-bottom:0">
+      <div class="help-sec-title">주의사항</div>
+      <div class="help-step">
+        <div class="hstep-n" style="background:var(--abg);border-color:var(--abd);color:var(--amber)">!</div>
+        <div class="hstep-t" style="color:var(--t3)">
+          본 판정기는 <strong>층수·면적·용도 기준</strong>에 한하며, 실제 허가 시
+          <strong>전문 구조기술사</strong>의 검토가 필요합니다.
+          높이·처마·경간 기준은 별도 확인 요망.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════
+   MANMIN Ver 2.0 — 내진설계 판정 논리 엔진
+   건축법 §48 · 시행령 §32 · KDS 41 17 00
+════════════════════════════════════════ */
+let G = null;
+
+const SN = {
+  RC_FRAME:'RC 라멘조', RC_WALL:'RC 벽식구조', RC_FLAT:'RC 플랫슬래브',
+  STEEL_FRAME:'철골조', STEEL_BRACED:'철골 가새골조', STEEL_MOMENT:'철골 모멘트골조',
+  SRC:'SRC조', CFT:'CFT조', MASONRY:'조적조', WOOD:'목구조', PRECAST:'PC조', OTHER:'기타'
+};
+const UN = {
+  CRITICAL:'특수시설', HOSPITAL:'의료시설', SCHOOL:'교육시설', OFFICE_LARGE:'공공청사',
+  APARTMENT:'공동주택', COMMERCIAL:'상업시설', INDUSTRIAL:'산업시설',
+  RESIDENTIAL:'단독주택', RELIGIOUS:'종교시설', OTHER_USE:'기타'
+};
+const CU = ['CRITICAL','HOSPITAL','SCHOOL','OFFICE_LARGE'];
+
+/* ── 슬라이더 동기화 ── */
+function syncYear(src, v) {
+  v = Math.min(2025, Math.max(1950, parseInt(v) || 2010));
+  document.getElementById('yearVal').textContent = v;
+  if (src !== 's') document.getElementById('yearSlider').value = v;
+  if (src !== 'i') document.getElementById('yearInput').value  = v;
+  document.getElementById('yearSlider').style.setProperty('--pct', ((v-1950)/75*100).toFixed(1)+'%');
+}
+function syncFloor(src, v) {
+  v = Math.min(200, Math.max(1, parseInt(v) || 1));
+  const sv = Math.min(50, v);
+  document.getElementById('floorVal').textContent = v;
+  if (src !== 's') document.getElementById('floorSlider').value = sv;
+  if (src !== 'i') document.getElementById('floorInput').value  = v;
+  document.getElementById('floorSlider').style.setProperty('--pct', ((sv-1)/49*100).toFixed(1)+'%');
+}
+syncYear('s', 2010);
+syncFloor('s', 5);
+
+/* ════════ 판정 엔진 ════════ */
+function runJudge() {
+  const year   = parseInt(document.getElementById('yearInput').value)  || 2010;
+  const floors = parseInt(document.getElementById('floorInput').value) || 1;
+  const area   = parseFloat(document.getElementById('areaInput').value) || 0;
+  const struct = document.getElementById('structType').value;
+  const use    = document.getElementById('buildingUse').value;
+
+  if (!struct) { toast('구조형식을 선택해주세요'); return; }
+  if (!use)    { toast('건물 용도를 선택해주세요'); return; }
+
+  // 연도별 기준
+  let era, fTh, aTh, aThW;
+  if      (year >= 2017) { era='2017.2.3 이후 현행'; fTh=2;    aTh=200;     aThW=500; }
+  else if (year >= 2005) { era='2005년 ~ 2017.2.2';  fTh=3;    aTh=1000;    aThW=1000; }
+  else if (year >= 1988) { era='1988년 ~ 2004년';     fTh=6;    aTh=100000;  aThW=100000; }
+  else                   { era='1988년 이전';           fTh=9999; aTh=9999999; aThW=9999999; }
+
+  const isWood = struct === 'WOOD';
+  const effATh = isWood ? aThW : aTh;
+
+  const byFloor = floors >= fTh;
+  const byArea  = area   >= effATh;
+  const byUse   = CU.includes(use);
+  const mandatory = byFloor || byArea || byUse;
+
+  // 내진등급
+  let grade, gClass, gDesc;
+  if (use === 'CRITICAL') {
+    grade='내진특등급'; gClass='gv-special'; gDesc='즉시기능 유지 (재현주기 2,400년)';
+  } else if (byUse || floors >= 16 || area >= 30000) {
+    grade='내진Ⅰ등급'; gClass='gv-1'; gDesc='인명보호+신속복구 (재현주기 1,000년)';
+  } else if (mandatory) {
+    grade='내진Ⅱ등급'; gClass='gv-2'; gDesc='인명보호 (재현주기 500년)';
+  } else {
+    grade='해당 없음'; gClass=''; gDesc='내진설계 의무 미해당';
+  }
+
+  // 구조 경고
+  let structWarn = null;
+  if (struct === 'MASONRY') structWarn = '조적조는 지진에 취약한 취성 구조입니다. 내진보강 설계를 강력 권고합니다.';
+  if (struct === 'PRECAST') structWarn = 'PC구조는 접합부 내진 상세에 특별 주의가 필요합니다.';
+
+  G = { year, floors, area, struct, use, era, fTh, effATh, isWood, byFloor, byArea, byUse, mandatory, grade, gClass, gDesc, structWarn };
+  renderResult(G);
+}
+
+function renderResult(d) {
+  // 플레이스홀더 숨김
+  const ph = document.getElementById('resultPlaceholder');
+  if (ph) ph.style.display = 'none';
+
+  // 입력 요약
+  document.getElementById('inputSummary').innerHTML = [
+    `📅 준공 <span>${d.year}년</span>`,
+    `🏗️ <span>${SN[d.struct] || d.struct}</span>`,
+    `🏢 <span>${d.floors}층</span>`,
+    `📐 <span>${d.area.toLocaleString()}㎡</span>`,
+    `🏠 <span>${UN[d.use] || d.use}</span>`
+  ].map(h => `<div class="is-chip">${h}</div>`).join('');
+
+  // 판정 타입 클래스
+  const p = document.getElementById('resultPanel');
+  p.className = `result-panel show ${d.mandatory ? 'mandatory' : 'exempt'}`;
+
+  // 판정 헤더
+  document.getElementById('verdictArea').innerHTML = `
+    <div class="verdict-icon">${d.mandatory ? '⚡' : '✅'}</div>
+    <div class="verdict-text">
+      <div class="verdict-label">${d.mandatory ? '내진설계 의무 대상' : '내진설계 의무 면제'}</div>
+      <div class="verdict-main">${d.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}</div>
+    </div>`;
+
+  // 등급 행
+  document.getElementById('gradeRow').innerHTML = `
+    <div class="grade-box">
+      <div class="grade-box-label">적용 기준 시점</div>
+      <div class="grade-box-val gv-blue">${d.era}</div>
+    </div>
+    <div class="grade-box">
+      <div class="grade-box-label">내진등급 (KDS 41 17 00)</div>
+      <div class="grade-box-val ${d.gClass}">${d.grade}</div>
+    </div>
+    <div class="grade-box">
+      <div class="grade-box-label">성능목표</div>
+      <div class="grade-box-val" style="font-size:12px;color:var(--t2);font-weight:500">${d.gDesc}</div>
+    </div>`;
+
+  // 판정 근거
+  const bases = [
+    { t:'info', law:'§32 기준 시점', txt:`${d.year}년 — ${d.era} (층수 ${d.fTh}층↑ / 면적 ${d.effATh.toLocaleString()}㎡↑)` },
+    { t: d.byFloor?'fail':'pass', law:'시행령 제32조 제1호', txt:`층수 ${d.floors}층 — ${d.fTh}층 이상 기준 ${d.byFloor ? '⚡ 해당 → 의무 적용' : '✓ 미해당'}` },
+    { t: d.byArea?'fail':'pass',  law:`시행령 제32조 제2호${d.isWood?' (목구조)':''}`, txt:`면적 ${d.area.toLocaleString()}㎡ — ${d.effATh.toLocaleString()}㎡ 이상 기준 ${d.byArea ? '⚡ 해당 → 의무 적용' : '✓ 미해당'}` }
+  ];
+  if (d.byUse)     bases.push({ t:'fail', law:'시행령 §32 제6호', txt:`용도(${UN[d.use]}) — 중요도 시설 규모 무관 의무 적용` });
+  if (d.structWarn) bases.push({ t:'warn', law:'KDS 41 17 00 §4.3', txt: d.structWarn });
+
+  document.getElementById('basisList').innerHTML = bases.map(b => `
+    <div class="basis-item ${b.t}">
+      <div class="bi-icon">${b.t==='fail'?'⚡':b.t==='pass'?'✓':b.t==='warn'?'⚠':'ℹ'}</div>
+      <div class="bi-content">
+        <div class="bi-law">${b.law}</div>
+        <div class="bi-text">${b.txt}</div>
+      </div>
+    </div>`).join('');
+
+  // 안내
+  document.getElementById('noticeBox').innerHTML = d.mandatory
+    ? `<strong>⚡ 의무 이행 사항:</strong> KDS 41 17 00 기준 내진설계 수행 필수 · ${d.grade} 기준 설계지진 적용 · 구조계산서 내진 내용 포함 후 허가청 제출 · 감리 이행 확인<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>전문 구조기술사 검토</strong>가 필요합니다.`
+    : `<strong>✅ 면제 안내:</strong> 현행 기준 의무 미해당. 단, 용도변경·증축·대수선 시 현행 기준 재검토 필요.<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>전문가 확인</strong>을 권고합니다.`;
+
+  // 모바일: 결과 쪽으로 스크롤 (데스크탑은 우측 패널이라 불필요)
+  if (window.innerWidth < 1024) {
+    setTimeout(() => p.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
+  }
+
+  buildMobilePreview(d);
+}
+
+/* ════════ 모바일 미리보기 ════════ */
+function buildMobilePreview(d) {
+  const vm = d.mandatory;
+  const ac  = vm ? '#f04040' : '#22c55e';
+  const abg = vm ? 'rgba(240,64,64,0.1)'  : 'rgba(34,197,94,0.1)';
+  const abd = vm ? 'rgba(240,64,64,0.3)'  : 'rgba(34,197,94,0.3)';
+
+  const bases = [
+    { ok: d.byFloor, txt:`층수 ${d.floors}층 — ${d.fTh}층↑ 기준 ${d.byFloor?'⚡해당':'✓미해당'}` },
+    { ok: d.byArea,  txt:`면적 ${d.area.toLocaleString()}㎡ — ${d.effATh.toLocaleString()}㎡↑ 기준 ${d.byArea?'⚡해당':'✓미해당'}` }
+  ];
+  if (d.byUse) bases.push({ ok: true, txt:`용도(${UN[d.use]}) — 중요도 시설` });
+
+  document.getElementById('mobScreenInner').innerHTML = `
+    <div style="font-family:'Noto Sans KR',sans-serif;background:#06090f;padding:0 0 20px">
+      <div style="padding:12px 14px 10px;border-bottom:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:8.5px;letter-spacing:.15em;color:#f04040;margin-bottom:3px;font-family:monospace">MANMIN-VER.2.0 · 내진설계판정기</div>
+        <div style="font-size:16px;font-weight:700;color:#fff;letter-spacing:-.02em">내진설계 의무대상 판정서</div>
+        <div style="font-size:9px;color:#515e7a;margin-top:2px;font-family:monospace">${new Date().toLocaleDateString('ko-KR')} 판정 완료</div>
+      </div>
+      <div style="margin:10px;padding:12px;border-radius:12px;background:${abg};border:1px solid ${abd}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:46px;height:46px;border-radius:12px;background:${abg};border:1px solid ${abd};display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0">${vm?'⚡':'✅'}</div>
+          <div>
+            <div style="font-size:9px;letter-spacing:.1em;color:${ac};font-family:monospace;margin-bottom:2px">${vm?'내진설계 의무 대상':'내진설계 의무 면제'}</div>
+            <div style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-.02em">${vm?'내진설계 의무 적용':'내진설계 의무 없음'}</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin:0 10px 10px;display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <div style="padding:9px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:8px;color:#515e7a;font-family:monospace;margin-bottom:3px">내진등급</div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:-.01em;color:${d.gClass==='gv-special'?'#f04040':d.gClass==='gv-1'?'#f97316':'#f0b429'}">${d.grade}</div>
+        </div>
+        <div style="padding:9px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:8px;color:#515e7a;font-family:monospace;margin-bottom:3px">기준 시점</div>
+          <div style="font-size:10px;font-weight:600;color:#4a8cf5">${d.era}</div>
+        </div>
+      </div>
+      <div style="margin:0 10px 10px;padding:10px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:8px;letter-spacing:.1em;color:#515e7a;font-family:monospace;margin-bottom:7px">입력 정보</div>
+        ${[
+          ['준공연도', d.year+'년'],
+          ['구조형식', SN[d.struct]||d.struct],
+          ['지상층수', d.floors+'층'],
+          ['연면적',   d.area.toLocaleString()+'㎡'],
+          ['건물용도', UN[d.use]||d.use]
+        ].map(([k,v]) => `
+          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:11px">
+            <span style="color:#9ba6c0">${k}</span>
+            <span style="color:#edf1fc;font-weight:600">${v}</span>
+          </div>`).join('')}
+      </div>
+      <div style="margin:0 10px 10px">
+        <div style="font-size:8px;letter-spacing:.1em;color:#515e7a;font-family:monospace;margin-bottom:7px">판정 근거 (시행령 제32조)</div>
+        ${bases.map(b => `
+          <div style="display:flex;gap:7px;align-items:flex-start;padding:7px 9px;background:#111521;border-radius:6px;border:1px solid rgba(255,255,255,0.05);font-size:11px;color:#edf1fc;margin-bottom:4px;line-height:1.5">
+            <span style="color:${b.ok?'#f04040':'#22c55e'};flex-shrink:0">${b.ok?'⚡':'✓'}</span>
+            <span>${b.txt}</span>
+          </div>`).join('')}
+      </div>
+      <div style="margin:0 10px;padding:9px 11px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-size:10px;color:#515e7a;line-height:1.7">
+        건축법 §48 · 시행령 §32 (2017.2.3) · KDS 41 17 00 (2018.12.31)<br>
+        <span style="color:#2e3650">※ 본 판정은 참고용 — 실제 허가 시 전문가 확인 필요</span>
+      </div>
+    </div>`;
+
+  document.getElementById('shareEmpty').style.display  = 'none';
+  document.getElementById('shareReady').style.display  = 'block';
+}
+
+/* ════════ 공유 기능 ════════ */
+function downloadJPG() {
+  const t = document.getElementById('mobScreenInner');
+  if (!t) { toast('판정 결과가 없습니다'); return; }
+  toast('JPG 생성 중...');
+  html2canvas(t, { scale: 3, backgroundColor: '#06090f', useCORS: true, logging: false })
+    .then(c => {
+      const a = document.createElement('a');
+      a.download = `내진판정_${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}.jpg`;
+      a.href = c.toDataURL('image/jpeg', 0.95);
+      a.click();
+      toast('✅ JPG 저장 완료');
+    })
+    .catch(() => toast('저장 실패 — 다시 시도해주세요'));
+}
+
+function copyResultText() {
+  if (!G) { toast('판정 결과가 없습니다'); return; }
+  const txt = [
+    '━━━━━━━━━━━━━━━━━━━━━',
+    '⚡ 내진설계 의무대상 판정서',
+    '   MANMIN-Ver.2.0',
+    '━━━━━━━━━━━━━━━━━━━━━',
+    `판정:    ${G.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}`,
+    `내진등급: ${G.grade}`,
+    `기준시점: ${G.era}`,
+    '─────────────────────',
+    `준공연도: ${G.year}년`,
+    `구조형식: ${SN[G.struct]||G.struct}`,
+    `지상층수: ${G.floors}층`,
+    `연면적:   ${G.area.toLocaleString()}㎡`,
+    `건물용도: ${UN[G.use]||G.use}`,
+    '─────────────────────',
+    `층수기준: ${G.floors}층 [${G.byFloor?'해당':'미해당'}]`,
+    `면적기준: ${G.area.toLocaleString()}㎡ [${G.byArea?'해당':'미해당'}]`,
+    '━━━━━━━━━━━━━━━━━━━━━',
+    '건축법§48 · 시행령§32 · KDS 41 17 00',
+  ].join('\n');
+  navigator.clipboard.writeText(txt)
+    .then(()  => toast('📋 클립보드에 복사됨'))
+    .catch(()  => toast('복사 실패'));
+}
+
+async function nativeShare() {
+  if (!G) { toast('판정 결과가 없습니다'); return; }
+  const sd = {
+    title: '내진설계 의무대상 판정 결과',
+    text: `[MANMIN 내진판정] ${G.year}년 준공 ${G.floors}층 ${G.area.toLocaleString()}㎡ → ${G.mandatory?'내진설계 의무':'면제'} (${G.grade})`,
+    url: window.location.href
+  };
+  if (navigator.share) {
+    try { await navigator.share(sd); } catch {}
+  } else {
+    navigator.clipboard.writeText(sd.text + '\n' + sd.url)
+      .then(() => toast('🔗 링크가 클립보드에 복사됐습니다'))
+      .catch(() => toast('공유 실패'));
+  }
+}
+
+function openShareTab() {
+  const b = document.querySelectorAll('.tab-btn')[1];
+  goTab('share', b);
+}
+
+/* ════════ 탭 전환 ════════ */
+function goTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════ 법조문 토글 ════════ */
+function toggleLaw(id) {
+  document.getElementById('lb-'+id).classList.toggle('open');
+  document.getElementById('lt-'+id).classList.toggle('open');
+}
+
+/* ════════ 리셋 ════════ */
+function resetForm() {
+  const p = document.getElementById('resultPanel');
+  p.classList.remove('show'); p.style.display = 'none';
+  const ph = document.getElementById('resultPlaceholder');
+  if (ph) ph.style.display = '';
+  document.getElementById('yearInput').value   = 2010;
+  document.getElementById('floorInput').value  = 5;
+  document.getElementById('areaInput').value   = 3000;
+  document.getElementById('structType').value  = '';
+  document.getElementById('buildingUse').value = '';
+  syncYear('i', 2010); syncFloor('i', 5);
+  G = null;
+  document.getElementById('shareEmpty').style.display = 'block';
+  document.getElementById('shareReady').style.display = 'none';
+  const b = document.querySelectorAll('.tab-btn')[0];
+  goTab('judge', b);
+}
+
+/* ════════ FAB / MODAL ════════ */
+function openHelp() {
+  document.getElementById('helpModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeHelp() {
+  document.getElementById('helpModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function modalBgClose(e) {
+  if (e.target === document.getElementById('helpModal')) closeHelp();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp(); });
+
+/* ════════ TOAST ════════ */
+let _tt;
+function toast(m) {
+  const e = document.getElementById('toast');
+  e.textContent = m;
+  e.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => e.classList.remove('show'), 2600);
+}
+<!-- ════════ PWA 설치 배너 ════════ -->
+<div id="pwa-banner" role="dialog" aria-label="앱 설치 안내">
+  <img src="icons/icon-192x192.png" alt="내진성능 아이콘" class="pwa-icon">
+  <div class="pwa-info">
+    <div class="pwa-name">내진성능</div>
+    <div class="pwa-desc">홈 화면에 추가 · 오프라인 지원</div>
+  </div>
+  <div class="pwa-btns">
+    <button class="pwa-install-btn" onclick="pwaTriggerInstall()">설치하기</button>
+    <button class="pwa-dismiss-btn" onclick="pwaDismiss()">닫기</button>
+  </div>
+</div>
+
+<script>
+/* ════════ Service Worker 등록 ════════ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('[SW] 등록 완료:', reg.scope))
+      .catch(err => console.warn('[SW] 등록 실패:', err));
+  });
+}
+
+/* ════════ PWA 설치 프롬프트 ════════ */
+let _deferredPrompt = null;
+const _banner = document.getElementById('pwa-banner');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _deferredPrompt = e;
+  // 3초 후 배너 표시 (처음 방문 시)
+  if (!sessionStorage.getItem('pwa-dismissed')) {
+    setTimeout(() => _banner.classList.add('show'), 3000);
+  }
+});
+
+async function pwaTriggerInstall() {
+  if (!_deferredPrompt) {
+    toast('이미 설치되었거나 브라우저가 설치를 지원하지 않습니다');
+    pwaDismiss();
+    return;
+  }
+  _deferredPrompt.prompt();
+  const { outcome } = await _deferredPrompt.userChoice;
+  if (outcome === 'accepted') toast('✅ "내진성능" 앱이 설치되었습니다!');
+  else toast('설치를 취소했습니다');
+  _deferredPrompt = null;
+  pwaDismiss();
+}
+
+function pwaDismiss() {
+  _banner.classList.remove('show');
+  sessionStorage.setItem('pwa-dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  toast('✅ "내진성능" 홈 화면에 추가 완료!');
+  _banner.classList.remove('show');
+});
+</script>
+</body>
+</html>
