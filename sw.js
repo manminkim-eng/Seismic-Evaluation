@@ -2,7 +2,7 @@
    내진성능 PWA — Service Worker  v2.0
    캐시 전략: Cache-First (오프라인 지원)
 ══════════════════════════════════════════════════ */
-const CACHE_NAME = 'naejin-v2.0.0';
+const CACHE_NAME = 'naejin-v2.1.0';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -50,7 +50,6 @@ self.addEventListener('fetch', event => {
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
       }).catch(() => {
-        // 오프라인 fallback
         if (event.request.destination === 'document') {
           return caches.match('./index.html');
         }
