@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="내진성능">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="내진성능">
-<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN-Ver.2.0">
-<title>내진성능 [MANMIN-Ver.2.0]</title>
+<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN-Ver.2.1">
+<title>내진성능 [MANMIN-Ver.2.1]</title>
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <!-- Favicon & Icons -->
@@ -923,13 +923,13 @@ input[type=range]::-moz-range-thumb {
     <div class="hlogo-wrap">
       <div class="logo-mark"><img src="header-logo.jpg" alt="내진성능 로고" class="logo-img"></div>
       <div class="htext">
-        <div class="hseries">내진설계판정기 · MANMIN-Ver.2.0</div>
+        <div class="hseries">내진설계판정기 · MANMIN-Ver.2.1</div>
         <div class="htitle">내진설계 <em>의무대상</em> 판정기</div>
-        <div class="hsub-line">건축법 §48 · 시행령 §32 · KDS 41 17 00 : 2018</div>
+        <div class="hsub-line">건축법 §48 · 시행령 §32 · KDS 41 17 00 : 2022</div>
       </div>
     </div>
     <div class="hright">
-      <div class="hbadge hbadge-ver">Ver 2.0.0</div>
+      <div class="hbadge hbadge-ver">Ver 2.1.0</div>
       <div class="hbadge hbadge-law">KDS 41 17 00</div>
     </div>
   </div>
@@ -1189,7 +1189,7 @@ input[type=range]::-moz-range-thumb {
   <div class="law-card">
     <div class="law-card-header" onclick="toggleLaw('l3')">
       <span class="law-num">KDS 41 17 00</span>
-      <span class="law-title">건축물 내진설계 기준 (2018.12.31 제정)</span>
+      <span class="law-title">건축물 내진설계 기준 (KDS 41 17 00 : 2022, 2022.10.11 개정·현행)</span>
       <span class="law-toggle" id="lt-l3">▼</span>
     </div>
     <div class="law-body" id="lb-l3">
@@ -1200,7 +1200,7 @@ input[type=range]::-moz-range-thumb {
         <p>· <strong style="color:var(--orange)">내진Ⅰ등급</strong> — 인명보호+신속복구 (학교·공공건물·16층↑) 재현주기 1,000년</p>
         <p>· <strong style="color:var(--amber)">내진Ⅱ등급</strong> — 인명보호 (일반 건축물) 재현주기 500년</p>
       </div>
-      <div class="highlight">ℹ️ KDS 17 10 00 폐지 후 2018.12.31 통합 제정. 시설별 분산 기준 일원화.</div>
+      <div class="highlight">ℹ️ 2018.12.31 제정 → 2019 → 2022.10.11 개정. 현행판은 KDS 41 17 00 : 2022. 내진설계 일반(KDS 17 10 00)은 폐지가 아니라 현행(2024.3.21 개정) 상위 공통기준으로 존속.</div>
     </div>
   </div>
 
@@ -1292,9 +1292,9 @@ input[type=range]::-moz-range-thumb {
       <div class="tl-item">
         <div class="tl-dot active">18</div>
         <div class="tl-content">
-          <div class="tl-year">2018년 12월 31일 ★ 현행 설계기준</div>
-          <div class="tl-title">KDS 41 17 00 제정 — 내진기준 통합</div>
-          <div class="tl-desc">KDS 17 10 00 폐지 후 통합 제정. 내진등급(특·Ⅰ·Ⅱ) 체계 정비.</div>
+          <div class="tl-year">2022년 10월 11일 ★ 현행 설계기준</div>
+          <div class="tl-title">KDS 41 17 00 : 2022 개정 — 현행판 (2018.12.31 제정)</div>
+          <div class="tl-desc">2018 제정 → 2022.10.11 개정. 내진등급(특·Ⅰ·Ⅱ) 체계. KDS 17 10 00(내진 일반)은 현행 존속.</div>
         </div>
       </div>
       <div class="tl-item">
@@ -1420,7 +1420,7 @@ input[type=range]::-moz-range-thumb {
         </div>
         <div class="law-mini-item">
           <span class="law-mini-badge">KDS 41 17 00</span>
-          <div class="law-mini-t"><strong>2018.12.31 제정</strong> — 내진특·Ⅰ·Ⅱ등급 분류. 성능기반 내진설계 기준 통합.</div>
+          <div class="law-mini-t"><strong>KDS 41 17 00 : 2022 (현행)</strong> — 내진특·Ⅰ·Ⅱ등급 분류. 2018.12.31 제정 → 2022.10.11 개정.</div>
         </div>
         <div class="law-mini-item">
           <span class="law-mini-badge">지진화산법</span>
@@ -1447,7 +1447,7 @@ input[type=range]::-moz-range-thumb {
 
 <script>
 /* ════════════════════════════════════════
-   MANMIN Ver 2.0 — 내진설계 판정 논리 엔진
+   MANMIN Ver 2.1 — 내진설계 판정 논리 엔진
    건축법 §48 · 시행령 §32 · KDS 41 17 00
 ════════════════════════════════════════ */
 let G = null;
@@ -1664,7 +1664,7 @@ function buildMobilePreview(d) {
           </div>`).join('')}
       </div>
       <div style="margin:0 10px;padding:9px 11px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-size:10px;color:#515e7a;line-height:1.7">
-        건축법 §48 · 시행령 §32 (2017.2.3) · KDS 41 17 00 (2018.12.31)<br>
+        건축법 §48 · 시행령 §32 (2017.2.3) · KDS 41 17 00 (2022.10.11)<br>
         <span style="color:#2e3650">※ 본 판정은 참고용 — 실제 허가 시 전문가 확인 필요</span>
       </div>
     </div>`;
@@ -1694,7 +1694,7 @@ function copyResultText() {
   const txt = [
     '━━━━━━━━━━━━━━━━━━━━━',
     '⚡ 내진설계 의무대상 판정서',
-    '   MANMIN-Ver.2.0',
+    '   MANMIN-Ver.2.1',
     '━━━━━━━━━━━━━━━━━━━━━',
     `판정:    ${G.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}`,
     `내진등급: ${G.grade}`,
