@@ -20,7 +20,7 @@
    [삭제] header-logo.jpg(507KB) — v5.0 헤더는 심벌 로고를 두지 않는다(§3-1).
 ═══════════════════════════════════════════════════ */
 const PREFIX = 'naejin-';
-const CACHE  = 'naejin-v5.0.0';   /* 2026-09-03 v5.0 디자인 통일 */
+const CACHE  = 'naejin-v5.0.1';   /* 2026-09-03 v5.0 디자인 통일 */
 const ORPHAN = ['naejin-v2.1.0'];
 const ASSETS = [
   './',
@@ -102,7 +102,7 @@ self.addEventListener('fetch', e => {
         const clone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
         return res;
-      }).catch(() => caches.match('./index.html'));
+      }).catch(() => Response.error());   /* R19 (2026-09-04): 스크립트·스타일 실패 시 index.html 을 돌려주면 SyntaxError 로 빈 화면이 된다 — 네트워크 오류로 드러낸다 */
     })
   );
 });
