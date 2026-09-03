@@ -1,59 +1,117 @@
-/* ══════════════════════════════════════════════════
-   내진성능 PWA — Service Worker  v2.0
-   캐시 전략: Cache-First (오프라인 지원)
-══════════════════════════════════════════════════ */
-const CACHE_NAME = 'naejin-v2.1.0';
-const STATIC_ASSETS = [
+/* ═══════════════════════════════════════════════════
+   내진성능 — 내진설계 의무대상 판정기  MANMIN Ver-5.0
+   Service Worker — 오프라인 캐시 + 버전 업데이트
+   ARCHITECT KIM MANMIN
+
+   v5.0.0 (2026-09-03)
+   ───────────────────────────────────────────────────
+   [변경] 문서(HTML)까지 Cache-first 로 처리하던 v2.1 구조를 고쳤다.
+          그 상태에서는 index.html 을 수정·배포해도 캐시명을 올리기 전에는
+          사용자 화면에 영구히 반영되지 않는다(§11-2 ①②).
+   ⛔ navigate 분기를 제거하지 말 것. 제거하면 배포가 화면에 반영되지 않는다.
+   ⛔ 분기 순서는 폰트 → navigate → 정적 자산(§18-14). 정적 정규식에 html 을 넣지 않는다.
+   [변경] 캐시 삭제 범위를 자기 접두어(PREFIX)로 한정했다(§17-1).
+          caches.keys() 는 origin 전체를 반환해, 종전 `k !== CACHE_NAME` 필터는
+          같은 origin 의 나머지 38종 캐시를 전부 지웠다.
+   [변경] 종전 캐시명 'naejin-v2.1.0' 은 접두어가 같아 PREFIX 필터로 지워지지만,
+          ORPHAN 배열에도 명시해 둔다(§18-7).
+   ⛔ cache.addAll 은 원자적이다. 목록 중 하나라도 404 면 설치가 통째로 실패해
+      SW 가 아예 안 붙는다 → allSettled + 개별 catch 로 감쌌다(§11-3).
+   [삭제] header-logo.jpg(507KB) — v5.0 헤더는 심벌 로고를 두지 않는다(§3-1).
+═══════════════════════════════════════════════════ */
+const PREFIX = 'naejin-';
+const CACHE  = 'naejin-v5.0.0';   /* 2026-09-03 v5.0 디자인 통일 */
+const ORPHAN = ['naejin-v2.1.0'];
+const ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icons/icon-192x192.png',
   './icons/icon-512x512.png',
   './icons/apple-touch-icon.png',
-  './header-logo.jpg',
-  'https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap',
+  './icons/favicon-32x32.png',
+  './icons/favicon-16x16.png',
+  /* v5.0 — 로컬 폴백 폰트. CDN 차단·오프라인 시 한글 깨짐 방지 (§3-7) */
+  './assets/fonts/manmin-fonts.css',
+  './assets/fonts/NotoSansKR-var.woff2',
+  'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css',
+  'https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
 ];
 
-/* ── 설치: 정적 자산 캐시 ── */
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(STATIC_ASSETS).catch(err => {
-        console.warn('[SW] 일부 자산 캐시 실패 (외부 리소스 포함)', err);
-      });
-    }).then(() => self.skipWaiting())
+self.addEventListener('install', e => {
+  console.log('[SW] Install:', CACHE);
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.allSettled(
+        ASSETS.map(u => c.add(u).catch(err => console.warn('[SW] precache skip:', u, err)))
+      ))
+      .then(() => self.skipWaiting())
   );
 });
 
-/* ── 활성화: 구버전 캐시 삭제 ── */
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+self.addEventListener('activate', e => {
+  console.log('[SW] Activate:', CACHE);
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        /* ⛔ 자기 접두어(+ORPHAN)만 지운다. caches.keys() 는 origin 전체를 반환하므로
+           manminkim-eng.github.io 를 39종이 공유하는 이 구조에서 무조건 지우면
+           나머지 38종의 캐시를 통째로 날린다(§17-1 · §18-7). */
+        keys.filter(k => k !== CACHE && (k.indexOf(PREFIX) === 0 || ORPHAN.indexOf(k) !== -1))
+            .map(k => { console.log('[SW] 구버전 캐시 삭제:', k); return caches.delete(k); })
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
-/* ── Fetch: Cache-First → Network Fallback ── */
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
+  if (!e.request.url.startsWith('http')) return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
-          return response;
-        }
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => {
-        if (event.request.destination === 'document') {
-          return caches.match('./index.html');
-        }
-      });
+  /* ══ ⛔ 핵심 ══ HTML 문서는 Network-first.
+     네트워크가 되면 항상 최신을 보여주고, 끊겼을 때만 캐시로 떨어진다. */
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(
+      fetch(e.request)
+        .then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
+        })
+        .catch(() => caches.match(e.request).then(c => c || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  /* ══ 정적 자산: Cache-First + 백그라운드 갱신 ══ */
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) {
+        fetch(e.request).then(res => {
+          if (res && res.status === 200) {
+            caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+          }
+        }).catch(() => {});
+        return cached;
+      }
+      return fetch(e.request).then(res => {
+        if (!res || res.status !== 200 || res.type === 'opaque') return res;
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      }).catch(() => caches.match('./index.html'));
     })
   );
 });
+
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data && e.data.type === 'GET_VERSION' && e.ports[0]) {
+    e.ports[0].postMessage({ version: CACHE });
+  }
+});
+
+console.log('[SW] loaded:', CACHE);

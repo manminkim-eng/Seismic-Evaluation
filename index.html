@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="theme-color" content="#ef4444">
+<meta name="theme-color" content="#1e3a5f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="내진성능">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="내진성능">
-<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN-Ver.2.1">
-<title>내진성능 [MANMIN-Ver.2.1]</title>
+<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN Ver-5.0">
+<title>내진설계 의무대상 판정기 · MANMIN Ver-5.0</title>
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <!-- Favicon & Icons -->
@@ -19,11 +19,13 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/fonts/manmin-fonts.css"/><!-- v5.0 로컬 폴백 폰트 — CDN 차단·오프라인 대비. CDN link 보다 먼저 로드되어야 한다 (§3-7) -->
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ═══════════════════════════════════════════════════
-   MANMIN Design System Ver.2.0
+   MANMIN Design System Ver-5.0 (2026-09-03 v5.0 디자인 통일 — 헤더·탭·A4·JPG·FAB 규격 · 본문 다크 테마 유지)
    폰트: Pretendard (본문) + JetBrains Mono (코드·레이블)
    레이아웃: 데스크탑 2-col / 태블릿·모바일 1-col
 ═══════════════════════════════════════════════════ */
@@ -73,8 +75,8 @@
   --obd:    rgba(249,115,22,0.26);
 
   /* 폰트 */
-  --font: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-  --mono: 'JetBrains Mono', 'Source Code Pro', 'Noto Sans KR', monospace;
+  --font: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR Local', 'Noto Sans KR', 'Malgun Gothic', sans-serif;   /* v5.0 §3-7 로컬 폴백 */
+  --mono: 'JetBrains Mono', 'Source Code Pro', 'Noto Sans KR Local', 'Noto Sans KR', monospace;
 
   /* 반경 */
   --rsm: 6px;
@@ -121,32 +123,58 @@ body::before {
   position: relative; z-index: 1;
 }
 
-/* ════════════════ HEADER ════════════════ */
-.site-header {
-  width: 100%;
-  background: rgba(6,9,15,0.96);
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid var(--bd0);
-  position: sticky; top: 0; z-index: 300;
-}
-.hinner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 1rem 1.75rem;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-}
-.hlogo-wrap { display: flex; align-items: center; gap: 14px; min-width: 0; }
-.logo-img {
-  width: 100%; height: 100%; object-fit: cover;
-  border-radius: 10px;
+/* ════════════════ HEADER (v5.0 §3-1 · §3-2-1 · §18-1) ════════════════ */
+/* 헤더+탭바를 하나의 그라데이션 면으로 통합한다(§3-2-1). sticky 금지(§3-1).
+   v5.0-HDR (2026-09-02 확정 §18-1) — 줄높이 px 고정 · flex-start · 활성탭 단색+바 · 헤더 버튼 0개 */
+.hdr-shell{width:100%;background:linear-gradient(135deg,#0a1628 0%,#1e3a5f 50%,#2d5186 100%);
+  box-shadow:0 2px 20px rgba(30,58,95,.35);position:relative;z-index:2;}
+.app-header{background:transparent;color:#fff;}
+.header-inner{max-width:1300px;margin:0 auto;padding:20px 24px 16px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.brand-logo{display:flex;align-items:flex-start;min-width:0;}
+.brand-texts{min-width:0;}
+.hdr-eyebrow{font-size:11px;font-weight:600;opacity:.7;color:#fff;letter-spacing:.15em;line-height:16px;
+  text-transform:uppercase;margin-bottom:6px;font-family:var(--font);}
+.hdr-h1{font-size:26px;font-weight:900;color:#fff;letter-spacing:.04em;line-height:1.2;font-family:var(--font);}
+.hdr-sub{font-size:11px;margin-top:8px;color:#fff;opacity:.85;letter-spacing:.02em;line-height:17px;}
+.hdr-manmin{font-family:'Orbitron',sans-serif!important;font-weight:900;font-size:12px;
+  color:#fbbf24;letter-spacing:.08em;text-shadow:0 0 8px rgba(251,191,36,.6);
+  white-space:nowrap;display:inline-block;line-height:17px;vertical-align:top;}
+.hdr-right-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:6px;
+  padding-bottom:2px;flex-shrink:0;}
+.hdr-right{text-align:right;opacity:.75;color:#fff;font-size:11px;line-height:16px;}   /* 4줄 13/11/11/10 = 70px ≤ 78.2 */
+.hdr-right strong{font-size:13px;font-weight:700;line-height:19px;}
+.hdr-right em{font-size:10px;color:#fbbf24;font-style:normal;display:block;margin-top:4px;line-height:15px;}
+@media(max-width:768px){ .hdr-right{display:none;} .hdr-right-wrap{gap:0;} }
+@media(max-width:640px){
+  .hdr-h1{font-size:18px;}
+  /* eyebrow 표시 · sub 11px · 각인 12px 유지 · 좌우 14px · 유령 gap 제거 (01 마스터 실측 §18-4) */
+  .header-inner{padding:20px 14px 16px;row-gap:0;}
+  .hdr-right-wrap{padding-bottom:0;}
+  .tab-bar-inner{padding:4px 14px 0;}
 }
 
-.logo-mark {
-  width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0;
-  background: transparent;
-  border: 1px solid var(--rbd);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
+/* ════════════════ TAB BAR (v5.0 §3-2 · §18-1) ════════════════ */
+.tab-bar{background:transparent;overflow-x:auto;scrollbar-width:none;}   /* 배경은 .hdr-shell 이 담당 */
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-bar-inner{max-width:1300px;margin:0 auto;padding:4px 24px 0;display:flex;}
+.tb{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.75);font-family:var(--font);
+  padding:11px 16px;font-size:13px;font-weight:700;letter-spacing:.02em;line-height:19px;
+  border-bottom:3px solid transparent;   /* 11+19+11+3 = 44px */
+  transition:all .15s;display:flex;align-items:center;gap:5px;
+  white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
+.tb:hover{color:#fff;background:rgba(255,255,255,.09);}
+.tb.active{color:#fff;background:#1d4ed8;border-bottom-color:#fbbf24;}
+.tab-panel { display: none; width: 100%; }   /* ⛔ width:100% 필수 — .page-center 가 align-items:center 라 A4 탭이 794px 로 벌어져 375 에서 문서폭 611 (실측 2026-09-03) */
+.tab-panel.active { display: block; }
+/* v5.0-HDR — 요약 스트립 (헤더 3층) */
+.sum-bar-wrap{width:100%;background:#0f172a;padding:10px 0;}
+.sum-bar{max-width:1300px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;gap:14px;}
+.sum-item{font-size:12px;color:#94a3b8;line-height:18px;}
+.sum-item b{font-family:'JetBrains Mono','Noto Sans KR',monospace;font-weight:700;color:#fbbf24;}
+@media(max-width:640px){.sum-bar{padding:0 14px;}.sum-item{font-size:11px;}}
+
+/* ════════════════ PWA 배너 ════════════════ */
 #pwa-banner {
   position: fixed; bottom: 5rem; left: 50%;
   transform: translateX(-50%) translateY(120px);
@@ -181,7 +209,7 @@ body::before {
 #pwa-banner .pwa-btns { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
 .pwa-install-btn {
   padding: .52rem 1.1rem; border-radius: var(--rsm);
-  background: linear-gradient(135deg, var(--red), var(--red2));
+  background: linear-gradient(135deg, #1e3a5f, #2d5186);   /* v5.0 구조 토큰 */
   color: #fff; border: none; font-size: 13px; font-weight: 700;
   cursor: pointer; white-space: nowrap;
   font-family: var(--font); letter-spacing: -0.01em;
@@ -197,58 +225,6 @@ body::before {
 }
 .pwa-dismiss-btn:hover { color: var(--t1); border-color: var(--bd3); }
 
-.htext { min-width: 0; }
-.hseries {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .18em;
-  color: var(--red); text-transform: uppercase; margin-bottom: 3px;
-}
-.htitle {
-  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
-  font-weight: 700; color: var(--t0); line-height: 1.2;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  letter-spacing: -0.02em;
-}
-.htitle em { color: var(--red); font-style: normal; }
-.hsub-line {
-  font-size: 11px; color: var(--t3); font-family: var(--mono);
-  margin-top: 3px; letter-spacing: .04em; display: none;
-}
-@media (min-width: 600px) { .hsub-line { display: block; } }
-.hright { display: flex; align-items: center; gap: .625rem; flex-shrink: 0; }
-.hbadge {
-  font-family: var(--mono); font-size: 10.5px;
-  padding: 4px 10px; border-radius: var(--rsm); white-space: nowrap;
-}
-.hbadge-ver { border: 1px solid var(--bd2); color: var(--t2); display: none; }
-@media (min-width: 520px) { .hbadge-ver { display: inline-block; } }
-.hbadge-law { background: var(--rbg); border: 1px solid var(--rbd); color: var(--red); }
-
-/* ════════════════ TABBAR ════════════════ */
-.tab-bar {
-  width: 100%;
-  background: var(--bg1);
-  border-bottom: 1px solid var(--bd1);
-  position: sticky; top: 61px; z-index: 299;
-}
-.tab-inner {
-  max-width: 1280px; margin: 0 auto;
-  display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.tab-inner::-webkit-scrollbar { display: none; }
-.tab-btn {
-  padding: .75rem 1.25rem;
-  font-size: 14px;           /* ✦ 탭 폰트 크기 */
-  font-family: var(--font); font-weight: 500;
-  color: var(--t3); background: transparent; border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer; white-space: nowrap;
-  transition: color .15s, border-color .15s; flex-shrink: 0;
-}
-.tab-btn:hover { color: var(--t2); }
-.tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
 
 /* ════════════════ MAIN WRAP ════════════════ */
 .main-wrap {
@@ -270,22 +246,17 @@ body::before {
 
 /* ════════════════ ✦ 2-COLUMN JUDGE LAYOUT ════════════════ */
 /* 데스크탑(≥1024px): 좌 입력 / 우 결과 */
+/* v5.0 §3-9 — min-width:1024 를 기본값으로 올리고 좁은 화면만 max-width:1024 로 세로 전환 */
 .judge-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  grid-template-rows: auto;
+  gap: 1.5rem;
+  align-items: start;
 }
-@media (min-width: 1024px) {
-  .judge-layout {
-    display: grid;
-    grid-template-columns: 480px 1fr;
-    grid-template-rows: auto;
-    gap: 1.5rem;
-    align-items: start;
-  }
-  .judge-left  { grid-column: 1; }
-  .judge-right { grid-column: 2; }
-}
+.judge-left  { grid-column: 1; }
+.judge-right { grid-column: 2; }
+@media (max-width: 1024px) { .judge-layout { gap: 1.25rem; } .judge-left, .judge-right { grid-column: auto; } }
 
 /* 판정 버튼 - 왼쪽 열 하단 */
 .judge-btn {
@@ -344,7 +315,6 @@ body::before {
 
 /* ════════════════ FORM ════════════════ */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.125rem; }
-@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
 .form-group { display: flex; flex-direction: column; gap: .45rem; }
 .form-label {
@@ -618,215 +588,72 @@ input[type=range]::-moz-range-thumb {
 .tag-amber  { background: var(--abg); border: 1px solid var(--abd); color: var(--amber); }
 .tag-blue   { background: var(--bbg); border: 1px solid var(--bbd); color: var(--blue); }
 
-/* ════════════════ SHARE TAB ════════════════ */
-.share-empty {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  min-height: 340px; text-align: center; gap: 1rem;
+/* ════════════════ FAB · 모달 (v5.0 §18-11 — 09 제연 기준본 규격 · 색만 구조 토큰) ════════════════ */
+#fab-group{position:fixed;bottom:18px;right:18px;z-index:1200;display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.help-fab{
+  position:relative;z-index:auto;
+  background:linear-gradient(135deg,#0a1628 0%,#1e3a5f 55%,#2d5186 100%);
+  border:1px solid rgba(251,191,36,.3);
+  color:#fff;border-radius:16px;padding:11px 8px;width:72px;min-width:72px;cursor:pointer;font-family:var(--font);
+  box-shadow:0 4px 20px rgba(30,58,95,.65);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  line-height:1.3;transition:transform .15s,box-shadow .15s;
+  animation:fabIn .55s cubic-bezier(.34,1.56,.64,1) forwards;
 }
-.share-empty .ei { font-size: 52px; opacity: .3; }
-.share-empty p { color: var(--t3); font-size: 14px; line-height: 1.8; }
-.share-empty p strong { color: var(--t2); }
+@keyframes fabIn{from{opacity:0;transform:scale(.3) rotate(-20deg);}to{opacity:1;transform:scale(1) rotate(0);}}
+.help-fab:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,58,95,.65);}
+.help-fab:active{transform:translateY(0);}
+.help-fab .fab-icon{font-size:20px;line-height:1;}
+.help-fab .fab-lbl{font-size:10px;font-weight:800;letter-spacing:.04em;color:#fff;}
+.help-fab .fab-sub{font-size:9px;opacity:.8;}
 
-.mob-preview-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
-
-/* ── Galaxy S24 Ultra 실제 스펙 기반 프레임
-   물리 해상도: 1440×3120px | 비율 19.5:9 (~2.167:1)
-   CSS 뷰포트: 384×824px    | DPR: 3.75
-   디스플레이: 6.8인치 Dynamic LTPO AMOLED 2X
-   프레임 너비 360px → 높이 360×(3120/1440) = 780px (내부 스크린)
-   상단 펀치홀 노치 30px + 하단 홈바 24px 포함
-────────────────────────────────────────── */
-.mob-device {
-  width: 360px;                        /* CSS 뷰포트 384px 근사 (프레임 포함) */
-  background: var(--bg0);
-  border-radius: 46px;                 /* S24 Ultra 평면 엣지, 각진 라운드 */
-  border: 2px solid rgba(255,255,255,0.22);
-  box-shadow:
-    0 0 0 5px var(--bg2),
-    0 0 0 7px rgba(255,255,255,.07),
-    0 24px 64px rgba(0,0,0,.75);
-  overflow: hidden; position: relative; flex-shrink: 0;
+/* 통합 모달 — 중앙 다이얼로그 (§18-11 overlay·box·head·close·tab·body) · 라이트 배경 */
+.master-modal-ov{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);
+  display:none;align-items:center;justify-content:center;padding:16px;}
+.master-modal-ov.open{display:flex;animation:fadeIn .2s;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.master-modal-box{background:#fff;border-radius:20px;width:100%;max-width:800px;color:#111827;
+  max-height:calc(100vh - 32px);display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.4);animation:slideUp .25s cubic-bezier(.34,1.5,.64,1);}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:none;opacity:1;}}
+.master-modal-hd{background:linear-gradient(135deg,#0a1628,#1e3a5f,#2d5186);color:#fff;padding:18px 22px 0;flex-shrink:0;}
+.master-modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px;gap:10px;}
+.master-modal-tit{font-size:14px;font-weight:900;color:#fff;letter-spacing:.04em;margin-bottom:3px;}
+.master-modal-sub{font-size:10px;color:#fbbf24;font-weight:500;margin-top:1px;}
+.master-modal-cls{width:34px;height:34px;border:none;background:rgba(255,255,255,.13);color:#fff;border-radius:50%;
+  cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.master-modal-cls:hover{background:rgba(255,255,255,.26);}
+.master-modal-tabs{display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex-shrink:0;}
+.master-modal-tabs::-webkit-scrollbar{display:none;}
+.mm-mtab{padding:9px 18px;border:none;background:transparent;color:rgba(255,255,255,.6);font-size:12px;font-weight:700;
+  font-family:var(--font);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all .15s;flex-shrink:0;}
+.mm-mtab.active{color:#fff;border-bottom-color:#fbbf24;}
+.mm-mtab:hover:not(.active){color:rgba(255,255,255,.88);}
+.master-modal-body{padding:20px 22px 26px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;}
+.master-modal-body::-webkit-scrollbar{width:5px;}
+.master-modal-body::-webkit-scrollbar-thumb{background:#fbbf24;border-radius:3px;}
+.mm-mpanel{display:none;} .mm-mpanel.active{display:block;}
+/* ⛔ 다크 테마 도구는 모달을 흰 배경으로 바꾸면 본문 글자가 사라진다(§18-11) → 모달 본문 클래스 라이트 재지정 */
+.master-modal-body .help-sec-title{color:#1e3a5f;}
+.master-modal-body .help-sec-title::before{background:#1e3a5f;}
+.master-modal-body .help-step{background:#f8fafc;border-color:#e2e8f0;}
+.master-modal-body .hstep-n{background:#dbeafe;border-color:#bfdbfe;color:#1e3a5f;}
+.master-modal-body .hstep-t{color:#475569;}
+.master-modal-body .hstep-t strong{color:#0f172a;}
+.master-modal-body .law-mini-item{background:#f8fafc;border-color:#e2e8f0;}
+.master-modal-body .law-mini-badge{background:#dbeafe;border-color:#bfdbfe;color:#1e3a5f;}
+.master-modal-body .law-mini-t{color:#475569;}
+.master-modal-body .law-mini-t strong{color:#0f172a;}
+.master-modal-body .hstep-n.warn{background:#fef3c7;border-color:#fde68a;color:#b45309;}
+@media(max-width:540px){
+  .master-modal-ov{padding:0;align-items:flex-end;}
+  .master-modal-box{border-radius:20px 20px 0 0;max-height:92vh;}
+  .master-modal-hd{padding:14px 16px 0;}
+  .master-modal-body{padding:16px 16px 36px;}
+  .mm-mtab{padding:9px 13px;font-size:11px;}
+  #fab-group{bottom:16px;right:12px;}
+  .help-fab{padding:10px 8px;}
 }
-/* S24 Ultra 특징: 카메라 펀치홀 중앙 원형 */
-.mob-device-notch {
-  width: 100%; height: 30px; background: var(--bg0);
-  display: flex; align-items: center; justify-content: center;
-  position: relative; z-index: 2;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.mob-notch-pill {
-  /* S24 Ultra: 펀치홀 카메라 — 원형 */
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--bg4); border: 1px solid var(--bd2);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
-}
-/* 스크린 영역: 360px 너비 × 19.5:9 비율 = 780px
-   max-height로 실제 뷰에서 스크롤 가능하게 */
-.mob-device-screen {
-  width: 100%;
-  height: 780px;                      /* 360 × (3120/1440) ≈ 780px */
-  max-height: 65vh;                   /* 작은 화면에서 넘치지 않게 */
-  overflow-y: auto; overflow-x: hidden;
-  scrollbar-width: thin; scrollbar-color: var(--bd2) transparent;
-  background: var(--bg0);
-}
-.mob-device-screen::-webkit-scrollbar { width: 3px; }
-.mob-device-screen::-webkit-scrollbar-thumb { background: var(--bd2); border-radius: 2px; }
-.mob-screen-inner { padding: 14px 13px; min-height: 100%; }
-/* S24 Ultra: 네비게이션 바 (제스처) */
-.mob-device-home {
-  width: 100%; height: 24px; background: var(--bg0);
-  display: flex; align-items: center; justify-content: center;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
-.mob-home-bar { width: 80px; height: 3px; background: var(--bd2); border-radius: 2px; }
-
-/* ── S24 Ultra 화면 좌우 약간 둥근 표시 ── */
-.mob-device::before {
-  content: '';
-  position: absolute; top: 30px; bottom: 24px;
-  left: 0; width: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.04) 80%, transparent);
-  z-index: 10; pointer-events: none;
-}
-.mob-device::after {
-  content: '';
-  position: absolute; top: 30px; bottom: 24px;
-  right: 0; width: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.04) 80%, transparent);
-  z-index: 10; pointer-events: none;
-}
-
-/* ── 사양 표시 배지 ── */
-.mob-spec-badge {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  flex-wrap: wrap;
-}
-.mob-spec-chip {
-  font-family: var(--mono); font-size: 10px;
-  padding: 3px 8px; border-radius: 4px;
-  background: var(--bg3); border: 1px solid var(--bd1);
-  color: var(--t3);
-}
-.mob-spec-chip.accent { color: var(--blue); border-color: var(--bbd); background: var(--bbg); }
-
-/* ── 컴팩트 공유 버튼 — 좌우 2열 배치 ── */
-.share-actions-row {
-  width: 360px;                       /* 디바이스 너비와 동일 */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .625rem;
-}
-.share-btn-compact {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: .5rem;
-  padding: .875rem .75rem;
-  border-radius: var(--rmd);
-  border: 1px solid var(--bd1); background: var(--bg2);
-  color: var(--t1); font-family: var(--font);
-  cursor: pointer; transition: all .15s;
-}
-.share-btn-compact:hover { border-color: var(--bd2); background: var(--bg3); }
-.share-btn-compact.primary {
-  background: linear-gradient(135deg, rgba(240,64,64,.15), rgba(240,64,64,.07));
-  border-color: var(--rbd);
-}
-.share-btn-compact.primary:hover {
-  background: linear-gradient(135deg, rgba(240,64,64,.24), rgba(240,64,64,.14));
-}
-.sbc-icon { font-size: 22px; line-height: 1; }
-.sbc-label {
-  font-size: 13px; font-weight: 700; color: var(--t0);
-  letter-spacing: -0.01em; white-space: nowrap;
-}
-
-@media (max-width: 400px) {
-  .mob-device { width: 100%; }
-  .share-actions-row { width: 100%; }
-}
-
-/* ════════════════ FAB ════════════════ */
-.fab-wrap {
-  position: fixed; bottom: 1.875rem; right: 1.875rem;
-  z-index: 500;
-  display: flex; flex-direction: column; align-items: flex-end; gap: .5rem;
-}
-.fab-tip {
-  background: var(--bg3); border: 1px solid var(--bd2);
-  color: var(--t0); font-size: 11.5px; font-family: var(--mono);
-  padding: .35rem .8rem; border-radius: var(--rsm);
-  opacity: 0; transform: translateX(8px);
-  transition: all .18s; pointer-events: none; white-space: nowrap;
-  box-shadow: var(--sh2);
-}
-.fab-wrap:hover .fab-tip { opacity: 1; transform: translateX(0); }
-.fab-main {
-  position: relative;
-  width: 54px; height: 54px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--red), var(--red2));
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 23px; color: #fff;
-  box-shadow: 0 4px 20px rgba(240,64,64,.42), var(--sh3);
-  transition: all .2s;
-}
-.fab-main:hover { transform: scale(1.07); box-shadow: 0 6px 28px rgba(240,64,64,.56); }
-.fab-main:active { transform: scale(.95); }
-/* 삼각자 뾰족이 */
-.fab-main::after {
-  content: ''; position: absolute; right: -3px; bottom: -3px;
-  width: 0; height: 0;
-  border-left: 12px solid transparent;
-  border-bottom: 12px solid var(--bg0);
-}
-
-/* ════════════════ ✦ CENTER MODAL ════════════════ */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 600;
-  background: rgba(0,0,0,.72);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;          /* ✦ 세로 중앙 */
-  justify-content: center;      /* ✦ 가로 중앙 */
-  padding: 1.5rem;
-  opacity: 0; pointer-events: none;
-  transition: opacity .25s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-
-.modal-box {
-  width: 100%; max-width: 560px;
-  background: var(--bg1);
-  border-radius: var(--rxl);          /* ✦ 전체 라운드 */
-  border: 1px solid var(--bd2);
-  padding: 2rem 2rem 2.5rem;
-  max-height: 88vh; overflow-y: auto;
-  transform: scale(.96) translateY(8px);
-  transition: transform .3s cubic-bezier(.16,1,.3,1);
-  box-shadow: var(--sh4);
-}
-.modal-overlay.open .modal-box { transform: scale(1) translateY(0); }
-
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1.5rem; padding-bottom: 1.125rem;
-  border-bottom: 1px solid var(--bd0);
-}
-.modal-title {
-  font-size: 17px; font-weight: 700; color: var(--t0);
-  display: flex; align-items: center; gap: 8px;
-  letter-spacing: -0.02em;
-}
-.modal-close {
-  width: 32px; height: 32px; border-radius: 9px;
-  background: var(--bg3); border: 1px solid var(--bd1);
-  color: var(--t3); font-size: 16px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .15s;
-}
-.modal-close:hover { border-color: var(--bd2); color: var(--t1); }
 
 /* Help 섹션 */
 .help-sec { margin-bottom: 1.625rem; }
@@ -882,35 +709,153 @@ input[type=range]::-moz-range-thumb {
 }
 .toast.show { opacity: 1; }
 
-/* ════════════════ RESPONSIVE ════════════════ */
-@media (max-width: 1023px) {
-  .judge-layout { flex-direction: column; }
+/* ════════════════ RESPONSIVE (v5.0 §3-9 — 1024 · 768 · 640 · 480 + 기능 쿼리) ════════════════ */
+@media (max-width: 1024px) {
+  .judge-layout { display: flex; flex-direction: column; }
   .result-placeholder { min-height: 160px; display: none; } /* 모바일에선 숨김 */
 }
 @media (max-width: 768px) {
-  .hinner { padding: .875rem 1.125rem; }
   .main-wrap { padding: 1.375rem 1.125rem 5rem; }
   .card { padding: 1.25rem; }
-  .tab-btn { padding: .7rem .9rem; font-size: 13px; }
   .grade-row { grid-template-columns: 1fr 1fr; }
-  .modal-box { padding: 1.5rem 1.375rem 2rem; max-height: 92vh; }
-  .modal-overlay { padding: 1rem; }
-  .fab-wrap { bottom: 1.25rem; right: 1.25rem; }
-  .fab-main { width: 50px; height: 50px; font-size: 21px; }
-  .mob-device { max-width: 100%; }
-  .share-actions { max-width: 100%; }
   body { font-size: 15px; }
+}
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .form-grid { grid-template-columns: 1fr; }
   .std-table { font-size: 12.5px; }
   .std-table th, .std-table td { padding: .6rem .7rem; }
-  .htitle { font-size: .95rem; }
-  body { font-size: 15px; }
 }
-@media (min-width: 1280px) {
-  .tab-btn { padding: .8rem 1.5rem; font-size: 14.5px; }
-  .main-wrap { padding: 2.5rem 1.75rem 6rem; }
+/* 기능 쿼리 — iOS 자동확대 방지 · 터치 타깃 (§3-11) */
+@media screen and (max-width: 768px) {
+  .form-input, .form-select { font-size: 16px; }
+}
+@media (hover: none) and (pointer: coarse) {
+  .form-input, .form-select { min-height: 40px; }
+  .judge-btn, .mm-btn, .btn-export { min-height: 38px; }
+}
+
+/* ════════════════ A4 미리보기 (v5.0 §3-3 · §3-4 · §3-4-1 · §17-2) ════════════════ */
+.a4-export-bar{background:var(--bg1);border:1px solid var(--bd1);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.bar-lbl{font-size:11px;font-weight:700;color:var(--t2);}
+.a4-proj-inputs{display:flex;gap:8px;flex-wrap:wrap;flex:1 1 320px;}
+.a4-proj-inputs .form-input{padding:.5rem .75rem;font-size:13px;flex:1 1 140px;min-width:0;}
+/* 출력 버튼 규격 (§3-6). 진입점은 이 출력바 한 곳뿐이다(모바일 미리보기 탭·공유 버튼 제거). */
+.btn-export,.mm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 16px;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer;
+  border:none;font-family:inherit;white-space:nowrap;line-height:1.2;min-height:38px;
+  transition:background .15s,box-shadow .15s,transform .1s;}
+.mm-btn-print{background:#1e3a5f;color:#fff;}
+.mm-btn-print:hover{background:#2d5186;}
+.mm-btn-jpg{background:#7e22ce;color:#fff;}
+.mm-btn-jpg:hover{background:#6b21a8;}
+/* ⛔ width:100% 는 출력바 안으로 한정한다(§16-5). 전역이면 저장 시트 닫기 버튼까지 100% 를 먹는다. */
+@media(max-width:480px){ .a4-export-bar{flex-direction:column;align-items:stretch;}
+  .a4-export-bar .btn-export,.a4-export-bar .mm-btn{width:100%;} }
+.a4-wrap{background:#64748b;padding:20px 20px 32px;min-height:300px;display:flex;justify-content:center;align-items:flex-start;border-radius:10px;overflow:hidden;}
+@media(max-width:640px){.a4-wrap{padding:8px 8px 24px;}}
+.a4-scale-wrap{display:block;transform-origin:top center;flex-shrink:0;}
+/* ⛔ .a4-page 는 언제나 794px 고정(§17-2). 좁은 화면은 .a4-scale-wrap 의 transform:scale() 이 담당한다.
+   화면 여백 = @page 여백 (14/12/22/14mm → 53/45/83/53px) → 내용 영역 696×986px = 184×261mm */
+.a4-page{background:#fff;width:794px;min-height:1122px;margin:0;padding:53px 45px 83px 53px;box-shadow:0 8px 40px rgba(0,0,0,.28);font-size:11px;color:#111827;display:block;position:relative;line-height:1.5;letter-spacing:0;
+  font-family:'Noto Sans KR Local','Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
+.a4-page .mono,.a4-page code{font-family:'JetBrains Mono','Noto Sans KR Local',monospace;}
+.a4-tit{font-size:22px;font-weight:900;color:#0a1628;text-align:center;border-bottom:2.5px solid #1e3a5f;padding-bottom:9px;margin-bottom:12px;letter-spacing:-.02em;}
+.a4-head2{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px;}
+.a4-head2 .a4-proj{font-size:12px;font-weight:800;color:#111827;}
+.a4-head2 .a4-meta{font-size:9px;color:#64748b;text-align:right;line-height:1.6;font-weight:600;}
+.a4-sub{font-size:13px;font-weight:800;color:#1e3a5f;margin-bottom:4px;margin-top:9px;padding-left:7px;border-left:3px solid #1e3a5f;text-align:left;}
+.a4-tbl,.a4-meta-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:7px;}
+.a4-tbl th,.a4-meta-table th{background:#dbeafe;padding:5px 6px;text-align:center;font-weight:700;font-size:11px;color:#1e3a5f;border:1px solid #bfdbfe;}
+.a4-tbl td,.a4-meta-table td{padding:5px 7px;text-align:left;border:1px solid #e0e7ff;font-weight:600;color:#111827;vertical-align:top;}
+.a4-tbl td.c{text-align:center;}
+.a4-meta-table td.k{background:#eff6ff;font-weight:800;color:#1e3a5f;width:110px;white-space:nowrap;}
+.a4-tbl tfoot td{background:#dbeafe!important;font-weight:900;}
+/* 판정 의미색 — 본문과 동일 (빨강 의무 · 녹색 면제) */
+.a4-verdict{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;margin-bottom:8px;border:1.5px solid;}
+.a4-verdict.mandatory{background:#fef2f2;border-color:#fca5a5;color:#b91c1c;}
+.a4-verdict.exempt{background:#f0fdf4;border-color:#86efac;color:#15803d;}
+.a4-verdict .v-main{font-size:16px;font-weight:900;letter-spacing:-.01em;}
+.a4-verdict .v-sub{font-size:10px;font-weight:600;opacity:.85;}
+.a4-tag{display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:800;white-space:nowrap;}
+.a4-tag.fail{background:#fee2e2;color:#b91c1c;}
+.a4-tag.pass{background:#dcfce7;color:#15803d;}
+.a4-tag.warn{background:#fef3c7;color:#b45309;}
+.a4-tag.info{background:#dbeafe;color:#1e3a5f;}
+.a4-notice{font-size:10.5px;line-height:1.65;color:#374151;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px;margin-bottom:7px;}
+.a4-notice strong{color:#1e3a5f;}
+/* 푸터 3분할 (§3-4). 인쇄에서는 flex 가 어긋나므로 table-cell 33.33% 로 고정한다. */
+.a4-footer{border-top:1px solid #e0e7ff;padding-top:8px;font-size:9px;color:#9ca3af;
+  margin-top:16px;line-height:1.6;font-weight:600;display:table;width:100%;table-layout:fixed;}
+.a4-footer>span{display:table-cell;width:33.33%;vertical-align:top;}
+.a4-footer>span:nth-child(2){text-align:center;}
+.a4-footer>span:nth-child(3){text-align:right;}
+/* JPG 저장 시트 (§3-5 · §3-5-3) — 1매여도 뜬다. */
+#mm-save-ov{display:none;position:fixed;inset:0;z-index:9999;background:rgba(12,26,46,.82);
+  align-items:center;justify-content:center;padding:18px;}
+#mm-save-ov.show{display:flex;}
+.mm-sheet{background:#fff;border:1px solid #dbeafe;border-radius:14px;width:100%;max-width:720px;
+  max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.45);color:#111827;}
+.mm-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px;border-bottom:1px solid #e2e8f0;}
+.mm-sheet-title{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:900;
+  letter-spacing:.12em;color:#1e3a5f;text-transform:uppercase;}
+.mm-sheet-note{font-size:11px;color:#64748b;margin-top:4px;}
+.mm-sheet-body{padding:16px 18px;overflow-y:auto;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.mm-shot{background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:9px;
+  display:flex;flex-direction:column;gap:8px;}
+.mm-shot img{width:100%;height:auto;border-radius:4px;background:#fff;display:block;
+  border:1px solid #e2e8f0;}
+.mm-shot-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 10px;
+  border-radius:7px;border:1px solid #c4b5fd;background:none;color:#7e22ce;
+  font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s;}
+.mm-shot-btn:hover{background:#f5f3ff;}
+.mm-sheet-foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;
+  padding:13px 18px;border-top:1px solid #e2e8f0;}
+.mm-btn-close{background:#e2e8f0;color:#334155;}
+.mm-sheet-head > div:first-child{flex:1 1 auto;min-width:0;}
+.mm-sheet-head .btn-export{flex:0 0 auto;}
+@media(max-width:480px){
+  .mm-sheet-body{grid-template-columns:1fr;padding:12px;}
+  .mm-sheet-body.multi{grid-template-columns:repeat(2,1fr);}
+  .mm-sheet-foot{justify-content:stretch;} .mm-sheet-foot .btn-export{flex:1;}
+  .mm-sheet-head{padding:12px 14px;gap:8px;}
+  .mm-sheet-title{font-size:10px;}
+  .mm-sheet-note{font-size:10px;line-height:1.45;}
+  .mm-sheet-head .btn-export{padding:6px 9px!important;min-height:28px!important;
+    font-size:10.5px!important;align-self:flex-start;}
+  .mm-shot{padding:7px;} .mm-shot-btn{padding:6px;font-size:11px;}
+  .mm-shot img{max-height:46vh;object-fit:contain;}
+}
+/* #dev-stamp 없음 — 인쇄 PDF 하단 각인은 전 종 적용하지 않는다 (MIN 2026-09-03 · 지시서 §20). 버전은 A4 푸터 [MANMIN-Ver5.0] 이 담당 */
+
+/* ════════════════ 인쇄 전용 (v5.0 §3-3 · §16-9 · §16-13 · §16-15 · §17-3) ════════════════ */
+@media print{
+  html,body{background:#fff!important;margin:0;padding:0;display:block!important;min-height:0!important;}
+  body::before{display:none!important;}
+  .hdr-shell,.app-header,.tab-bar,.sum-bar-wrap,.tab-panel:not(#tab-print),.a4-export-bar,#tab-print .sec-title,
+  .master-modal-ov,#fab-group,.toast,#pwa-banner,#mm-save-ov,.no-print{display:none!important;}
+  #tab-print{display:block!important;}
+  /* ⛔ 컨테이너 패딩이 남으면 A4 가 아래로 밀린다(§16-15). A4 패널이 .page-center > .main-wrap 안이라 패딩만 해제한다. */
+  .page-center{display:block!important;width:auto!important;}
+  .main-wrap{padding:0!important;margin:0!important;max-width:none!important;width:auto!important;}
+  .a4-wrap{background:#fff!important;padding:0!important;min-height:unset!important;border-radius:0!important;display:block!important;overflow:visible!important;}
+  .a4-scale-wrap{transform:none!important;margin:0!important;height:auto!important;width:auto!important;max-width:none!important;}
+  /* 여백은 @page 하나로만 일원화한다(§3-3). .a4-page 자체 패딩은 인쇄 시 해제. */
+  .a4-page{width:100%!important;max-width:100%!important;box-shadow:none!important;min-height:unset!important;
+    padding:0!important;margin:0!important;font-size:9.5px!important;}
+  /* 표는 통째로 한 장에 둔다(§16-13). 한 장보다 긴 표(.long)만 분할 허용 + thead 반복. */
+  .a4-tbl,.a4-meta-table{break-inside:avoid;page-break-inside:avoid;}
+  .a4-tbl.long,.a4-meta-table.long{break-inside:auto!important;page-break-inside:auto!important;}
+  .a4-tbl thead,.a4-meta-table thead{display:table-header-group;}
+  .a4-tbl tr,.a4-meta-table tr{page-break-inside:avoid;page-break-after:auto;}
+  .a4-sub{page-break-after:avoid;page-break-before:auto;}
+  .a4-sub + table,.a4-sub + .a4-verdict{break-before:avoid;page-break-before:avoid;}
+  .a4-verdict,.a4-notice{break-inside:avoid;page-break-inside:avoid;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .a4-tag,.a4-tbl th,.a4-meta-table th,.a4-meta-table td.k{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  @page{size:A4 portrait;margin:14mm 12mm 22mm 14mm;}
 }
 </style>
 </head>
@@ -918,33 +863,51 @@ input[type=range]::-moz-range-thumb {
 <div class="page-center">
 
 <!-- ════════ HEADER ════════ -->
-<header class="site-header">
-  <div class="hinner">
-    <div class="hlogo-wrap">
-      <div class="logo-mark"><img src="header-logo.jpg" alt="내진성능 로고" class="logo-img"></div>
-      <div class="htext">
-        <div class="hseries">내진설계판정기 · MANMIN-Ver.2.1</div>
-        <div class="htitle">내진설계 <em>의무대상</em> 판정기</div>
-        <div class="hsub-line">건축법 §48 · 시행령 §32 · KDS 41 17 00 : 2022</div>
+<!-- v5.0 : 헤더+탭바 그라데이션 1면 통합 래퍼 (§3-2-1) · 3단 hdr-* (§3-1 · §18-1) -->
+<div class="hdr-shell no-print">
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand-logo">
+      <div class="brand-texts">
+        <!-- v5.0-HDR — 375px 1줄 유지(≤40자) -->
+        <div class="hdr-eyebrow">Seismic Design Check · 건축법 제48조</div>
+        <h1 class="hdr-h1">내진설계 의무대상 판정기</h1>
+        <div class="hdr-sub">
+          건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022 — 의무 여부 · 내진등급 · 판정 근거 자동 산출
+          <span class="hdr-manmin">MANMIN · Ver-5.0</span>
+        </div>
       </div>
     </div>
-    <div class="hright">
-      <div class="hbadge hbadge-ver">Ver 2.1.0</div>
-      <div class="hbadge hbadge-law">KDS 41 17 00</div>
+    <div class="hdr-right-wrap">
+      <!-- v5.0-HDR — 마스터 4줄(13/11/11/10) · LawMCP 2026-09-03 확인(시행령 제32조 현행 2026-07-28 시행) -->
+      <div class="hdr-right"><strong>건축법 제48조 · 시행령 제32조</strong><br/>구조내력 등 · 구조 안전의 확인<br/>KDS 41 17 00 : 2022 건축물 내진설계기준<br/><em>[시행령 시행 2026. 7. 28.]</em></div>
+      <!-- v5.0 : 헤더 버튼 없음. 설치는 PWA 배너가, 초기화는 우측 하단 FAB 이 담당한다(§3-1 · §18-1). -->
     </div>
   </div>
 </header>
 
 <!-- ════════ TABBAR ════════ -->
 <nav class="tab-bar">
-  <div class="tab-inner">
-    <button class="tab-btn active"  onclick="goTab('judge',this)">⚡ 판정</button>
-    <button class="tab-btn"         onclick="goTab('share',this)">📱 미리보기·공유</button>
-    <button class="tab-btn"         onclick="goTab('law',this)">📋 법조문</button>
-    <button class="tab-btn"         onclick="goTab('history',this)">📅 연혁</button>
-    <button class="tab-btn"         onclick="goTab('guide',this)">📖 기준표</button>
+  <div class="tab-bar-inner">
+    <button class="tb active" onclick="goTab('judge',this)">⚡ 판정</button>
+    <button class="tb" onclick="goTab('print',this)">📄 A4 결과서</button>
+    <button class="tb" onclick="goTab('law',this)">📋 법조문</button>
+    <button class="tb" onclick="goTab('history',this)">📅 연혁</button>
+    <button class="tb" onclick="goTab('guide',this)">📖 기준표</button>
   </div>
 </nav>
+</div><!-- /.hdr-shell -->
+<!-- v5.0-HDR : 요약 스트립 (헤더 3층) — 값은 문서 끝 스크립트가 G 에서 읽어 채운다 -->
+<div class="sum-bar-wrap no-print">
+  <div class="sum-bar">
+    <span class="sum-item">📅 준공: <b id="sb-year">—</b></span>
+    <span class="sum-item">🏗️ 구조: <b id="sb-struct">—</b></span>
+    <span class="sum-item">🏢 층수: <b id="sb-floors">—</b></span>
+    <span class="sum-item">📐 연면적: <b id="sb-area">—</b></span>
+    <span class="sum-item">⚡ 판정: <b id="sb-verdict">—</b></span>
+    <span class="sum-item">🎯 등급: <b id="sb-grade">—</b></span>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════
      TAB 1 : 판정 — 데스크탑 2-col 레이아웃
@@ -1085,7 +1048,7 @@ input[type=range]::-moz-range-thumb {
         <div class="basis-list"     id="basisList"></div>
         <div class="notice-box"     id="noticeBox"></div>
         <div class="result-actions">
-          <button class="action-btn primary" onclick="openShareTab()">📱 모바일 미리보기 · 공유하기</button>
+          <button class="action-btn primary" onclick="openShareTab()">📄 A4 판정 결과서 · 인쇄 · JPG</button>
         </div>
       </div>
 
@@ -1095,57 +1058,70 @@ input[type=range]::-moz-range-thumb {
 </div>
 </div><!-- /tab-judge -->
 
-<!-- ══ TAB: 미리보기·공유 ══ -->
-<div class="tab-panel" id="tab-share">
+<!-- ══ TAB: A4 결과서 (v5.0 §3-4 서식 · 출력 진입점 1곳 · 화면 = 인쇄 = JPG 동일 DOM §2②) ══ -->
+<div class="tab-panel" id="tab-print">
 <div class="main-wrap">
-  <div class="sec-title">Galaxy S24 Ultra 미리보기 · 공유</div>
-
-  <div id="shareEmpty" class="card">
-    <div class="share-empty">
-      <div class="ei">📱</div>
-      <p>
-        <strong>판정 탭에서 먼저 판정을 실행하세요.</strong><br><br>
-        판정 완료 후 이 탭에서<br>
-        <strong>Galaxy S24 Ultra</strong> 규격 (6.8" · 1440×3120 · DPR 3.75)<br>
-        모바일 미리보기와 JPG 저장 · 공유하기를 이용할 수 있습니다.
-      </p>
+  <div class="sec-title">A4 판정 결과서</div>
+  <div class="a4-export-bar no-print">
+    <span class="bar-lbl">📄 A4 출력 :</span>
+    <div class="a4-proj-inputs">
+      <input type="text" class="form-input" id="a4ProjName" placeholder="공사명 (예: ○○빌딩 신축공사)" oninput="renderA4()">
+      <input type="text" class="form-input" id="a4Author" placeholder="작성자" oninput="renderA4()">
     </div>
+    <button class="mm-btn mm-btn-print" onclick="printA4()">🖨️ 인쇄 / PDF 저장</button>
+    <button class="mm-btn mm-btn-jpg" id="btn-jpg" onclick="exportA4Jpg()">🖼️ JPG 저장</button>
   </div>
-
-  <div id="shareReady" style="display:none">
-    <div class="mob-preview-wrap">
-
-      <!-- S24 Ultra 스펙 배지 -->
-      <div class="mob-spec-badge">
-        <span class="mob-spec-chip accent">Galaxy S24 Ultra</span>
-        <span class="mob-spec-chip">6.8" · 1440×3120</span>
-        <span class="mob-spec-chip">DPR 3.75 · 19.5:9</span>
-        <span class="mob-spec-chip">CSS 384×824px</span>
-      </div>
-
-      <!-- 디바이스 프레임 -->
-      <div class="mob-device" id="mobDevice">
-        <div class="mob-device-notch"><div class="mob-notch-pill"></div></div>
-        <div class="mob-device-screen"><div class="mob-screen-inner" id="mobScreenInner"></div></div>
-        <div class="mob-device-home"><div class="mob-home-bar"></div></div>
-      </div>
-
-      <!-- 컴팩트 공유 버튼 2열 -->
-      <div class="share-actions-row">
-        <button class="share-btn-compact primary" onclick="downloadJPG()">
-          <span class="sbc-icon">💾</span>
-          <span class="sbc-label">JPG 저장</span>
-        </button>
-        <button class="share-btn-compact" onclick="nativeShare()">
-          <span class="sbc-icon">🔗</span>
-          <span class="sbc-label">공유하기</span>
-        </button>
-      </div>
-
+  <div class="a4-wrap" id="a4Wrap">
+  <div class="a4-scale-wrap" id="a4ScaleWrap">
+  <div class="a4-page" id="a4Page">
+    <div class="a4-tit">내진설계 의무대상 판정 결과서</div>
+    <div class="a4-head2">
+      <div class="a4-proj">공사명 : <span id="a4-projName">—</span></div>
+      <div class="a4-meta">근거 : 건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022<br/>작성일 : <span id="a4-projDate">—</span><br/>작성자 : <span id="a4-projAuthor">—</span></div>
     </div>
-  </div>
+
+    <div class="a4-sub">1. 입력 정보</div>
+    <table class="a4-meta-table" id="a4-input">
+      <tr><td class="k">준공연도</td><td id="a4-in-year">—</td><td class="k">구조형식</td><td id="a4-in-struct">—</td></tr>
+      <tr><td class="k">지상 층수</td><td id="a4-in-floors">—</td><td class="k">연면적</td><td id="a4-in-area">—</td></tr>
+      <tr><td class="k">건물 용도</td><td id="a4-in-use" colspan="3">—</td></tr>
+    </table>
+
+    <div class="a4-sub">2. 판정 결과</div>
+    <div class="a4-verdict" id="a4-verdict"><div><div class="v-main">판정 탭에서 먼저 판정을 실행하세요.</div></div></div>
+    <table class="a4-meta-table" id="a4-grade">
+      <tr><td class="k">적용 기준 시점</td><td id="a4-g-era">—</td></tr>
+      <tr><td class="k">내진등급</td><td id="a4-g-grade">—</td></tr>
+      <tr><td class="k">성능목표</td><td id="a4-g-desc">—</td></tr>
+    </table>
+
+    <div class="a4-sub">3. 판정 근거</div>
+    <table class="a4-tbl" id="a4-basis">
+      <thead><tr><th style="width:26%">근거 조항</th><th>검토 내용</th><th style="width:14%">판정</th></tr></thead>
+      <tbody id="a4-basis-body"><tr><td colspan="3" style="color:#94a3b8;text-align:center;">—</td></tr></tbody>
+    </table>
+
+    <div class="a4-sub">4. 안내 사항</div>
+    <div class="a4-notice" id="a4-notice">—</div>
+
+    <div class="a4-sub">5. 적용 기준</div>
+    <table class="a4-meta-table">
+      <tr><td class="k">건축법 제48조</td><td>구조내력 등 — 제2항 : 건축물을 건축하거나 대수선하는 경우 대통령령으로 정하는 기준에 따라 내진설계 [법률 시행 2026. 2. 27.]</td></tr>
+      <tr><td class="k">시행령 제32조</td><td>구조 안전의 확인 — 제2항 각 호 : 2층(목구조 3층) 이상 · 연면적 200㎡(목구조 500㎡) 이상 · 높이 13m · 처마높이 9m · 경간 10m 이상 · 중요도 높은 건축물 등 [시행 2026. 7. 28.]</td></tr>
+      <tr><td class="k">KDS 41 17 00</td><td>건축물 내진설계기준 : 2022 — 내진특등급 · 내진Ⅰ등급 · 내진Ⅱ등급 (재현주기 2,400 · 1,000 · 500년)</td></tr>
+      <tr><td class="k">판정 범위</td><td>본 결과서는 <b>층수 · 연면적 · 용도</b> 기준에 한한다. 높이 13m · 처마높이 9m · 경간 10m 기준은 별도 확인이 필요하다.</td></tr>
+    </table>
+
+    <div class="a4-footer">
+      <span>내진설계 의무대상 판정기 [MANMIN-Ver5.0]</span>
+      <span>건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022</span>
+      <span>작성일: <span id="a4-foot-date">—</span></span>
+    </div>
+  </div><!-- /a4-page -->
+  </div><!-- /a4-scale-wrap -->
+  </div><!-- /a4-wrap -->
 </div>
-</div>
+</div><!-- /tab-print -->
 
 <!-- ══ TAB: 법조문 ══ -->
 <div class="tab-panel" id="tab-law">
@@ -1373,20 +1349,39 @@ input[type=range]::-moz-range-thumb {
 
 </div><!-- /page-center -->
 
-<!-- ════════ FAB ════════ -->
-<div class="fab-wrap">
-  <div class="fab-tip">사용법 · 관련법규</div>
-  <button class="fab-main" onclick="openHelp()" aria-label="사용법 및 관련법규">📐</button>
+<!-- ══ FAB 버튼 그룹 (v5.0 §18-11 — 초기화 위 · 관련법규 아래) ══ -->
+<div id="fab-group" class="no-print">
+  <button class="help-fab" id="fabReset" onclick="resetForm()" title="입력 초기화">
+    <span class="fab-icon">🔄</span>
+    <span class="fab-lbl">초기화</span>
+    <span class="fab-sub">전체</span>
+  </button>
+  <button class="help-fab" id="fabHelp" onclick="openMasterModal(0)" title="사용법 · 관련법규">
+    <span class="fab-icon">📐</span>
+    <span class="fab-lbl">관련법규</span>
+    <span class="fab-sub">사용법</span>
+  </button>
 </div>
 
-<!-- ════════ HELP MODAL (화면 정중앙) ════════ -->
-<div class="modal-overlay" id="helpModal" onclick="modalBgClose(event)">
-  <div class="modal-box" id="helpBox">
-    <div class="modal-header">
-      <div class="modal-title">📐 사용법 &amp; 관련법규</div>
-      <button class="modal-close" onclick="closeHelp()">✕</button>
+<!-- ══ 통합 모달 (v5.0 §18-11 규격 · 라이트 배경) ══ -->
+<div class="master-modal-ov no-print" id="masterModal" onclick="if(event.target===this)closeMasterModal()">
+  <div class="master-modal-box">
+    <div class="master-modal-hd">
+      <div class="master-modal-head">
+        <div>
+          <div class="master-modal-tit">📐 내진설계 의무대상 판정 — 사용법 &amp; 관련법규</div>
+          <div class="master-modal-sub">건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022 · MANMIN Ver-5.0</div>
+        </div>
+        <button class="master-modal-cls" onclick="closeMasterModal()">✕</button>
+      </div>
+      <div class="master-modal-tabs">
+        <button class="mm-mtab active" id="mt-0" onclick="switchMasterTab(0)">📘 사용 방법</button>
+        <button class="mm-mtab" id="mt-1" onclick="switchMasterTab(1)">📋 관련 법규</button>
+        <button class="mm-mtab" id="mt-2" onclick="switchMasterTab(2)">⚠️ 주의사항</button>
+      </div>
     </div>
-
+    <div class="master-modal-body">
+      <div class="mm-mpanel active" id="mp-0">
     <div class="help-sec">
       <div class="help-sec-title">사용 방법</div>
       <div class="help-step">
@@ -1403,10 +1398,11 @@ input[type=range]::-moz-range-thumb {
       </div>
       <div class="help-step">
         <div class="hstep-n">4</div>
-        <div class="hstep-t"><strong>📱 공유 탭</strong> — Galaxy S24 Ultra 규격 미리보기 확인 후 JPG 저장·공유하기를 이용하세요.</div>
+        <div class="hstep-t"><strong>📄 A4 결과서 탭</strong> — 공사명·작성자를 입력하고 인쇄(PDF) 또는 JPG 로 저장하세요. 화면·인쇄·JPG 는 같은 결과서입니다.</div>
       </div>
     </div>
-
+      </div>
+      <div class="mm-mpanel" id="mp-1">
     <div class="help-sec">
       <div class="help-sec-title">관련 법규</div>
       <div class="law-mini-list">
@@ -1428,26 +1424,29 @@ input[type=range]::-moz-range-thumb {
         </div>
       </div>
     </div>
-
-    <div class="help-sec" style="margin-bottom:0">
+      </div>
+      <div class="mm-mpanel" id="mp-2">
+    <div class="help-sec">
       <div class="help-sec-title">주의사항</div>
       <div class="help-step">
-        <div class="hstep-n" style="background:var(--abg);border-color:var(--abd);color:var(--amber)">!</div>
-        <div class="hstep-t" style="color:var(--t3)">
+        <div class="hstep-n warn">!</div>
+        <div class="hstep-t">
           본 판정기는 <strong>층수·면적·용도 기준</strong>에 한하며, 실제 허가 시
           <strong>전문 구조기술사</strong>의 검토가 필요합니다.
           높이·처마·경간 기준은 별도 확인 요망.
         </div>
       </div>
     </div>
-  </div>
-</div>
+      </div>
+    </div><!-- /master-modal-body -->
+  </div><!-- /master-modal-box -->
+</div><!-- /masterModal -->
 
 <div class="toast" id="toast"></div>
 
 <script>
 /* ════════════════════════════════════════
-   MANMIN Ver 2.1 — 내진설계 판정 논리 엔진
+   MANMIN Ver-5.0 — 내진설계 판정 논리 엔진 (v2.1 원문 · 계산 로직 무변경)
    건축법 §48 · 시행령 §32 · KDS 41 17 00
 ════════════════════════════════════════ */
 let G = null;
@@ -1694,7 +1693,7 @@ function copyResultText() {
   const txt = [
     '━━━━━━━━━━━━━━━━━━━━━',
     '⚡ 내진설계 의무대상 판정서',
-    '   MANMIN-Ver.2.1',
+    '   MANMIN Ver-5.0',
     '━━━━━━━━━━━━━━━━━━━━━',
     `판정:    ${G.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}`,
     `내진등급: ${G.grade}`,
@@ -1794,6 +1793,372 @@ function toast(m) {
   clearTimeout(_tt);
   _tt = setTimeout(() => e.classList.remove('show'), 2600);
 }
+</script>
+
+<script>
+/* ═══════════════ v5.0 — 출력·탭·모달 계층 (계산 스크립트 무접촉 · §19-5 window.* 재할당) ═══════════════ */
+/* 삭제된 모바일 미리보기 탭이 참조하던 함수를 무력화한다. renderResult 마지막 줄의 buildMobilePreview(d) 호출이 살아 있다. */
+window.buildMobilePreview = function(){};
+window.downloadJPG = function(){ if(typeof exportA4Jpg==='function') exportA4Jpg(); };
+window.nativeShare = function(){ toast('공유는 A4 결과서 탭의 JPG 저장을 이용하세요'); };
+
+/* 탭 전환 — .tb 기준으로 재작성. A4 탭 진입 시 렌더·배율 재계산. */
+window.goTab = function(id, btn){
+  document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.tb').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('tab-' + id);
+  if(panel) panel.classList.add('active');
+  if(!btn){ document.querySelectorAll('.tb').forEach(function(b){ if((b.getAttribute('onclick')||'').indexOf("'"+id+"'")>=0) b.classList.add('active'); }); }
+  else btn.classList.add('active');
+  if(id==='print'){ renderA4(); setTimeout(function(){ if(window._scaleA4) window._scaleA4(); }, 30); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+window.openShareTab = function(){ goTab('print'); };
+
+/* 초기화 — 원본 resetForm 은 삭제된 shareEmpty/shareReady 를 참조하므로 재작성 */
+window.resetForm = function(){
+  var p = document.getElementById('resultPanel');
+  if(p){ p.classList.remove('show'); p.className = 'result-panel'; }
+  var ph = document.getElementById('resultPlaceholder');
+  if (ph) ph.style.display = '';
+  document.getElementById('yearInput').value   = 2010;
+  document.getElementById('floorInput').value  = 5;
+  document.getElementById('areaInput').value   = 3000;
+  document.getElementById('structType').value  = '';
+  document.getElementById('buildingUse').value = '';
+  syncYear('i', 2010); syncFloor('i', 5);
+  G = null;
+  if(window.mmSetSum) mmSetSum();
+  renderA4();
+  goTab('judge');
+  toast('🔄 입력을 초기화했습니다');
+};
+
+/* 모달 — 원본 openHelp/closeHelp(helpModal) 를 통합 모달로 대체 */
+window.openMasterModal = function(i){
+  var ov=document.getElementById('masterModal'); if(!ov) return;
+  ov.classList.add('open'); document.body.style.overflow='hidden';
+  switchMasterTab(i||0);
+};
+window.closeMasterModal = function(){
+  var ov=document.getElementById('masterModal'); if(!ov) return;
+  ov.classList.remove('open'); document.body.style.overflow='';
+};
+window.switchMasterTab = function(i){
+  document.querySelectorAll('.mm-mtab').forEach(function(b,k){ b.classList.toggle('active', k===i); });
+  document.querySelectorAll('.mm-mpanel').forEach(function(p,k){ p.classList.toggle('active', k===i); });
+};
+window.openHelp = function(){ openMasterModal(0); };
+window.closeHelp = function(){ closeMasterModal(); };
+
+/* ═══════════════ A4 결과서 렌더 — G 를 읽기만 한다 ═══════════════ */
+function _esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function _today(){ var n=new Date(); return n.getFullYear()+'. '+(n.getMonth()+1)+'. '+n.getDate()+'.'; }
+window.renderA4 = function(){
+  var d = (typeof G!=='undefined') ? G : null;
+  var $ = function(id){ return document.getElementById(id); };
+  var set = function(id,v){ var e=$(id); if(e) e.textContent=v; };
+  var pn = ($('a4ProjName')||{}).value || '';
+  var au = ($('a4Author')||{}).value || '';
+  set('a4-projName', pn ? pn : '—');
+  set('a4-projAuthor', au ? au : '—');
+  set('a4-projDate', _today());
+  set('a4-foot-date', _today());
+  var vb = $('a4-verdict'), bb = $('a4-basis-body'), nt = $('a4-notice');
+  if(!d){
+    set('a4-in-year','—'); set('a4-in-struct','—'); set('a4-in-floors','—'); set('a4-in-area','—'); set('a4-in-use','—');
+    set('a4-g-era','—'); set('a4-g-grade','—'); set('a4-g-desc','—');
+    if(vb){ vb.className='a4-verdict'; vb.innerHTML='<div><div class="v-main" style="color:#94a3b8">판정 탭에서 먼저 판정을 실행하세요.</div></div>'; }
+    if(bb) bb.innerHTML='<tr><td colspan="3" style="color:#94a3b8;text-align:center;">—</td></tr>';
+    if(nt) nt.textContent='—';
+    return;
+  }
+  set('a4-in-year', d.year+'년 (건축허가 기준)');
+  set('a4-in-struct', (SN[d.struct]||d.struct)+(d.isWood?' — 목구조 기준 적용':''));
+  set('a4-in-floors', d.floors+'층');
+  set('a4-in-area', d.area.toLocaleString()+' ㎡');
+  set('a4-in-use', (UN[d.use]||d.use)+(d.byUse?' — 중요도 시설(규모 무관 의무)':''));
+  set('a4-g-era', d.era+' (층수 '+d.fTh+'층 이상 / 연면적 '+d.effATh.toLocaleString()+'㎡ 이상)');
+  set('a4-g-grade', d.grade);
+  set('a4-g-desc', d.gDesc);
+  if(vb){
+    vb.className = 'a4-verdict '+(d.mandatory?'mandatory':'exempt');
+    vb.innerHTML = '<div style="font-size:22px;line-height:1">'+(d.mandatory?'⚡':'✅')+'</div>'
+      + '<div><div class="v-main">'+(d.mandatory?'내진설계 의무 적용':'내진설계 의무 없음')+'</div>'
+      + '<div class="v-sub">'+(d.mandatory?'건축법 제48조 제2항 · 시행령 제32조 — 내진설계 의무 대상':'시행령 제32조 기준 미해당 — 내진설계 의무 면제')+'</div></div>';
+  }
+  var rows = [
+    { t:'info', law:'시행령 제32조 기준 시점', txt:d.year+'년 준공 — '+d.era+' (층수 '+d.fTh+'층 이상 / 연면적 '+d.effATh.toLocaleString()+'㎡ 이상)', tag:'기준' },
+    { t:d.byFloor?'fail':'pass', law:'시행령 제32조 제2항 제1호', txt:'층수 '+d.floors+'층 — '+d.fTh+'층 이상 기준', tag:d.byFloor?'해당':'미해당' },
+    { t:d.byArea?'fail':'pass',  law:'시행령 제32조 제2항 제2호'+(d.isWood?' (목구조)':''), txt:'연면적 '+d.area.toLocaleString()+'㎡ — '+d.effATh.toLocaleString()+'㎡ 이상 기준', tag:d.byArea?'해당':'미해당' }
+  ];
+  if(d.byUse) rows.push({ t:'fail', law:'시행령 제32조 제2항 제6호', txt:'용도 '+(UN[d.use]||d.use)+' — 중요도가 높은 건축물, 규모 무관 의무 적용', tag:'해당' });
+  if(d.structWarn) rows.push({ t:'warn', law:'KDS 41 17 00 §4.3', txt:d.structWarn, tag:'주의' });
+  if(bb) bb.innerHTML = rows.map(function(r){
+    return '<tr><td>'+_esc(r.law)+'</td><td>'+_esc(r.txt)+'</td><td class="c"><span class="a4-tag '+r.t+'">'+r.tag+'</span></td></tr>';
+  }).join('');
+  if(nt) nt.innerHTML = (d.mandatory
+    ? '<strong>⚡ 의무 이행 사항 :</strong> KDS 41 17 00 기준 내진설계 수행 · '+_esc(d.grade)+' 기준 설계지진 적용 · 구조계산서에 내진 내용 포함 후 허가권자 제출 · 감리 이행 확인.'
+    : '<strong>✅ 면제 안내 :</strong> 현행 기준 의무 미해당. 단, 용도변경 · 증축 · 대수선 시 현행 기준으로 재검토 필요.')
+    + '<br/><strong>※ 참고 :</strong> 시행령 제32조 제3항 — 방화 · 방수 · 단열 등 성능 개선을 위한 기존 건축물의 증축 · 대수선은 주요구조부 변경이 없고 구조내력 변경이 경미한 경우 구조 안전 확인 방법을 달리 적용할 수 있다(국토교통부령).'
+    + '<br/><strong>※ 주의 :</strong> 본 판정은 층수 · 연면적 · 용도 기준에 한한 참고용이며, 실제 허가 시 <strong>건축구조기술사 검토</strong>가 필요하다.';
+  var p=$('a4Page'); if(p && typeof markLongTables==='function') markLongTables(p);
+};
+
+/* 인쇄 — v5.0 : window.print() 한 경로(§3-3). 화면 DOM 그대로 인쇄한다(§2②). */
+window.printA4 = function(){
+  if(!G){ toast('먼저 판정을 실행하세요'); goTab('judge'); return; }
+  renderA4();
+  setTimeout(function(){ window.print(); }, 120);
+};
+
+/* A4 동적 스케일 — .a4-scale-wrap 에 transform:scale() (§17-2 · §17-4). 래퍼에 width 인라인 금지(§17-3). */
+function scaleA4Page(){
+  var wrap = document.getElementById('a4ScaleWrap');
+  var outer = document.getElementById('a4Wrap');
+  if(!wrap || !outer) return;
+  if(window.matchMedia('print').matches){ wrap.style.transform='none'; wrap.style.height=''; return; }
+  var tabPanel = document.getElementById('tab-print');
+  if(tabPanel && !tabPanel.classList.contains('active')) return;
+  var ocs = getComputedStyle(outer);
+  var availW = outer.clientWidth - (parseFloat(ocs.paddingLeft)||0) - (parseFloat(ocs.paddingRight)||0);
+  if(availW <= 0){ wrap.style.transform='none'; wrap.style.height=''; return; }
+  var scale = Math.max(0.05, Math.min(1, availW / 794));
+  wrap.style.transform = 'scale(' + scale.toFixed(5) + ')';
+  var page = document.getElementById('a4Page');
+  var naturalH = page ? page.offsetHeight : 1122;
+  wrap.style.height = (naturalH * scale) + 'px';
+}
+window._scaleA4 = scaleA4Page;
+(function(){
+  if(typeof ResizeObserver === 'undefined') return;
+  document.addEventListener('DOMContentLoaded', function(){
+    var wrap = document.getElementById('a4Wrap');
+    if(!wrap) return;
+    var ro = new ResizeObserver(function(){
+      var tab = document.getElementById('tab-print');
+      if(tab && tab.classList.contains('active')) scaleA4Page();
+    });
+    ro.observe(wrap);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(scaleA4Page);
+  });
+})();
+window.addEventListener('resize', function(){ scaleA4Page(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeMasterModal(); if(typeof mmCloseSheet==='function') mmCloseSheet(); } });
+
+/* v5.0-HDR — 요약 스트립 갱신. runJudge 를 감싸 G 를 읽기만 한다(§18-1). */
+window.mmSetSum = function(){
+  var d=(typeof G!=='undefined')?G:null;
+  var f=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  if(!d){['sb-year','sb-struct','sb-floors','sb-area','sb-verdict','sb-grade'].forEach(function(id){f(id,'—');});return;}
+  f('sb-year', d.year+'년');
+  f('sb-struct', SN[d.struct]||d.struct);
+  f('sb-floors', d.floors+'층');
+  f('sb-area', d.area.toLocaleString()+' ㎡');
+  f('sb-verdict', d.mandatory?'의무 적용':'의무 없음');
+  f('sb-grade', d.grade);
+};
+(function(){
+  var _rj=window.runJudge;
+  if(typeof _rj==='function'){ window.runJudge=function(){ var r=_rj.apply(this,arguments); mmSetSum(); renderA4(); return r; }; }
+  mmSetSum(); renderA4();
+})();
+</script>
+<script>
+/* ═══════════════ v5.0 — A4 페이지 단위 JPG + 저장 시트 (§3-5 · §14-2 · §17-7) ═══════════════
+   22 냉온배관 v5.0 엔진 이식. 통짜 1장 캡처 → A4 비율(794×1123) 쪽 분할 + 미리보기 시트. */
+function mmSafeCuts(page){
+  var pr=page.getBoundingClientRect(), out=[];
+  page.querySelectorAll('.a4-head2,table.a4-tbl tbody tr,table.a4-meta-table tr')
+    .forEach(function(el){ out.push(el.getBoundingClientRect().bottom-pr.top); });
+  page.querySelectorAll('.a4-sub')
+    .forEach(function(el){ out.push(el.getBoundingClientRect().top-pr.top); });
+  out.push(page.scrollHeight);
+  out.sort(function(a,b){return a-b;});
+  return out.filter(function(v,i,a){return i===0 || v-a[i-1]>0.5;});
+}
+function mmPickCut(cuts,y,limit){
+  var best=0;
+  for(var i=0;i<cuts.length;i++){
+    if(cuts[i]>y+1 && cuts[i]<=limit) best=cuts[i];
+    else if(cuts[i]>limit) break;
+  }
+  return best;
+}
+/* ⛔ .a4-page 에 min-height:1122px 이 걸려 있어 scrollHeight 를 그대로 쓰면 유령 여백이 문서 높이로 잡힌다(§14-2). */
+function mmContentHeight(page){
+  var pr=page.getBoundingClientRect(), max=0;
+  page.querySelectorAll('*').forEach(function(el){
+    var cs=getComputedStyle(el);
+    if(cs.display==='none' || cs.visibility==='hidden') return;
+    var b=el.getBoundingClientRect().bottom-pr.top;
+    if(b>max) max=b;
+  });
+  var pad=parseFloat(getComputedStyle(page).paddingBottom)||0;
+  var h=Math.ceil(max+pad);
+  return (h>0 && h<page.scrollHeight) ? h : page.scrollHeight;
+}
+/* 쪽 나눔은 @page 여백과 같은 값을 쓴다(§3-5-1). 세로 유효 높이 297-14-22 = 261mm. */
+var MM_PAGE = { W:794, H:1123, MT:14, MR:12, MB:22, ML:14 };
+/* 한 장에 못 들어가는 표에는 .long 을 붙여 분할을 허용한다(§16-13). */
+function markLongTables(page){
+  var mmPerPx=210/794, usable=(297-14-22)/mmPerPx;   /* 261mm ≈ 987px */
+  page.querySelectorAll('table.a4-tbl,table.a4-meta-table').forEach(function(t){
+    t.classList.toggle('long', t.getBoundingClientRect().height > usable);
+  });
+}
+/* 블록 원자 방식(§17-7) — #a4Page 직계 자식. 소제목(.a4-sub)은 바로 뒤 형제와 한 덩어리. */
+function mmBlocks(page){
+  var pr=page.getBoundingClientRect(), out=[], pend=null;
+  Array.prototype.forEach.call(page.children, function(el){
+    var b=el.getBoundingClientRect();
+    if(b.height<=0) return;
+    var mb=parseFloat(getComputedStyle(el).marginBottom)||0;
+    var top=b.top-pr.top, bot=b.bottom-pr.top+mb;
+    if(el.classList.contains('a4-sub')){
+      if(pend) out.push(pend);
+      pend={top:top, bot:bot};
+      return;
+    }
+    if(pend){ out.push({top:pend.top, bot:bot}); pend=null; return; }
+    out.push({top:top, bot:bot});
+  });
+  if(pend) out.push(pend);
+  out.sort(function(a,b){ return a.top-b.top; });
+  return out;
+}
+function mmSegments(page){
+  var mmPerPx=210/MM_PAGE.W;
+  var cs=getComputedStyle(page);
+  var padTop=parseFloat(cs.paddingTop)||0, padBot=parseFloat(cs.paddingBottom)||0;
+  var usable=(297-MM_PAGE.MT-MM_PAGE.MB)/mmPerPx;
+  var docH=mmContentHeight(page);
+  var stop=Math.max(padTop, docH-padBot);
+  var blocks=mmBlocks(page);
+  if(!blocks.length) return [[padTop,stop]];
+  var cuts=mmSafeCuts(page);
+  var segs=[], y=padTop, i=0, guard=0;
+  while(i<blocks.length && guard++<120){
+    var limit=y+usable, j=i, end=y;
+    while(j<blocks.length && blocks[j].bot<=limit+0.5){ end=blocks[j].bot; j++; }
+    if(j===i){
+      var cut=mmPickCut(cuts, y, limit);
+      if(!cut || cut<=y+1) cut=limit;
+      segs.push([y,cut]);
+      if(cut>=blocks[i].bot-0.5) i++;
+      y=cut; continue;
+    }
+    segs.push([y,end]); y=end; i=j;
+  }
+  if(stop-y>5) segs.push([y,stop]);
+  return segs.length ? segs : [[padTop,stop]];
+}
+function mmDownload(url,name){
+  var a=document.createElement('a');
+  a.download=name; a.href=url;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function mmCloseSheet(){
+  var ov=document.getElementById('mm-save-ov');
+  if(ov) ov.classList.remove('show');
+}
+function mmOpenSheet(shots, base){
+  var prev=document.getElementById('mm-save-ov');
+  if(prev) prev.remove();
+  var ov=document.createElement('div');
+  ov.id='mm-save-ov';
+  var body='';
+  shots.forEach(function(url,i){
+    body+='<div class="mm-shot"><img src="'+url+'" alt="'+(i+1)+'쪽 미리보기"/>'
+        + '<button class="mm-shot-btn" data-i="'+i+'">🖼 '+(i+1)+'쪽 저장</button></div>';
+  });
+  ov.innerHTML =
+    '<div class="mm-sheet" role="dialog" aria-modal="true" aria-label="결과서 저장">'
+    + '<div class="mm-sheet-head"><div>'
+    +   '<div class="mm-sheet-title">결과서 저장 · 총 '+shots.length+'매</div>'
+    +   '<div class="mm-sheet-note">'+(shots.length>1?'브라우저가 연속 다운로드를 차단하므로 쪽별로 저장합니다.':'미리보기를 확인하고 저장하세요.')+'</div>'
+    + '</div><button class="btn-export mm-btn-close" id="mm-sheet-x">✕ 닫기</button></div>'
+    + '<div class="mm-sheet-body'+(shots.length>1?' multi':'')+'">'+body+'</div>'
+    + '<div class="mm-sheet-foot">'
+    +   '<button class="btn-export mm-btn-jpg" id="mm-save-all">🖼 전체 저장 ('+shots.length+'매)</button>'
+    + '</div></div>';
+  document.body.appendChild(ov);
+  ov.classList.add('show');
+  ov.querySelectorAll('.mm-shot-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      mmDownload(shots[+b.getAttribute('data-i')], base+'_'+(+b.getAttribute('data-i')+1)+'of'+shots.length+'.jpg');
+    });
+  });
+  document.getElementById('mm-sheet-x').addEventListener('click',mmCloseSheet);
+  ov.addEventListener('click',function(e){ if(e.target===ov) mmCloseSheet(); });
+  document.getElementById('mm-save-all').addEventListener('click',function(){
+    shots.forEach(function(url,i){
+      setTimeout(function(){ mmDownload(url, base+'_'+(i+1)+'of'+shots.length+'.jpg'); }, i*400);
+    });
+  });
+}
+
+window.exportA4Jpg = function(){
+  var el = document.getElementById('a4Page');
+  if(!el){ toast('A4 결과서 탭으로 이동 후 시도하세요'); return; }
+  if(!G){ toast('⚠️ 먼저 판정을 실행하세요'); goTab('judge'); return; }
+  renderA4();
+  toast('📸 JPG 생성 중...');
+  /* ⛔ 미리보기 축소 배율을 반드시 먼저 푼다(§16-17). 해제 → 리플로우 → 측정·캡처 → 복원 */
+  var scaleWrap = document.getElementById('a4ScaleWrap');
+  var prevTransform = scaleWrap ? scaleWrap.style.transform : '';
+  if(scaleWrap) scaleWrap.style.transform = 'none';
+  void el.offsetHeight;
+  var restoreScale = function(){ if(scaleWrap) scaleWrap.style.transform = prevTransform; };
+  markLongTables(el);
+  var segs = mmSegments(el);
+  var fullH = Math.max(mmContentHeight(el),1);
+  html2canvas(el, {
+    scale: 2, useCORS: true, allowTaint: false,
+    backgroundColor: '#ffffff', logging: false,
+    width: el.scrollWidth, height: fullH,
+    windowWidth: el.scrollWidth, windowHeight: fullH,
+    scrollX: 0, scrollY: 0
+  }).then(function(canvas){
+    restoreScale();
+    var now = new Date();
+    var ts = now.getFullYear()+''+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')
+      +'_'+String(now.getHours()).padStart(2,'0')+String(now.getMinutes()).padStart(2,'0');
+    var base = '내진설계판정_결과서_MANMIN-Ver5.0_'+ts;
+    if(!segs || !segs.length){
+      mmDownload(canvas.toDataURL('image/jpeg',0.95), base+'.jpg');
+      toast('✅ JPG 저장 완료!'); return;
+    }
+    /* 각 쪽을 A4 용지 비율(794×1123 · 1:1.414) 캔버스에 얹는다(§3-5-2). 윗여백 14mm 전 쪽 동일(§3-5-1). */
+    var S = canvas.width/el.scrollWidth;
+    var PAGE_W=MM_PAGE.W, PAGE_H=MM_PAGE.H, mmPerPx=210/PAGE_W;
+    var topPx = MM_PAGE.MT/mmPerPx;
+    var shots = segs.map(function(sg, idx){
+      var h=Math.max(1,Math.round((sg[1]-sg[0])*S));
+      var tmp=document.createElement('canvas');
+      tmp.width=Math.round(PAGE_W*S); tmp.height=Math.round(PAGE_H*S);
+      var ctx=tmp.getContext('2d');
+      ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,tmp.width,tmp.height);
+      ctx.drawImage(canvas,0,Math.round(sg[0]*S),canvas.width,h, 0,Math.round(topPx*S),canvas.width,h);
+      /* 쪽 번호 각인 — JPG 전용 규격(§3-5-5 · §18-12). 2쪽 이상일 때만. */
+      if(segs.length>1){
+        var fs=Math.round(9*S);
+        ctx.fillStyle='#9CA3AF';
+        ctx.font='700 '+fs+'px Orbitron, "JetBrains Mono", monospace';
+        ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+        ctx.fillText((idx+1)+' / '+segs.length,
+                     Math.round(MM_PAGE.ML/mmPerPx*S),
+                     Math.round((MM_PAGE.H - MM_PAGE.MB/mmPerPx + fs/S*0.4)*S));
+      }
+      return tmp.toDataURL('image/jpeg',0.95);
+    });
+    mmOpenSheet(shots, base);
+    toast(shots.length>1 ? '📄 '+shots.length+'매로 나눴습니다' : '📄 미리보기에서 저장하세요');
+  }).catch(function(err){
+    restoreScale();
+    toast('❌ JPG 저장 실패: '+err.message);
+  });
+};
 </script>
 
 <!-- ════════ PWA 설치 배너 ════════ -->
