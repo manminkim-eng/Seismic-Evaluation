@@ -890,6 +890,15 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
   @page{size:A4 portrait;margin:14mm 12mm 22mm 14mm;}
 }
 </style>
+<style id="mm-r24b">/* R24 ①② (2026-09-05 · S10 3-B 소급 · 지시서 §21-1 R24) — 인쇄 시 collapse 표의 우측 세로선 소실 → separate + 셀 자체 선. 화면·JPG·PDF 동일 DOM(§2②). 선색은 기존 값 유지. */
+.a4-tbl,.a4-meta-table{border-collapse:separate;border-spacing:0;border:0;}
+.a4-tbl th,.a4-meta-table th{border:0;border-right:1px solid #bfdbfe;border-bottom:1px solid #bfdbfe;}
+.a4-tbl th:first-child,.a4-meta-table th:first-child{border-left:1px solid #bfdbfe;}
+.a4-tbl tr:first-child th,.a4-meta-table tr:first-child th{border-top:1px solid #bfdbfe;}
+.a4-tbl td,.a4-meta-table td{border:0;border-right:1px solid #e0e7ff;border-bottom:1px solid #e0e7ff;}
+.a4-tbl td:first-child,.a4-meta-table td:first-child{border-left:1px solid #e0e7ff;}
+.a4-tbl tr:first-child td,.a4-meta-table tr:first-child td{border-top:1px solid #e0e7ff;}
+</style>
 </head>
 <body>
 <div class="page-center">
