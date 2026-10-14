@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="내진성능">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="내진성능">
-<meta name="description" content="건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN Ver-5.0">
+<meta name="description" content="건축법 제48조·시행령 제32조 제2항(허가 신청일 시점별)·구조기준 규칙 별표 11·12·KDS 41 17 00 기준 내진설계 의무 대상 · 내진등급 판별 — MANMIN Ver-5.0">
 <title>내진설계 의무대상 판정기 · MANMIN Ver-5.0</title>
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
@@ -349,6 +349,11 @@ body::before {
 }
 .form-select option { background: var(--bg2); color: var(--t0); }
 .form-note { font-size: 11px; color: var(--t3); margin-top: 3px; }
+.se-checks{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem;padding-top:.875rem;border-top:1px dashed #cbd5e1;}
+.se-chk{display:flex;gap:.5rem;align-items:flex-start;font-size:13px;color:var(--t1);line-height:1.5;cursor:pointer;}
+.se-chk input{margin-top:3px;width:16px;height:16px;flex-shrink:0;accent-color:#2D3A8C;}
+.se-chk.off{opacity:.45;}
+
 
 /* ── 슬라이더 ── */
 .range-wrap { display: flex; align-items: center; gap: .875rem; }
@@ -914,14 +919,14 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
         <div class="hdr-eyebrow">Seismic Design Check · 건축법 제48조</div>
         <h1 class="hdr-h1">내진설계 의무대상 판정기</h1>
         <div class="hdr-sub">
-          건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022 — 의무 여부 · 내진등급 · 판정 근거 자동 산출
+          건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022 — 허가 신청일 기준 의무 여부 · 내진등급 · 판정 근거
           <span class="hdr-manmin">MANMIN · Ver-5.0</span>
         </div>
       </div>
     </div>
     <div class="hdr-right-wrap">
-      <!-- v5.0-HDR — 마스터 4줄(13/11/11/10) · LawMCP 2026-09-03 확인(시행령 제32조 현행 2026-07-28 시행) -->
-      <div class="hdr-right"><strong>건축법 제48조 · 시행령 제32조</strong><br/>구조내력 등 · 구조 안전의 확인<br/>KDS 41 17 00 : 2022 건축물 내진설계기준<br/><em>[시행령 시행 2026. 7. 28.]</em></div>
+      <!-- v5.0.7 — LawMCP 2026-10-14 확인 : 시행령 현행 2026.10.6. 시행(제32조는 2024.12.17. 개정 이후 변동 없음) · 2027.4.7. 시행예정본도 제32조 동일 -->
+      <div class="hdr-right"><strong>건축법 제48조 · 시행령 제32조</strong><br/>구조내력 등 · 구조 안전의 확인<br/>KDS 41 17 00 : 2022 건축물 내진설계기준<br/><em>[시행령 시행 2026. 10. 6.]</em></div>
       <!-- v5.0 : 헤더 버튼 없음. 설치는 PWA 배너가, 초기화는 우측 하단 FAB 이 담당한다(§3-1 · §18-1). -->
     </div>
   </div>
@@ -941,7 +946,7 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 <!-- v5.0-HDR : 요약 스트립 (헤더 3층) — 값은 문서 끝 스크립트가 G 에서 읽어 채운다 -->
 <div class="sum-bar-wrap no-print">
   <div class="sum-bar">
-    <span class="sum-item">📅 준공: <b id="sb-year">—</b></span>
+    <span class="sum-item">📅 허가 신청: <b id="sb-year">—</b></span>
     <span class="sum-item">🏗️ 구조: <b id="sb-struct">—</b></span>
     <span class="sum-item">🏢 층수: <b id="sb-floors">—</b></span>
     <span class="sum-item">📐 연면적: <b id="sb-area">—</b></span>
@@ -978,24 +983,16 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
         </div>
       </div>
 
-      <!-- 준공연도 카드 -->
+      <!-- v5.0.7 기준일 카드 — 시행령 제32조 개정 부칙 경과조치 : 건축허가(대수선허가) 신청일 기준 -->
       <div class="card">
         <div class="card-title">
-          🏗️ 준공연도 (건축허가 기준)
-          <span class="cbadge">1988 · 2005 · 2017 기준점</span>
+          📅 기준일 (건축허가 신청일)
+          <span class="cbadge">시행령 제32조 · 시점별 12구간</span>
         </div>
         <div class="form-group">
-          <div class="form-label">준공연도 <span class="req">*</span><span class="hint">허가일 기준</span></div>
-          <div class="range-wrap">
-            <input type="range" id="yearSlider" min="1950" max="2025" value="2010" oninput="syncYear('s',this.value)">
-            <div class="range-display">
-              <span class="range-val" id="yearVal">2010</span>
-              <span class="range-unit">년</span>
-            </div>
-          </div>
-          <input type="number" class="form-input" id="yearInput"
-            min="1950" max="2025" value="2010" placeholder="연도 직접 입력"
-            oninput="syncYear('i',this.value)" style="margin-top:.625rem">
+          <div class="form-label">건축허가 · 대수선허가 신청일 <span class="req">*</span><span class="hint">건축위원회 심의 신청 · 건축신고 포함</span></div>
+          <input type="date" class="form-input" id="permitDate" min="1950-01-01" max="2099-12-31" onchange="seUpdateEra()" oninput="seUpdateEra()">
+          <div class="form-note" id="eraHint">적용 시점 : —</div>
         </div>
       </div>
 
@@ -1024,11 +1021,25 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
               </optgroup>
               <optgroup label="■ 기타">
                 <option value="MASONRY">조적조 (벽돌·블록)</option>
-                <option value="WOOD">목구조</option>
+                <option value="WOOD">목구조 (기둥 · 보가 목재)</option>
                 <option value="PRECAST">프리캐스트 콘크리트 (PC)</option>
                 <option value="OTHER">기타</option>
               </optgroup>
             </select>
+            <div class="form-note">※ 목구조 : 주요구조부인 기둥과 보가 목재 (2017.2.4. 이후 3층 · 2017.12.1. 이후 500㎡ 기준)</div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">건축물 용도 <span class="req">*</span></div>
+            <select class="form-select" id="buildingUse">
+              <option value="">-- 용도 선택 --</option>
+              <option value="HOUSE_D">단독주택 (별표 1 제1호)</option>
+              <option value="HOUSE_A">공동주택 (별표 1 제2호)</option>
+              <option value="STORAGE">창고 · 축사 · 작물 재배사</option>
+              <option value="FACTORY">공장</option>
+              <option value="OTHER">그 밖의 용도</option>
+            </select>
+            <div class="form-note">※ 단독 · 공동주택은 2017.12.1. 이후 규모와 관계없이 대상 (제9호)</div>
           </div>
 
           <div class="form-group">
@@ -1047,32 +1058,44 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 
           <div class="form-group">
             <div class="form-label">연면적 (㎡) <span class="req">*</span></div>
-            <input type="number" class="form-input" id="areaInput"
-              min="0" value="3000" placeholder="전체 연면적 ㎡">
-            <div class="form-note">※ 목구조는 500㎡ 기준 별도 적용</div>
-          </div>
-
-          <div class="form-group">
-            <div class="form-label">건물 용도 <span class="req">*</span></div>
-            <select class="form-select" id="buildingUse">
-              <option value="">-- 용도 선택 --</option>
-              <optgroup label="■ 특수·중요시설">
-                <option value="CRITICAL">특수시설 (원전·댐·방재거점)</option>
-                <option value="HOSPITAL">의료시설 (병원·응급센터)</option>
-                <option value="SCHOOL">교육시설 (학교·유치원)</option>
-                <option value="OFFICE_LARGE">공공청사·관공서</option>
-              </optgroup>
-              <optgroup label="■ 일반시설">
-                <option value="APARTMENT">공동주택 (아파트·빌라)</option>
-                <option value="COMMERCIAL">상업시설 (판매·업무)</option>
-                <option value="INDUSTRIAL">산업시설 (공장·창고)</option>
-                <option value="RESIDENTIAL">단독주택</option>
-                <option value="RELIGIOUS">종교시설</option>
-                <option value="OTHER_USE">기타 일반시설</option>
-              </optgroup>
+            <input type="number" class="form-input" id="areaInput" min="0" step="0.01" value="3000" placeholder="전체 연면적 ㎡">
+            <div class="form-label" style="margin-top:.75rem">중요도 (구조기준 규칙 별표 11) <span class="req">*</span></div>
+            <select class="form-select" id="impSel">
+              <option value="특">중요도 특 — 1,000㎡↑ 위험물 · 청사 · 소방서 · 발전소 · 방송국 · 종합병원 등</option>
+              <option value="1">중요도 1 — 학교 · 아동 · 노인 · 사회복지 · 5층↑ 아파트 · 숙박 · 5,000㎡↑ 집회 · 판매 등</option>
+              <option value="2" selected>중요도 2 — 중요도 특 · 1 · 3 외</option>
+              <option value="3">중요도 3 — 농업시설물 · 소규모 창고 · 가설구조물</option>
             </select>
           </div>
 
+          <div class="form-group">
+            <div class="form-label">높이 (m) <span class="hint">2009.7.16. 이후 13m</span></div>
+            <input type="number" class="form-input" id="heightInput" min="0" step="0.1" value="18">
+          </div>
+          <div class="form-group">
+            <div class="form-label">처마높이 (m) <span class="hint">9m</span></div>
+            <input type="number" class="form-input" id="eavesInput" min="0" step="0.1" value="18">
+          </div>
+          <div class="form-group">
+            <div class="form-label">기둥 사이 최대 거리 (m) <span class="hint">중심선 · 10m</span></div>
+            <input type="number" class="form-input" id="spanInput" min="0" step="0.1" value="8">
+          </div>
+          <div class="form-group">
+            <div class="form-label">특수구조 (영 제2조 제18호) <span class="hint">2014.11.29. 이후</span></div>
+            <select class="form-select" id="specialSel">
+              <option value="NONE">해당 없음</option>
+              <option value="CANT">가목 — 보 · 차양 3m 이상 돌출</option>
+              <option value="FLAT">다목 — 무량판 구조 (2024.12.17.~)</option>
+              <option value="NOTICE">라목 — 국토부 고시 특수구조</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="se-checks">
+          <label class="se-chk"><input type="checkbox" id="chkHeritage"> 국가적 문화유산 박물관 · 기념관 등 연면적 5,000㎡ 이상</label>
+          <label class="se-chk"><input type="checkbox" id="chkStd"> 표준설계도서에 따라 건축</label>
+          <label class="se-chk" id="rowSoft"><input type="checkbox" id="chkSoft"> 연약지반 건축조례 지역 (2014.11.29. ~ 2017.2.3. 만 적용)</label>
+          <label class="se-chk" id="rowZone"><input type="checkbox" id="chkZone"> <span id="zoneTxt">당시 규칙의 지진구역 · 중요시설 요건</span></label>
         </div>
       </div>
 
@@ -1135,17 +1158,19 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 
     <div class="a4-sub">1. 입력 정보</div>
     <table class="a4-meta-table" id="a4-input">
-      <tr><td class="k">준공연도</td><td id="a4-in-year">—</td><td class="k">구조형식</td><td id="a4-in-struct">—</td></tr>
+      <tr><td class="k">허가 신청일</td><td id="a4-in-year">—</td><td class="k">구조형식</td><td id="a4-in-struct">—</td></tr>
       <tr><td class="k">지상 층수</td><td id="a4-in-floors">—</td><td class="k">연면적</td><td id="a4-in-area">—</td></tr>
-      <tr><td class="k">건물 용도</td><td id="a4-in-use" colspan="3">—</td></tr>
+      <tr><td class="k">높이 · 처마</td><td id="a4-in-height">—</td><td class="k">기둥 사이</td><td id="a4-in-span">—</td></tr>
+      <tr><td class="k">용도 · 중요도</td><td id="a4-in-use">—</td><td class="k">특수구조</td><td id="a4-in-special">—</td></tr>
+      <tr><td class="k">그 밖의 조건</td><td id="a4-in-etc" colspan="3">—</td></tr>
     </table>
 
     <div class="a4-sub">2. 판정 결과</div>
     <div class="a4-verdict" id="a4-verdict"><div><div class="v-main">판정 탭에서 먼저 판정을 실행하세요.</div></div></div>
     <table class="a4-meta-table" id="a4-grade">
-      <tr><td class="k">적용 기준 시점</td><td id="a4-g-era">—</td></tr>
-      <tr><td class="k">내진등급</td><td id="a4-g-grade">—</td></tr>
-      <tr><td class="k">성능목표</td><td id="a4-g-desc">—</td></tr>
+      <tr><td class="k">적용 시점</td><td id="a4-g-era">—</td></tr>
+      <tr><td class="k">내진등급 (별표 12)</td><td id="a4-g-grade">—</td></tr>
+      <tr><td class="k">최소성능목표</td><td id="a4-g-desc">—</td></tr>
     </table>
 
     <div class="a4-sub">3. 판정 근거</div>
@@ -1159,15 +1184,16 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 
     <div class="a4-sub">5. 적용 기준</div>
     <table class="a4-meta-table">
-      <tr><td class="k">건축법 제48조</td><td>구조내력 등 — 제2항 : 건축물을 건축하거나 대수선하는 경우 대통령령으로 정하는 기준에 따라 내진설계 [법률 시행 2026. 2. 27.]</td></tr>
-      <tr><td class="k">시행령 제32조</td><td>구조 안전의 확인 — 제2항 각 호 : 2층(목구조 3층) 이상 · 연면적 200㎡(목구조 500㎡) 이상 · 높이 13m · 처마높이 9m · 경간 10m 이상 · 중요도 높은 건축물 등 [시행 2026. 7. 28.]</td></tr>
-      <tr><td class="k">KDS 41 17 00</td><td>건축물 내진설계기준 : 2022 — 내진특등급 · 내진Ⅰ등급 · 내진Ⅱ등급 (재현주기 2,400 · 1,000 · 500년)</td></tr>
-      <tr><td class="k">판정 범위</td><td>본 결과서는 <b>층수 · 연면적 · 용도</b> 기준에 한한다. 높이 13m · 처마높이 9m · 경간 10m 기준은 별도 확인이 필요하다.</td></tr>
+      <tr><td class="k">건축법 제48조</td><td>② 건축 · 대수선 시 대통령령에 따라 구조의 안전을 확인 · ③ 허가 시 내진성능 확보 여부 확인 [법률 시행 2026. 2. 27.]</td></tr>
+      <tr><td class="k">시행령 제32조 제2항</td><td>구조 안전 확인 서류 제출 대상 제1~9호 — 2층(목구조 3층) · 200㎡(목구조 500㎡) · 높이 13m · 처마높이 9m · 기둥 사이 10m · 중요도 특 · 1 · 문화유산 · 특수구조 · 단독 · 공동주택 [2024. 12. 17. 개정 · 영 시행 2026. 10. 6.]</td></tr>
+      <tr><td class="k">구조기준 규칙</td><td>제56조 제2항 · 별표 11(중요도) · 별표 12(내진등급) · 제58조(구조안전 및 내진설계 확인서) [2024. 12. 17.]</td></tr>
+      <tr><td class="k">KDS 41 17 00 : 2022</td><td>건축물 내진설계기준 — 표 2.2-1 내진등급 · 중요도계수 1.5 · 1.2 · 1.0 · 표 2.4-2 최소성능목표 (건축구조기준, 국토교통부고시 제2024-846호)</td></tr>
+      <tr><td class="k">시점 판정</td><td>각 개정 부칙의 경과조치에 따라 <b>건축허가 · 대수선허가 신청일</b>(건축위원회 심의 신청 · 건축신고 포함) 당시 규정으로 판정한다.</td></tr>
     </table>
 
     <div class="a4-footer">
       <span>내진설계 의무대상 판정기 [MANMIN-Ver5.0]</span>
-      <span>건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022</span>
+      <span>건축법 제48조 · 시행령 제32조 · KDS 41 17 00</span>
       <span>작성일: <span id="a4-foot-date">—</span></span>
     </div>
   </div><!-- /a4-page -->
@@ -1184,69 +1210,69 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
   <div class="law-card">
     <div class="law-card-header" onclick="toggleLaw('l1')">
       <span class="law-num">건축법 제48조</span>
-      <span class="law-title">구조내력 등 — 내진설계 의무 근거</span>
+      <span class="law-title">구조내력 등 [법률 시행 2026. 2. 27.]</span>
       <span class="law-toggle" id="lt-l1">▼</span>
     </div>
     <div class="law-body" id="lb-l1">
       <p>① 건축물은 고정하중, 적재하중, 적설하중, 풍압, 지진, 그 밖의 진동 및 충격 등에 대하여 안전한 구조를 가져야 한다.</p>
-      <p>② 제11조 제1항에 따른 건축물을 건축하거나 대수선하는 경우에는 대통령령으로 정하는 기준에 따라 <strong style="color:var(--red)">내진설계를 하여야</strong> 한다. 다만, 국토교통부령으로 정하는 소규모 건축물의 경우에는 그러하지 아니하다.</p>
-      <p>③ 제2항에 따른 내진설계는 지진구역을 고려하여야 한다.</p>
-      <div class="highlight">⚠️ <strong>핵심:</strong> 시행령 제32조가 정하는 규모 이상의 건축물은 내진설계 의무 적용</div>
+      <p>② 제11조 제1항에 따른 건축물을 건축하거나 대수선하는 경우에는 대통령령으로 정하는 바에 따라 <strong style="color:var(--red)">구조의 안전을 확인</strong>하여야 한다.</p>
+      <p>③ 지방자치단체의 장은 제2항에 따른 구조 안전 확인 대상 건축물에 대하여 허가 등을 하는 경우 <strong style="color:var(--red)">내진성능 확보 여부를 확인</strong>하여야 한다.</p>
+      <p>④ 구조내력의 기준과 구조 계산의 방법 등은 국토교통부령으로 정한다.</p>
+      <div class="highlight">ℹ️ 제48조의2 — 내진등급 설정(국토교통부령 별표 12) · 제48조의3 — 2층(목구조 3층) · 200㎡(목구조 500㎡) 이상 등은 사용승인 즉시 내진능력 공개</div>
     </div>
   </div>
 
   <div class="law-card">
     <div class="law-card-header" onclick="toggleLaw('l2')">
       <span class="law-num">시행령 제32조</span>
-      <span class="law-title">구조 안전의 확인 — 내진설계 적용 대상</span>
+      <span class="law-title">구조 안전의 확인 — 제2항 확인 서류 제출 대상 [2024. 12. 17. 개정]</span>
       <span class="law-toggle" id="lt-l2">▼</span>
     </div>
     <div class="law-body" id="lb-l2">
-      <p>① 다음 각 호의 어느 하나에 해당하는 건축물에 내진설계를 하여야 한다. <span style="color:var(--amber);font-size:12px">(2017.2.3 개정)</span></p>
+      <p>① 법 제11조 제1항에 따른 건축물을 건축 · 대수선하는 경우 설계자는 구조기준 등에 따라 구조의 안전을 확인한다.</p>
+      <p>② 다음 각 호의 건축물의 건축주는 설계자로부터 구조 안전의 확인 서류를 받아 <strong>착공신고 때 허가권자에게 제출</strong>한다. 다만, 표준설계도서에 따라 건축하는 건축물은 제외한다.</p>
       <div class="sub-item">
-        <p>1. <strong style="color:var(--t0)">층수 2층 이상</strong>인 건축물</p>
-        <p>2. <strong style="color:var(--t0)">연면적 200㎡ 이상</strong> (목구조 500㎡ 이상)</p>
-        <p>3. <strong style="color:var(--t0)">높이 13m 이상</strong></p>
-        <p>4. <strong style="color:var(--t0)">처마높이 9m 이상</strong></p>
-        <p>5. <strong style="color:var(--t0)">경간 10m 이상</strong></p>
-        <p>6. 용도 및 규모를 고려한 중요도가 높은 건축물</p>
+        <p>1. 층수 <strong style="color:var(--t0)">2층</strong>(기둥과 보가 목재인 목구조 3층) 이상</p>
+        <p>2. 연면적 <strong style="color:var(--t0)">200㎡</strong>(목구조 500㎡) 이상 — 창고 · 축사 · 작물 재배사 제외</p>
+        <p>3. 높이 13m 이상 · 4. 처마높이 9m 이상 · 5. 기둥과 기둥 사이 10m 이상</p>
+        <p>6. 중요도가 높은 건축물로서 국토교통부령으로 정하는 것 — 구조기준 규칙 제56조 제2항 : <strong style="color:var(--t0)">별표 11 중요도 특 · 1</strong></p>
+        <p>7. 국가적 문화유산 박물관 · 기념관 등 연면적 5,000㎡ 이상 (규칙 제56조 제3항)</p>
+        <p>8. 특수구조 건축물 — 영 제2조 제18호 가목(3m 이상 돌출) · 다목(무량판) · 라목(고시)</p>
+        <p>9. 별표 1 제1호 단독주택 및 제2호 공동주택</p>
       </div>
-      <div class="highlight">⚠️ <strong>2017.2.3 개정:</strong> 층수 3층 → <strong>2층</strong>, 연면적 500㎡ → <strong>200㎡</strong> 이상으로 강화 (경주지진 후속)</div>
+      <div class="highlight">⚠️ <strong>개정 이력 :</strong> 2017. 2. 4. 시행 — 층수 3층 → 2층(목구조 3층) · 2017. 12. 1. 시행 — 연면적 500㎡ → 200㎡(목구조 500㎡) · 중요도 특 · 1 · 단독 · 공동주택 추가 · 2024. 12. 17. — 무량판 구조 추가. 판정은 <strong>건축허가 신청일</strong> 당시 규정을 따른다(각 개정 부칙 경과조치).</div>
     </div>
   </div>
 
   <div class="law-card">
     <div class="law-card-header" onclick="toggleLaw('l3')">
       <span class="law-num">KDS 41 17 00</span>
-      <span class="law-title">건축물 내진설계 기준 (KDS 41 17 00 : 2022, 2022.10.11 개정·현행)</span>
+      <span class="law-title">건축물 내진설계기준 : 2022 (2019. 3. 14. 제정 · 2022. 10. 11. 개정)</span>
       <span class="law-toggle" id="lt-l3">▼</span>
     </div>
     <div class="law-body" id="lb-l3">
-      <p><strong style="color:var(--t0)">1.1 목적:</strong> 지진으로 인한 재해로부터 국민의 생명과 재산 보호</p>
-      <p><strong style="color:var(--t0)">4.1 내진등급 분류:</strong></p>
+      <p><strong style="color:var(--t0)">2.2 내진등급 · 중요도계수 (표 2.2-1)</strong> — 중요도 특 → 내진특등급 1.5 · 중요도 1 → 내진Ⅰ등급 1.2 · 중요도 2 · 3 → 내진Ⅱ등급 1.0</p>
+      <p><strong style="color:var(--t0)">2.3 지진위험도</strong> — 최대고려지진은 2400년 재현주기, 기본설계지진은 그 스펙트럼가속도의 2/3 수준</p>
+      <p><strong style="color:var(--t0)">2.4 최소성능목표 (표 2.4-2)</strong></p>
       <div class="sub-item">
-        <p>· <strong style="color:var(--red)">내진특등급</strong> — 즉시기능 유지 (원자력·방재거점·주요병원) 재현주기 2,400년</p>
-        <p>· <strong style="color:var(--orange)">내진Ⅰ등급</strong> — 인명보호+신속복구 (학교·공공건물·16층↑) 재현주기 1,000년</p>
-        <p>· <strong style="color:var(--amber)">내진Ⅱ등급</strong> — 인명보호 (일반 건축물) 재현주기 500년</p>
+        <p>· <strong style="color:var(--red)">내진특등급</strong> — 2400년 인명보호 · 1000년 기능수행</p>
+        <p>· <strong style="color:var(--orange)">내진Ⅰ등급</strong> — 2400년 붕괴방지 · 1400년 인명보호</p>
+        <p>· <strong style="color:var(--amber)">내진Ⅱ등급</strong> — 2400년 붕괴방지 · 1000년 인명보호</p>
       </div>
-      <div class="highlight">ℹ️ 2018.12.31 제정 → 2019 → 2022.10.11 개정. 현행판은 KDS 41 17 00 : 2022. 내진설계 일반(KDS 17 10 00)은 폐지가 아니라 현행(2024.3.21 개정) 상위 공통기준으로 존속.</div>
+      <div class="highlight">ℹ️ 출처 : 건축구조기준(국토교통부고시 제2024-846호, 2024. 12. 24.) 첨부 「KDS 41 17 00 건축물 내진설계기준」 원문 · kcsc.re.kr</div>
     </div>
   </div>
 
   <div class="law-card">
     <div class="law-card-header" onclick="toggleLaw('l4')">
-      <span class="law-num">지진·화산재해대책법</span>
-      <span class="law-title">기존 건축물 내진보강 의무</span>
+      <span class="law-num">지진 · 화산재해대책법</span>
+      <span class="law-title">내진설계기준 설정 · 기존 시설물 내진보강 [시행 2025. 8. 28.]</span>
       <span class="law-toggle" id="lt-l4">▼</span>
     </div>
     <div class="law-body" id="lb-l4">
-      <p><strong style="color:var(--t0)">제16조 (기존 시설물 내진보강)</strong></p>
-      <p>시설물이 내진설계기준에 미달하는 경우 내진보강을 하여야 한다.</p>
-      <div class="sub-item">
-        <p>· 1988년 이전 준공: 공공건물 의무, 민간 권고</p>
-        <p>· 공공건축물(학교·청사): 2009년~ 단계적 의무화</p>
-      </div>
-      <div class="highlight">ℹ️ 기존 건물도 용도변경·증축·대수선 시 현행 기준 재적용 필요</div>
+      <p><strong style="color:var(--t0)">제14조 (내진설계기준의 설정)</strong> — 관계 중앙행정기관의 장은 「건축법」에 따른 건축물 등 대상 시설의 내진설계기준을 정하고, 시 · 도지사등은 허가 때 내진설계 여부를 확인한다(제3항).</p>
+      <p><strong style="color:var(--t0)">제16조 (기존 시설물의 내진보강 추진 등)</strong> — 관계 중앙행정기관의 장과 시 · 도지사등은 기본계획에 따라 소관 시설물의 내진보강대책을 수립 · 추진한다.</p>
+      <div class="highlight">ℹ️ 2008. 3. 28. 「지진재해대책법」으로 제정, 2015. 7. 24. 개정으로 현재 제명</div>
     </div>
   </div>
 </div>
@@ -1255,83 +1281,95 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 <!-- ══ TAB: 연혁 ══ -->
 <div class="tab-panel" id="tab-history">
 <div class="main-wrap">
-  <div class="sec-title">내진설계 법령 연혁</div>
+  <div class="sec-title">내진설계 대상 법령 연혁 (시행일 · LawMCP 시점별 원문)</div>
   <div class="card">
     <div class="timeline">
       <div class="tl-item">
         <div class="tl-dot">88</div>
         <div class="tl-content">
-          <div class="tl-year">1988년</div>
-          <div class="tl-title">국내 최초 내진설계 법제화</div>
-          <div class="tl-desc">건축법 시행령 개정 — 6층 이상 또는 연면적 10만㎡ 이상 건축물에 내진설계 최초 의무화.</div>
+          <div class="tl-year">1988. 8. 25.</div>
+          <div class="tl-title">지진 안전 확인 제도 도입</div>
+          <div class="tl-desc">구 시행령 제16조 제1호(1988.2.24. 개정, 공포 후 6월 경과일 시행) — 6층 이상, 21층 이상 · 연면적 10만㎡ 이상(공동주택 · 공장 제외), 지진구역 2의 중요 시설 등. 지진하중 규정(구조기준 규칙 제14조)은 1988. 7. 1. 시행.</div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-dot">95</div>
+        <div class="tl-dot">92</div>
         <div class="tl-content">
-          <div class="tl-year">1995년</div>
-          <div class="tl-title">내진기준 강화 논의 본격화</div>
-          <div class="tl-desc">성수대교 붕괴로 구조 안전 이슈 급부상. 적용 범위 확대 논의.</div>
+          <div class="tl-year">1992. 6. 1.</div>
+          <div class="tl-title">시행령 전부개정 — 제32조</div>
+          <div class="tl-desc">6층 이상 또는 연면적 10만㎡ 이상, 규칙으로 정하는 건축물(지진구역 2의 중요도 1 · 2 등).</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">96</div>
+        <div class="tl-content">
+          <div class="tl-year">1996. 1. 6.</div>
+          <div class="tl-title">연면적 기준 1만㎡</div>
+          <div class="tl-desc">6층 이상 또는 연면적 1만㎡ 이상 (1995.12.30. 개정).</div>
         </div>
       </div>
       <div class="tl-item">
         <div class="tl-dot">05</div>
         <div class="tl-content">
-          <div class="tl-year">2005년</div>
-          <div class="tl-title">3층 이상 / 1,000㎡ 이상으로 확대</div>
-          <div class="tl-desc">내진설계 의무 범위 대폭 확대. 지진구역 개념 도입.</div>
+          <div class="tl-year">2005. 7. 18.</div>
+          <div class="tl-title">3층 이상 · 1,000㎡ 이상</div>
+          <div class="tl-desc">창고 · 축사 · 작물 재배사 · 표준설계도서는 면적 기준 제외. 지진구역 Ⅰ의 중요도 특 · 1 포함.</div>
         </div>
       </div>
       <div class="tl-item">
         <div class="tl-dot">09</div>
         <div class="tl-content">
-          <div class="tl-year">2009년</div>
-          <div class="tl-title">기존 건축물 내진보강 제도 도입</div>
-          <div class="tl-desc">지진·화산재해대책법 제정. 학교시설 내진보강 의무화 시작.</div>
+          <div class="tl-year">2009. 7. 16.</div>
+          <div class="tl-title">높이 13m · 처마높이 9m · 기둥 사이 10m</div>
+          <div class="tl-desc">구조 안전 확인(지진 포함) 대상으로 통합.</div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-dot">16</div>
+        <div class="tl-dot">14</div>
         <div class="tl-content">
-          <div class="tl-year">2016년 9월 12일</div>
-          <div class="tl-title">경주 지진 규모 5.8 — 역대 최강</div>
-          <div class="tl-desc">내진설계 사각지대 문제 부각. 법령 개정 착수.</div>
+          <div class="tl-year">2014. 11. 29.</div>
+          <div class="tl-title">확인 서류 제출 대상(제2항)으로 정비</div>
+          <div class="tl-desc">특수구조 건축물 추가, 연약지반 조례 지역은 2층.</div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-dot active">17</div>
+        <div class="tl-dot">15</div>
         <div class="tl-content">
-          <div class="tl-year">2017년 2월 3일 ★ 현행 핵심 기준</div>
-          <div class="tl-title">시행령 제32조 전면 개정</div>
-          <div class="tl-desc">
-            <strong style="color:var(--red)">층수: 3층 → 2층 이상</strong> &nbsp;|&nbsp;
-            <strong style="color:var(--red)">면적: 500㎡ → 200㎡ 이상</strong><br>
-            처마 9m · 높이 13m · 경간 10m 기준 신설.
-          </div>
+          <div class="tl-year">2015. 9. 22.</div>
+          <div class="tl-title">연면적 500㎡</div>
+          <div class="tl-desc">1,000㎡ → 500㎡.</div>
         </div>
       </div>
       <div class="tl-item">
         <div class="tl-dot">17</div>
         <div class="tl-content">
-          <div class="tl-year">2017년 11월 15일</div>
-          <div class="tl-title">포항 지진 규모 5.4</div>
-          <div class="tl-desc">내진이행 실태 전수조사. 기존 건물 내진보강 지원 확대.</div>
+          <div class="tl-year">2017. 2. 4.</div>
+          <div class="tl-title">층수 2층 (목구조 3층)</div>
+          <div class="tl-desc">2017.2.3. 개정. 연약지반 조례 단서 삭제.</div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-dot active">18</div>
+        <div class="tl-dot">17</div>
         <div class="tl-content">
-          <div class="tl-year">2022년 10월 11일 ★ 현행 설계기준</div>
-          <div class="tl-title">KDS 41 17 00 : 2022 개정 — 현행판 (2018.12.31 제정)</div>
-          <div class="tl-desc">2018 제정 → 2022.10.11 개정. 내진등급(특·Ⅰ·Ⅱ) 체계. KDS 17 10 00(내진 일반)은 현행 존속.</div>
+          <div class="tl-year">2017. 12. 1.</div>
+          <div class="tl-title">연면적 200㎡ · 주택 전부 · 중요도 특 · 1</div>
+          <div class="tl-desc">2017.10.24. 개정. 목구조는 500㎡. 지진구역 요건 없이 중요도 특 · 1 대상.</div>
         </div>
       </div>
       <div class="tl-item">
-        <div class="tl-dot">현재</div>
+        <div class="tl-dot">18</div>
         <div class="tl-content">
-          <div class="tl-year">현재 (2024~)</div>
-          <div class="tl-title">내진보강 지속 추진</div>
-          <div class="tl-desc">공공건축물·민간 다중이용시설 내진보강 지원 확대. 소규모 건축물 지원 강화.</div>
+          <div class="tl-year">2018. 12. 4.</div>
+          <div class="tl-title">표준설계도서 제외를 본문 단서로</div>
+          <div class="tl-desc">모든 호에 대해 표준설계도서 건축물 제외.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active">24</div>
+        <div class="tl-content">
+          <div class="tl-year">2024. 12. 17.</div>
+          <div class="tl-title">무량판 구조 추가 ★ 현행</div>
+          <div class="tl-desc">영 제2조 제18호 다목 신설 — 제8호 특수구조에 포함. 제3항(성능 개선 증축 · 대수선 특례) 신설.</div>
         </div>
       </div>
     </div>
@@ -1345,44 +1383,45 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
   <div class="sec-title">내진설계 적용 기준표</div>
 
   <div class="card">
-    <div class="card-title">📐 의무 적용 규모 기준 (시행령 제32조)</div>
+    <div class="card-title">📐 시점별 대상 기준 (건축허가 신청일 기준)</div>
     <div style="overflow-x:auto">
       <table class="std-table">
-        <thead>
-          <tr><th>구분</th><th>2017.2.3~ 현행</th><th>2005~2017.2.2</th><th>1988~2004</th><th>1988 이전</th></tr>
-        </thead>
+        <thead><tr><th>신청일</th><th>층수</th><th>연면적</th><th>그 밖의 대상</th></tr></thead>
         <tbody>
-          <tr><td><strong>층수</strong></td><td><span class="tag tag-red">2층 이상</span></td><td>3층 이상</td><td>6층 이상</td><td>미적용</td></tr>
-          <tr><td><strong>연면적</strong></td><td><span class="tag tag-red">200㎡ 이상</span><br><span style="font-size:11px;color:var(--t3)">(목구조 500㎡)</span></td><td>1,000㎡ 이상</td><td>10만㎡ 이상</td><td>미적용</td></tr>
-          <tr><td><strong>높이</strong></td><td><span class="tag tag-red">13m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td><strong>처마높이</strong></td><td><span class="tag tag-red">9m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td><strong>경간</strong></td><td><span class="tag tag-red">10m 이상</span></td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td>~1988. 8. 24.</td><td>—</td><td>—</td><td>규정 없음</td></tr>
+          <tr><td>1988. 8. 25.~</td><td>6층</td><td>21층 · 10만㎡(공동주택 · 공장 제외)</td><td>지진구역 2 중요 시설 · 국가안보 · 문화유산</td></tr>
+          <tr><td>1992. 6. 1.~</td><td>6층</td><td>10만㎡</td><td>규칙 지정 건축물 · 문화유산</td></tr>
+          <tr><td>1996. 1. 6.~</td><td>6층</td><td>1만㎡</td><td>규칙 지정 건축물 · 문화유산</td></tr>
+          <tr><td>2005. 7. 18.~</td><td>3층</td><td>1,000㎡</td><td>지진구역 Ⅰ 중요도 특 · 1 · 문화유산</td></tr>
+          <tr><td>2009. 7. 16.~</td><td>3층</td><td>1,000㎡</td><td>+ 높이 13m · 처마 9m · 기둥 사이 10m</td></tr>
+          <tr><td>2014. 11. 29.~</td><td>3층(연약지반 2층)</td><td>1,000㎡</td><td>+ 특수구조</td></tr>
+          <tr><td>2015. 9. 22.~</td><td>3층(연약지반 2층)</td><td>500㎡</td><td>동일</td></tr>
+          <tr><td>2017. 2. 4.~</td><td>2층(목구조 3층)</td><td>500㎡</td><td>동일</td></tr>
+          <tr><td>2017. 12. 1.~</td><td><span class="tag tag-red">2층(목구조 3층)</span></td><td><span class="tag tag-red">200㎡(목구조 500㎡)</span></td><td>중요도 특 · 1 · 단독 · 공동주택</td></tr>
+          <tr><td>2024. 12. 17.~ 현행</td><td><span class="tag tag-red">2층(목구조 3층)</span></td><td><span class="tag tag-red">200㎡(목구조 500㎡)</span></td><td>+ 무량판 구조</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-note" style="margin-top:.5rem">※ 면적 기준은 2005. 7. 18. 이후 창고 · 축사 · 작물 재배사 제외. 표준설계도서 건축물은 2018. 12. 4. 이후 전 항목 제외.</div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem">
+    <div class="card-title">🏆 중요도 · 내진등급 (구조기준 규칙 별표 11 · 12 · KDS 41 17 00 표 2.4-2)</div>
+    <div style="overflow-x:auto">
+      <table class="std-table">
+        <thead><tr><th style="white-space:nowrap">중요도</th><th>대상 (별표 11 요약)</th><th>내진등급 · I<sub>E</sub></th><th>최소성능목표</th></tr></thead>
+        <tbody>
+          <tr><td>특</td><td>연면적 1,000㎡ 이상 위험물 저장 · 처리 시설 · 국가 · 지자체 청사 · 외국공관 · 소방서 · 발전소 · 방송국 · 전신전화국 · 공공 데이터센터, 종합병원 · 수술 또는 응급시설이 있는 병원</td><td><span class="tag tag-red">내진특등급 · 1.5</span></td><td>2400년 인명보호 · 1000년 기능수행</td></tr>
+          <tr><td>1</td><td>위 시설 1,000㎡ 미만 · 5,000㎡ 이상 공연장 · 집회장 · 관람장 · 전시장 · 운동 · 판매 · 운수시설 · 아동 · 노인 · 사회 · 근로복지시설 · 5층 이상 숙박 · 오피스텔 · 기숙사 · 아파트 · 교정시설 · 학교 · 그 밖의 병원 · 1,000㎡ 이상 의료시설</td><td><span class="tag" style="background:var(--obg);border:1px solid var(--obd);color:var(--orange)">내진Ⅰ등급 · 1.2</span></td><td>2400년 붕괴방지 · 1400년 인명보호</td></tr>
+          <tr><td>2</td><td>특 · 1 · 3에 해당하지 않는 건축물</td><td><span class="tag tag-amber">내진Ⅱ등급 · 1.0</span></td><td>2400년 붕괴방지 · 1000년 인명보호</td></tr>
+          <tr><td>3</td><td>농업시설물 · 소규모 창고 · 가설구조물</td><td><span class="tag tag-amber">내진Ⅱ등급 · 1.0</span></td><td>2400년 붕괴방지 · 1000년 인명보호</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <div class="card" style="margin-top:1.5rem">
-    <div class="card-title">🏆 내진등급 분류 (KDS 41 17 00)</div>
-    <div style="overflow-x:auto">
-      <table class="std-table">
-        <thead>
-          <tr><th>내진등급</th><th>적용 시설</th><th>성능목표</th><th>설계 재현주기</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="tag tag-red">내진특등급</span></td><td>원자력·방재거점·주요병원·댐</td><td>즉시기능 유지</td><td>2,400년</td></tr>
-          <tr>
-            <td><span class="tag" style="background:var(--obg);border:1px solid var(--obd);color:var(--orange)">내진Ⅰ등급</span></td>
-            <td>학교·공공청사·16층↑·30,000㎡↑</td><td>인명보호+신속복구</td><td>1,000년</td>
-          </tr>
-          <tr><td><span class="tag tag-amber">내진Ⅱ등급</span></td><td>일반 건축물 (위 등급 외)</td><td>인명보호</td><td>500년</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:1.5rem">
-    <div class="card-title">🔧 구조형식별 내진 특성</div>
+    <div class="card-title">🔧 구조형식별 내진 특성 <span class="cbadge">MANMIN 참고</span></div>
     <div style="overflow-x:auto">
       <table class="std-table">
         <thead><tr><th>구조형식</th><th>내진 특성</th><th>권장 적용</th></tr></thead>
@@ -1423,7 +1462,7 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
       <div class="master-modal-head">
         <div>
           <div class="master-modal-tit">📐 내진설계 의무대상 판정 — 사용법 &amp; 관련법규</div>
-          <div class="master-modal-sub">건축법 제48조 · 시행령 제32조 · KDS 41 17 00 : 2022 · MANMIN Ver-5.0</div>
+          <div class="master-modal-sub">건축법 제48조 · 시행령 제32조 제2항 · KDS 41 17 00 : 2022 · MANMIN Ver-5.0</div>
         </div>
         <button class="master-modal-cls" onclick="closeMasterModal()">✕</button>
       </div>
@@ -1439,11 +1478,11 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
       <div class="help-sec-title">사용 방법</div>
       <div class="help-step">
         <div class="hstep-n">1</div>
-        <div class="hstep-t"><strong>준공연도 입력</strong> — 슬라이더 또는 직접 입력. 건축허가 신청일 기준으로 입력하세요.</div>
+        <div class="hstep-t"><strong>건축허가 신청일 입력</strong> — 건축위원회 심의 신청 · 건축신고 날짜 포함. 그날 시행 중이던 시행령 제32조로 판정합니다.</div>
       </div>
       <div class="help-step">
         <div class="hstep-n">2</div>
-        <div class="hstep-t"><strong>건물 정보 입력</strong> — 구조형식·지상층수·연면적·용도를 모두 선택·입력하세요.</div>
+        <div class="hstep-t"><strong>건물 정보 입력</strong> — 구조형식 · 용도 · 층수 · 연면적 · 중요도(별표 11) · 높이 · 처마높이 · 기둥 사이 거리 · 특수구조와 해당 조건을 입력하세요.</div>
       </div>
       <div class="help-step">
         <div class="hstep-n">3</div>
@@ -1451,7 +1490,7 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
       </div>
       <div class="help-step">
         <div class="hstep-n">4</div>
-        <div class="hstep-t"><strong>📄 A4 결과서 탭</strong> — 공사명·작성자를 입력하고 인쇄(PDF) 또는 JPG 로 저장하세요. 화면·인쇄·JPG 는 같은 결과서입니다.</div>
+        <div class="hstep-t"><strong>📄 A4 결과서 탭</strong> — 공사명 · 작성자는 「판정」 탭 공사 정보 카드에서 입력하고, 인쇄(PDF) 또는 JPG로 저장하세요. 화면 · 인쇄 · JPG는 같은 결과서입니다.</div>
       </div>
     </div>
       </div>
@@ -1461,19 +1500,19 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
       <div class="law-mini-list">
         <div class="law-mini-item">
           <span class="law-mini-badge">건축법 §48</span>
-          <div class="law-mini-t"><strong>구조내력 등</strong> — 내진설계 의무의 모법 근거. 대통령령 기준 이상 건물은 내진설계 필수.</div>
+          <div class="law-mini-t"><strong>구조내력 등</strong> — ② 구조 안전 확인 · ③ 허가 시 내진성능 확보 여부 확인.</div>
         </div>
         <div class="law-mini-item">
-          <span class="law-mini-badge">시행령 §32</span>
-          <div class="law-mini-t"><strong>2017.2.3 개정</strong> — 2층↑ / 200㎡↑ / 높이 13m↑ / 처마 9m↑ / 경간 10m↑ 해당 시 의무 적용.</div>
+          <span class="law-mini-badge">시행령 §32②</span>
+          <div class="law-mini-t"><strong>2024.12.17. 개정 · 현행</strong> — 2층(목 3층) · 200㎡(목 500㎡) · 13m · 9m · 10m · 중요도 특 · 1 · 문화유산 · 특수구조 · 주택.</div>
+        </div>
+        <div class="law-mini-item">
+          <span class="law-mini-badge">규칙 별표 11 · 12</span>
+          <div class="law-mini-t"><strong>중요도 · 내진등급</strong> — 특 → 내진특등급 · 1 → Ⅰ등급 · 2 · 3 → Ⅱ등급.</div>
         </div>
         <div class="law-mini-item">
           <span class="law-mini-badge">KDS 41 17 00</span>
-          <div class="law-mini-t"><strong>KDS 41 17 00 : 2022 (현행)</strong> — 내진특·Ⅰ·Ⅱ등급 분류. 2018.12.31 제정 → 2022.10.11 개정.</div>
-        </div>
-        <div class="law-mini-item">
-          <span class="law-mini-badge">지진화산법</span>
-          <div class="law-mini-t"><strong>제16조</strong> — 기존 시설물 내진보강 의무. 공공건물·학교 단계적 내진보강 추진.</div>
+          <div class="law-mini-t"><strong>: 2022</strong> — 표 2.2-1 중요도계수 · 표 2.4-2 최소성능목표 (고시 제2024-846호 첨부).</div>
         </div>
       </div>
     </div>
@@ -1484,9 +1523,9 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
       <div class="help-step">
         <div class="hstep-n warn">!</div>
         <div class="hstep-t">
-          본 판정기는 <strong>층수·면적·용도 기준</strong>에 한하며, 실제 허가 시
-          <strong>전문 구조기술사</strong>의 검토가 필요합니다.
-          높이·처마·경간 기준은 별도 확인 요망.
+          본 판정기는 <strong>입력값</strong>으로 시행령 제32조 제2항 대상 여부를 판정하는 참고 도구이며,
+          실제 허가 시 <strong>건축구조기술사 등 전문가</strong>의 검토가 필요합니다.
+          2017. 12. 1. 이전 신청분의 「지진구역 · 중요시설」 요건은 당시 규칙을 직접 확인해 체크하세요.
         </div>
       </div>
     </div>
@@ -1498,32 +1537,153 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
 <div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════════════
-   MANMIN Ver-5.0 — 내진설계 판정 논리 엔진 (v2.1 원문 · 계산 로직 무변경)
-   건축법 §48 · 시행령 §32 · KDS 41 17 00
-════════════════════════════════════════ */
-let G = null;
+/* ════════════════════════════════════════════════════════════════
+   MANMIN Ver-5.0 — 내진설계 의무대상 판정 엔진 (v5.0.7 · 2026-10-14 원문 정정)
+   근거 : 건축법 제48조 · 시행령 제32조 제2항(시점별 원문) · 구조기준 규칙 제56조 · 별표 11 · 12
+          KDS 41 17 00:2022 표 2.2-1 · 표 2.4-2 (국토교통부고시 제2024-846호 첨부 원문)
+   기준일 : 건축허가(대수선허가) 신청일 — 건축위원회 심의 신청 · 건축신고 포함 (각 개정 부칙 경과조치)
+   이 블록은 순수 함수다. 화면·A4·검증 스크립트가 같은 함수를 쓴다.
+════════════════════════════════════════════════════════════════ */
+var SEISMIC_ERAS = [
+  { id:'E0',  from:'0000-01-01', to:'1988-08-24', label:'1988. 8. 24. 이전',
+    law:'내진설계 의무 규정 없음 (지진하중 규정 신설 전)' },
+  { id:'E1',  from:'1988-08-25', to:'1992-05-31', label:'1988. 8. 25. ~ 1992. 5. 31.',
+    law:'구 시행령 제16조 제1호 가목 · 나목 (1988.2.24. 개정, 부칙 ① 단서 — 공포 후 6월 경과일 시행)' },
+  { id:'E2',  from:'1992-06-01', to:'1996-01-05', label:'1992. 6. 1. ~ 1996. 1. 5.',
+    law:'시행령 제32조 제1항 (1992.5.30. 전부개정, 1992.6.1. 시행)' },
+  { id:'E3',  from:'1996-01-06', to:'2005-07-17', label:'1996. 1. 6. ~ 2005. 7. 17.',
+    law:'시행령 제32조 (1995.12.30. 개정 · 2000.6.27. 개정)' },
+  { id:'E4',  from:'2005-07-18', to:'2009-07-15', label:'2005. 7. 18. ~ 2009. 7. 15.',
+    law:'시행령 제32조 제2항 (2005.7.18. 개정)' },
+  { id:'E5',  from:'2009-07-16', to:'2014-11-28', label:'2009. 7. 16. ~ 2014. 11. 28.',
+    law:'시행령 제32조 제1항 (2009.7.16. 개정)' },
+  { id:'E6',  from:'2014-11-29', to:'2015-09-21', label:'2014. 11. 29. ~ 2015. 9. 21.',
+    law:'시행령 제32조 제2항 (2014.11.28. 개정)' },
+  { id:'E7',  from:'2015-09-22', to:'2017-02-03', label:'2015. 9. 22. ~ 2017. 2. 3.',
+    law:'시행령 제32조 제2항 (2015.9.22. 개정)' },
+  { id:'E8',  from:'2017-02-04', to:'2017-11-30', label:'2017. 2. 4. ~ 2017. 11. 30.',
+    law:'시행령 제32조 제2항 (2017.2.3. 개정, 2017.2.4. 시행)' },
+  { id:'E9',  from:'2017-12-01', to:'2018-12-03', label:'2017. 12. 1. ~ 2018. 12. 3.',
+    law:'시행령 제32조 제2항 (2017.10.24. 개정, 2017.12.1. 시행)' },
+  { id:'E10', from:'2018-12-04', to:'2024-12-16', label:'2018. 12. 4. ~ 2024. 12. 16.',
+    law:'시행령 제32조 제2항 (2018.12.4. 개정)' },
+  { id:'E11', from:'2024-12-17', to:'9999-12-31', label:'2024. 12. 17. ~ 현행',
+    law:'시행령 제32조 제2항 (2024.12.17. 개정 · 현행)' }
+];
+var SEISMIC_ERA_IDX = {}; SEISMIC_ERAS.forEach(function(e,i){ SEISMIC_ERA_IDX[e.id]=i; });
 
+/* 「규칙으로 정하는 지진구역 안의 건축물 등」 — 시점별 문구 (중요도 판정이 지진구역과 묶여 있던 시기) */
+var SEISMIC_ZONE_TEXT = {
+  E1:'지진구역 2(1988 구조기준 규칙 제14조) 안의 종합병원 · 병원 · 발전소 · 공공업무시설 · 방송국 · 전신전화국 1,000㎡ 이상, 관람집회시설 5,000㎡ 이상, 판매시설 1만㎡ 이상 (구 시행령 제16조 제1호 나목) 또는 건설부장관이 국가안보상 지정한 건축물 (구 시행령 제7조 제2호)',
+  E2:'지진구역 2 안의 중요도 1 · 2 건축물 또는 국가안전보장상 필요한 건축물 (구조기준 규칙 제7조의2 제1호 · 제2호, 1992.6.1.)',
+  E3:'규칙으로 정하는 지진구역 안의 건축물 — 지진구역 2(2005.4.6. 이후 지진구역 Ⅰ) 안의 중요 건축물 또는 국가안전보장상 필요한 건축물 (구조기준 규칙 제7조의2 · 제7조)',
+  E4:'지진구역 Ⅰ 안의 중요도 특 · 1 건축물 (구조기준 규칙 제7조 제1항, 2005.4.6.)',
+  E5:'지진구역 Ⅰ 안의 중요도 특 · 1 건축물 (구조기준 규칙 제56조 제2항)',
+  E6:'지진구역 Ⅰ 안의 중요도 특 · 1 건축물 (구조기준 규칙 제56조 제2항)',
+  E7:'지진구역 Ⅰ 안의 중요도 특 · 1 건축물 (구조기준 규칙 제56조 제2항)',
+  E8:'지진구역 Ⅰ 안의 중요도 특 · 1 건축물 (구조기준 규칙 제56조 제2항)'
+};
+
+/* 현행 내진등급 (구조기준 규칙 별표 12 · KDS 41 17 00 표 2.2-1 · 표 2.4-2) */
+var SEISMIC_GRADE = {
+  '특': { grade:'내진특등급', cls:'gv-special', ie:1.5, perf:'2400년 인명보호 · 1000년 기능수행' },
+  '1':  { grade:'내진Ⅰ등급',  cls:'gv-1',       ie:1.2, perf:'2400년 붕괴방지 · 1400년 인명보호' },
+  '2':  { grade:'내진Ⅱ등급',  cls:'gv-2',       ie:1.0, perf:'2400년 붕괴방지 · 1000년 인명보호' },
+  '3':  { grade:'내진Ⅱ등급',  cls:'gv-2',       ie:1.0, perf:'2400년 붕괴방지 · 1000년 인명보호' }
+};
+
+function seismicEraOf(dateStr){
+  for (var i=0;i<SEISMIC_ERAS.length;i++){
+    var e=SEISMIC_ERAS[i]; if (dateStr>=e.from && dateStr<=e.to) return e;
+  }
+  return SEISMIC_ERAS[SEISMIC_ERAS.length-1];
+}
+
+/* inp: { date:'YYYY-MM-DD', struct, floors, area, height, eaves, span, use, imp:'특'|'1'|'2'|'3',
+          special:'NONE'|'CANT'|'FLAT'|'NOTICE', heritage:bool, std:bool, soft:bool, zone:bool } */
+function judgeSeismic(inp){
+  var era = seismicEraOf(inp.date), k = SEISMIC_ERA_IDX[era.id];
+  var isWood = inp.struct === 'WOOD';
+  var isStorage = inp.use === 'STORAGE';
+  var C = [];   /* 판정 항목 : { code, law, txt, hit, na } */
+  function add(code, law, txt, hit){ C.push({ code:code, law:law, txt:txt, hit:!!hit }); }
+  var f = inp.floors, a = inp.area;
+
+  if (k === 0){
+    add('none', era.law, '건축허가 신청일 '+inp.date+' — 이 시점에는 내진설계 의무 대상 규정이 없음', false);
+  }
+  else if (k === 1){
+    add('floor', '구 시행령 제16조 제1호 가목', '층수 '+f+'층 — 6층 이상', f>=6);
+    var excl = (inp.use==='HOUSE_A' || inp.use==='FACTORY');
+    add('big', '구 시행령 제16조 제1호 가목 · 제7조 제1호', '21층 이상 또는 연면적 10만㎡ 이상'+(excl?' — 공동주택 · 공장은 제외':''), !excl && (f>=21 || a>=100000));
+    add('heritage', '구 시행령 제16조 제1호 가목 · 제7조 제4호', '국가적 문화유산 박물관 · 기념관 등 연면적 5,000㎡ 이상', inp.heritage);
+    add('zone', '구 시행령 제16조 제1호 나목 · 제7조 제2호', SEISMIC_ZONE_TEXT.E1, inp.zone);
+  }
+  else if (k === 2 || k === 3){
+    var aT = (k===2)?100000:10000;
+    add('floor', era.id==='E2'?'시행령 제32조 제1항 (1992)':'시행령 제32조 (1996 · 2000)', '층수 '+f+'층 — 6층 이상', f>=6);
+    add('area',  era.id==='E2'?'시행령 제32조 제1항 (1992)':'시행령 제32조 (1996 · 2000)', '연면적 '+a.toLocaleString()+'㎡ — '+aT.toLocaleString()+'㎡ 이상', a>=aT);
+    add('zone', '구조기준 규칙 제7조의2 (규칙으로 정하는 건축물)', SEISMIC_ZONE_TEXT[era.id], inp.zone);
+    add('heritage', '구조기준 규칙 제7조의2 제3호 · 시행령 제32조', '국가적 문화유산 박물관 · 기념관 등 연면적 5,000㎡ 이상', inp.heritage);
+  }
+  else {
+    /* E4 ~ E11 */
+    var fT = 3; if (k>=8) fT = isWood ? 3 : 2; else if ((k===6||k===7) && inp.soft) fT = 2;
+    var aT2 = (k<=6)?1000 : (k<=8)?500 : (isWood?500:200);
+    var p2 = (k===4)?'시행령 제32조 제2항' : (k===5)?'시행령 제32조 제1항' : '시행령 제32조 제2항';
+    var floorTxt = '층수 '+f+'층 — '+fT+'층 이상'+(k>=8&&isWood?' (목구조)':'')+((k===6||k===7)&&inp.soft?' (연약지반 조례 지역)':'');
+    add('floor', p2+' 제1호', floorTxt, f>=fT);
+    var areaExcl = isStorage || (inp.std && k<=9);
+    add('area', p2+' 제2호', '연면적 '+a.toLocaleString()+'㎡ — '+aT2.toLocaleString()+'㎡ 이상'+(k>=9&&isWood?' (목구조)':'')+(isStorage?' — 창고 · 축사 · 작물 재배사 제외':'')+(inp.std&&k<=9&&!isStorage?' — 표준설계도서 제외':''), !areaExcl && a>=aT2);
+    if (k>=5){
+      add('height', p2+' 제3호', '높이 '+inp.height+'m — 13m 이상', inp.height>=13);
+      add('eaves',  p2+' 제4호', '처마높이 '+inp.eaves+'m — 9m 이상', inp.eaves>=9);
+      add('span',   p2+' 제5호', '기둥 사이 거리 '+inp.span+'m — 10m 이상', inp.span>=10);
+    }
+    if (k<=8){
+      add('zone', p2+' '+(k===4?'제3호':'제6호'), SEISMIC_ZONE_TEXT[era.id], inp.zone);
+    } else {
+      add('imp', '시행령 제32조 제2항 제6호 · 구조기준 규칙 제56조 제2항', '중요도 '+inp.imp+' (별표 11) — 중요도 특 또는 1', inp.imp==='특'||inp.imp==='1');
+    }
+    add('heritage', p2+' '+(k===4?'제4호':'제7호'), '국가적 문화유산 박물관 · 기념관 등 연면적 5,000㎡ 이상', inp.heritage);
+    if (k>=6){
+      var sp = inp.special, spHit = (sp==='CANT'||sp==='NOTICE'||(sp==='FLAT'&&k>=11));
+      var spTxt = {NONE:'해당 없음', CANT:'보 · 차양 등 외벽 중심선에서 3m 이상 돌출 (영 제2조 제18호 가목)', FLAT:'무량판 구조 — 보 없는 기둥 단면적 비율 1/4 이상 (영 제2조 제18호 다목, 2024.12.17. 신설)', NOTICE:'국토교통부장관 고시 특수구조 (특수구조 건축물 대상기준)'}[sp]||'해당 없음';
+      if (sp==='FLAT' && k<11) spTxt += ' — 이 시점에는 대상 아님';
+      add('special', p2+' 제8호', '특수구조 : '+spTxt, spHit);
+    }
+    if (k>=9){
+      add('house', '시행령 제32조 제2항 제9호', '단독주택 · 공동주택 (별표 1 제1호 · 제2호)', inp.use==='HOUSE_D'||inp.use==='HOUSE_A');
+    }
+  }
+
+  var any = C.some(function(c){ return c.hit; });
+  var stdAll = (k>=10 && inp.std);
+  var mandatory = any && !stdAll;
+  var g = SEISMIC_GRADE[inp.imp] || SEISMIC_GRADE['2'];
+  var structWarn = null;
+  if (inp.struct==='MASONRY') structWarn = { law:'KDS 41 17 00 13. 조적구조의 고려사항', txt:'조적구조는 KDS 41 17 00 13장의 지진력저항시스템 · 내진성능 확보 규정을 함께 검토 (MANMIN 참고)' };
+  if (inp.struct==='PRECAST') structWarn = { law:'KDS 41 20 10 프리캐스트 콘크리트구조 설계기준', txt:'PC구조는 접합부 상세를 KDS 41 20 10과 함께 검토 (MANMIN 참고)' };
+  return {
+    date: inp.date, era: era, eraIdx: k, isWood: isWood,
+    clauses: C, anyHit: any, stdAll: stdAll, mandatory: mandatory,
+    grade: mandatory ? g.grade : '해당 없음', gClass: mandatory ? g.cls : '',
+    ie: mandatory ? g.ie : null, perf: mandatory ? g.perf : '내진설계 의무 대상 아님',
+    structWarn: structWarn
+  };
+}
+/*MODEXPORT*/ if (typeof module !== 'undefined') module.exports = { judgeSeismic: judgeSeismic, SEISMIC_ERAS: SEISMIC_ERAS, seismicEraOf: seismicEraOf, SEISMIC_GRADE: SEISMIC_GRADE };
+
+let G = null;
 const SN = {
   RC_FRAME:'RC 라멘조', RC_WALL:'RC 벽식구조', RC_FLAT:'RC 플랫슬래브',
   STEEL_FRAME:'철골조', STEEL_BRACED:'철골 가새골조', STEEL_MOMENT:'철골 모멘트골조',
   SRC:'SRC조', CFT:'CFT조', MASONRY:'조적조', WOOD:'목구조', PRECAST:'PC조', OTHER:'기타'
 };
-const UN = {
-  CRITICAL:'특수시설', HOSPITAL:'의료시설', SCHOOL:'교육시설', OFFICE_LARGE:'공공청사',
-  APARTMENT:'공동주택', COMMERCIAL:'상업시설', INDUSTRIAL:'산업시설',
-  RESIDENTIAL:'단독주택', RELIGIOUS:'종교시설', OTHER_USE:'기타'
-};
-const CU = ['CRITICAL','HOSPITAL','SCHOOL','OFFICE_LARGE'];
+const UN = { HOUSE_D:'단독주택', HOUSE_A:'공동주택', STORAGE:'창고 · 축사 · 작물 재배사', FACTORY:'공장', OTHER:'그 밖의 용도' };
+const SPN = { NONE:'해당 없음', CANT:'가목 돌출 3m', FLAT:'다목 무량판', NOTICE:'라목 고시 특수구조' };
 
 /* ── 슬라이더 동기화 ── */
-function syncYear(src, v) {
-  v = Math.min(2025, Math.max(1950, parseInt(v) || 2010));
-  document.getElementById('yearVal').textContent = v;
-  if (src !== 's') document.getElementById('yearSlider').value = v;
-  if (src !== 'i') document.getElementById('yearInput').value  = v;
-  document.getElementById('yearSlider').style.setProperty('--pct', ((v-1950)/75*100).toFixed(1)+'%');
-}
 function syncFloor(src, v) {
   v = Math.min(200, Math.max(1, parseInt(v) || 1));
   const sv = Math.min(50, v);
@@ -1532,106 +1692,85 @@ function syncFloor(src, v) {
   if (src !== 'i') document.getElementById('floorInput').value  = v;
   document.getElementById('floorSlider').style.setProperty('--pct', ((sv-1)/49*100).toFixed(1)+'%');
 }
-syncYear('s', 2010);
+function seToday(){ const n=new Date(); return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0'); }
+function seDateTxt(ds){ if(!ds) return '—'; const p=ds.split('-'); return (+p[0])+'. '+(+p[1])+'. '+(+p[2])+'.'; }
+/* 기준일에 따라 적용 시점 · 시점별 입력 안내를 바꾼다 */
+function seUpdateEra(){
+  const ds = document.getElementById('permitDate').value;
+  const h = document.getElementById('eraHint');
+  if (!ds){ h.textContent='적용 시점 : —'; return; }
+  const e = seismicEraOf(ds), k = SEISMIC_ERA_IDX[e.id];
+  h.textContent = '적용 시점 : '+e.label+' — '+e.law;
+  const zr=document.getElementById('rowZone'), zt=document.getElementById('zoneTxt');
+  if (k>=1 && k<=8){ zr.classList.remove('off'); zt.textContent = '당시 규칙 요건 해당 — '+SEISMIC_ZONE_TEXT[e.id]; }
+  else { zr.classList.add('off'); zt.textContent = '당시 규칙의 지진구역 · 중요시설 요건 ('+(k===0?'이 시점에는 규정 없음':'2017.12.1. 이후는 중요도 특 · 1로 판정')+')'; }
+  document.getElementById('rowSoft').classList.toggle('off', !(k===6||k===7));
+}
 syncFloor('s', 5);
+document.getElementById('permitDate').value = seToday();
+seUpdateEra();
 
-/* ════════ 판정 엔진 ════════ */
+/* ════════ 판정 엔진 호출 ════════ */
+function seNum(id){ const v=parseFloat(document.getElementById(id).value); return isFinite(v)&&v>=0?v:0; }
 function runJudge() {
-  const year   = parseInt(document.getElementById('yearInput').value)  || 2010;
-  const floors = parseInt(document.getElementById('floorInput').value) || 1;
-  const area   = parseFloat(document.getElementById('areaInput').value) || 0;
+  const date   = document.getElementById('permitDate').value;
   const struct = document.getElementById('structType').value;
   const use    = document.getElementById('buildingUse').value;
-
+  if (!date)   { toast('건축허가 신청일을 입력해주세요'); return; }
   if (!struct) { toast('구조형식을 선택해주세요'); return; }
-  if (!use)    { toast('건물 용도를 선택해주세요'); return; }
-
-  // 연도별 기준
-  let era, fTh, aTh, aThW;
-  if      (year >= 2017) { era='2017.2.3 이후 현행'; fTh=2;    aTh=200;     aThW=500; }
-  else if (year >= 2005) { era='2005년 ~ 2017.2.2';  fTh=3;    aTh=1000;    aThW=1000; }
-  else if (year >= 1988) { era='1988년 ~ 2004년';     fTh=6;    aTh=100000;  aThW=100000; }
-  else                   { era='1988년 이전';           fTh=9999; aTh=9999999; aThW=9999999; }
-
-  const isWood = struct === 'WOOD';
-  const effATh = isWood ? aThW : aTh;
-
-  const byFloor = floors >= fTh;
-  const byArea  = area   >= effATh;
-  const byUse   = CU.includes(use);
-  const mandatory = byFloor || byArea || byUse;
-
-  // 내진등급
-  let grade, gClass, gDesc;
-  if (use === 'CRITICAL') {
-    grade='내진특등급'; gClass='gv-special'; gDesc='즉시기능 유지 (재현주기 2,400년)';
-  } else if (byUse || floors >= 16 || area >= 30000) {
-    grade='내진Ⅰ등급'; gClass='gv-1'; gDesc='인명보호+신속복구 (재현주기 1,000년)';
-  } else if (mandatory) {
-    grade='내진Ⅱ등급'; gClass='gv-2'; gDesc='인명보호 (재현주기 500년)';
-  } else {
-    grade='해당 없음'; gClass=''; gDesc='내진설계 의무 미해당';
-  }
-
-  // 구조 경고
-  let structWarn = null;
-  if (struct === 'MASONRY') structWarn = '조적조는 지진에 취약한 취성 구조입니다. 내진보강 설계를 강력 권고합니다.';
-  if (struct === 'PRECAST') structWarn = 'PC구조는 접합부 내진 상세에 특별 주의가 필요합니다.';
-
-  G = { year, floors, area, struct, use, era, fTh, effATh, isWood, byFloor, byArea, byUse, mandatory, grade, gClass, gDesc, structWarn };
+  if (!use)    { toast('건축물 용도를 선택해주세요'); return; }
+  const inp = {
+    date: date, struct: struct, use: use,
+    floors: parseInt(document.getElementById('floorInput').value) || 1,
+    area: seNum('areaInput'), height: seNum('heightInput'), eaves: seNum('eavesInput'), span: seNum('spanInput'),
+    imp: document.getElementById('impSel').value,
+    special: document.getElementById('specialSel').value,
+    heritage: document.getElementById('chkHeritage').checked,
+    std: document.getElementById('chkStd').checked,
+    soft: document.getElementById('chkSoft').checked,
+    zone: document.getElementById('chkZone').checked
+  };
+  const r = judgeSeismic(inp);
+  G = Object.assign({}, inp, r);
   renderResult(G);
 }
 
 function renderResult(d) {
-  // 플레이스홀더 숨김
   const ph = document.getElementById('resultPlaceholder');
   if (ph) ph.style.display = 'none';
-
-  // 입력 요약
   document.getElementById('inputSummary').innerHTML = [
-    `📅 준공 <span>${d.year}년</span>`,
+    `📅 허가 신청 <span>${seDateTxt(d.date)}</span>`,
     `🏗️ <span>${SN[d.struct] || d.struct}</span>`,
     `🏢 <span>${d.floors}층</span>`,
     `📐 <span>${d.area.toLocaleString()}㎡</span>`,
-    `🏠 <span>${UN[d.use] || d.use}</span>`
+    `🏠 <span>${UN[d.use] || d.use}</span>`,
+    `⭐ <span>중요도 ${d.imp}</span>`
   ].map(h => `<div class="is-chip">${h}</div>`).join('');
-
-  // 판정 타입 클래스
   const p = document.getElementById('resultPanel');
   p.className = `result-panel show ${d.mandatory ? 'mandatory' : 'exempt'}`;
-
-  // 판정 헤더
   document.getElementById('verdictArea').innerHTML = `
     <div class="verdict-icon">${d.mandatory ? '⚡' : '✅'}</div>
     <div class="verdict-text">
-      <div class="verdict-label">${d.mandatory ? '내진설계 의무 대상' : '내진설계 의무 면제'}</div>
+      <div class="verdict-label">${d.mandatory ? '내진설계 의무 대상' : '내진설계 의무 대상 아님'}</div>
       <div class="verdict-main">${d.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}</div>
     </div>`;
-
-  // 등급 행
   document.getElementById('gradeRow').innerHTML = `
     <div class="grade-box">
-      <div class="grade-box-label">적용 기준 시점</div>
-      <div class="grade-box-val gv-blue">${d.era}</div>
+      <div class="grade-box-label">적용 시점</div>
+      <div class="grade-box-val gv-blue" style="font-size:13px">${d.era.label}</div>
     </div>
     <div class="grade-box">
-      <div class="grade-box-label">내진등급 (KDS 41 17 00)</div>
+      <div class="grade-box-label">내진등급 (별표 12 · 현행)</div>
       <div class="grade-box-val ${d.gClass}">${d.grade}</div>
     </div>
     <div class="grade-box">
-      <div class="grade-box-label">성능목표</div>
-      <div class="grade-box-val" style="font-size:12px;color:var(--t2);font-weight:500">${d.gDesc}</div>
+      <div class="grade-box-label">최소성능목표 (KDS 표 2.4-2)</div>
+      <div class="grade-box-val" style="font-size:12px;color:var(--t2);font-weight:500">${d.perf}${d.ie?' · I<sub>E</sub> '+d.ie.toFixed(1):''}</div>
     </div>`;
-
-  // 판정 근거
-  const bases = [
-    { t:'info', law:'§32 기준 시점', txt:`${d.year}년 — ${d.era} (층수 ${d.fTh}층↑ / 면적 ${d.effATh.toLocaleString()}㎡↑)` },
-    { t: d.byFloor?'fail':'pass', law:'시행령 제32조 제1호', txt:`층수 ${d.floors}층 — ${d.fTh}층 이상 기준 ${d.byFloor ? '⚡ 해당 → 의무 적용' : '✓ 미해당'}` },
-    { t: d.byArea?'fail':'pass',  law:`시행령 제32조 제2호${d.isWood?' (목구조)':''}`, txt:`면적 ${d.area.toLocaleString()}㎡ — ${d.effATh.toLocaleString()}㎡ 이상 기준 ${d.byArea ? '⚡ 해당 → 의무 적용' : '✓ 미해당'}` }
-  ];
-  if (d.byUse)     bases.push({ t:'fail', law:'시행령 §32 제6호', txt:`용도(${UN[d.use]}) — 중요도 시설 규모 무관 의무 적용` });
-  if (d.structWarn) bases.push({ t:'warn', law:'KDS 41 17 00 §4.3', txt: d.structWarn });
-
+  const bases = [{ t:'info', law:'적용 시점 · 근거', txt:`${seDateTxt(d.date)} 신청 — ${d.era.label} · ${d.era.law}` }];
+  d.clauses.forEach(c => bases.push({ t: c.code==='none' ? 'info' : (c.hit?'fail':'pass'), law:c.law, txt: c.txt + (c.code==='none' ? '' : (c.hit ? ' ⚡ 해당' : ' ✓ 미해당')) }));
+  if (d.stdAll) bases.push({ t:'pass', law:'시행령 제32조 제2항 각 호 외의 부분 단서', txt:'표준설계도서에 따라 건축 — 구조 안전 확인 서류 제출 대상에서 제외' });
+  if (d.structWarn) bases.push({ t:'warn', law:d.structWarn.law, txt:d.structWarn.txt });
   document.getElementById('basisList').innerHTML = bases.map(b => `
     <div class="basis-item ${b.t}">
       <div class="bi-icon">${b.t==='fail'?'⚡':b.t==='pass'?'✓':b.t==='warn'?'⚠':'ℹ'}</div>
@@ -1640,154 +1779,18 @@ function renderResult(d) {
         <div class="bi-text">${b.txt}</div>
       </div>
     </div>`).join('');
-
-  // 안내
   document.getElementById('noticeBox').innerHTML = d.mandatory
-    ? `<strong>⚡ 의무 이행 사항:</strong> KDS 41 17 00 기준 내진설계 수행 필수 · ${d.grade} 기준 설계지진 적용 · 구조계산서 내진 내용 포함 후 허가청 제출 · 감리 이행 확인<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>전문 구조기술사 검토</strong>가 필요합니다.`
-    : `<strong>✅ 면제 안내:</strong> 현행 기준 의무 미해당. 단, 용도변경·증축·대수선 시 현행 기준 재검토 필요.<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>전문가 확인</strong>을 권고합니다.`;
-
-  // 모바일: 결과 쪽으로 스크롤 (데스크탑은 우측 패널이라 불필요)
+    ? `<strong>⚡ 이행 사항 :</strong> 설계자가 구조 안전(지진 포함)을 확인하고, 건축주는 착공신고 때 「구조안전 및 내진설계 확인서」를 허가권자에게 제출 (시행령 제32조 제2항 · 구조기준 규칙 제58조). 내진설계는 KDS 41 17 00에 따르고 ${d.grade} · 중요도계수 ${d.ie.toFixed(1)} 적용.<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>건축구조기술사 등 전문가 검토</strong>가 필요합니다.`
+    : `<strong>✅ 안내:</strong> 입력한 신청일 기준 시행령 제32조 제2항 대상이 아닙니다. 다만 모든 건축물은 지진에 안전한 구조를 가져야 하며(법 제48조 제1항), 증축 · 대수선 · 용도변경 때는 그 신청일 기준으로 다시 판정해야 합니다.<br><br><strong>※ 주의:</strong> 본 판정은 참고용이며 실제 허가 시 <strong>전문가 확인</strong>을 권고합니다.`;
   if (window.innerWidth < 1024) {
     setTimeout(() => p.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
   }
-
-  buildMobilePreview(d);
 }
 
-/* ════════ 모바일 미리보기 ════════ */
-function buildMobilePreview(d) {
-  const vm = d.mandatory;
-  const ac  = vm ? '#f04040' : '#22c55e';
-  const abg = vm ? 'rgba(240,64,64,0.1)'  : 'rgba(34,197,94,0.1)';
-  const abd = vm ? 'rgba(240,64,64,0.3)'  : 'rgba(34,197,94,0.3)';
-
-  const bases = [
-    { ok: d.byFloor, txt:`층수 ${d.floors}층 — ${d.fTh}층↑ 기준 ${d.byFloor?'⚡해당':'✓미해당'}` },
-    { ok: d.byArea,  txt:`면적 ${d.area.toLocaleString()}㎡ — ${d.effATh.toLocaleString()}㎡↑ 기준 ${d.byArea?'⚡해당':'✓미해당'}` }
-  ];
-  if (d.byUse) bases.push({ ok: true, txt:`용도(${UN[d.use]}) — 중요도 시설` });
-
-  document.getElementById('mobScreenInner').innerHTML = `
-    <div style="font-family:'Noto Sans KR',sans-serif;background:#06090f;padding:0 0 20px">
-      <div style="padding:12px 14px 10px;border-bottom:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:8.5px;letter-spacing:.15em;color:#f04040;margin-bottom:3px;font-family:monospace">MANMIN-VER.2.0 · 내진설계판정기</div>
-        <div style="font-size:16px;font-weight:700;color:#fff;letter-spacing:-.02em">내진설계 의무대상 판정서</div>
-        <div style="font-size:9px;color:#515e7a;margin-top:2px;font-family:monospace">${new Date().toLocaleDateString('ko-KR')} 판정 완료</div>
-      </div>
-      <div style="margin:10px;padding:12px;border-radius:12px;background:${abg};border:1px solid ${abd}">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:46px;height:46px;border-radius:12px;background:${abg};border:1px solid ${abd};display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0">${vm?'⚡':'✅'}</div>
-          <div>
-            <div style="font-size:9px;letter-spacing:.1em;color:${ac};font-family:monospace;margin-bottom:2px">${vm?'내진설계 의무 대상':'내진설계 의무 면제'}</div>
-            <div style="font-size:17px;font-weight:700;color:#fff;letter-spacing:-.02em">${vm?'내진설계 의무 적용':'내진설계 의무 없음'}</div>
-          </div>
-        </div>
-      </div>
-      <div style="margin:0 10px 10px;display:grid;grid-template-columns:1fr 1fr;gap:5px">
-        <div style="padding:9px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
-          <div style="font-size:8px;color:#515e7a;font-family:monospace;margin-bottom:3px">내진등급</div>
-          <div style="font-size:13px;font-weight:700;letter-spacing:-.01em;color:${d.gClass==='gv-special'?'#f04040':d.gClass==='gv-1'?'#f97316':'#f0b429'}">${d.grade}</div>
-        </div>
-        <div style="padding:9px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
-          <div style="font-size:8px;color:#515e7a;font-family:monospace;margin-bottom:3px">기준 시점</div>
-          <div style="font-size:10px;font-weight:600;color:#4a8cf5">${d.era}</div>
-        </div>
-      </div>
-      <div style="margin:0 10px 10px;padding:10px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.07)">
-        <div style="font-size:8px;letter-spacing:.1em;color:#515e7a;font-family:monospace;margin-bottom:7px">입력 정보</div>
-        ${[
-          ['준공연도', d.year+'년'],
-          ['구조형식', SN[d.struct]||d.struct],
-          ['지상층수', d.floors+'층'],
-          ['연면적',   d.area.toLocaleString()+'㎡'],
-          ['건물용도', UN[d.use]||d.use]
-        ].map(([k,v]) => `
-          <div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:11px">
-            <span style="color:#9ba6c0">${k}</span>
-            <span style="color:#edf1fc;font-weight:600">${v}</span>
-          </div>`).join('')}
-      </div>
-      <div style="margin:0 10px 10px">
-        <div style="font-size:8px;letter-spacing:.1em;color:#515e7a;font-family:monospace;margin-bottom:7px">판정 근거 (시행령 제32조)</div>
-        ${bases.map(b => `
-          <div style="display:flex;gap:7px;align-items:flex-start;padding:7px 9px;background:#111521;border-radius:6px;border:1px solid rgba(255,255,255,0.05);font-size:11px;color:#edf1fc;margin-bottom:4px;line-height:1.5">
-            <span style="color:${b.ok?'#f04040':'#22c55e'};flex-shrink:0">${b.ok?'⚡':'✓'}</span>
-            <span>${b.txt}</span>
-          </div>`).join('')}
-      </div>
-      <div style="margin:0 10px;padding:9px 11px;background:#0c0f1a;border-radius:8px;border:1px solid rgba(255,255,255,0.06);font-size:10px;color:#515e7a;line-height:1.7">
-        건축법 §48 · 시행령 §32 (2017.2.3) · KDS 41 17 00 (2022.10.11)<br>
-        <span style="color:#2e3650">※ 본 판정은 참고용 — 실제 허가 시 전문가 확인 필요</span>
-      </div>
-    </div>`;
-
-  document.getElementById('shareEmpty').style.display  = 'none';
-  document.getElementById('shareReady').style.display  = 'block';
-}
-
-/* ════════ 공유 기능 ════════ */
-function downloadJPG() {
-  const t = document.getElementById('mobScreenInner');
-  if (!t) { toast('판정 결과가 없습니다'); return; }
-  toast('JPG 생성 중...');
-  html2canvas(t, { scale: 3, backgroundColor: '#06090f', useCORS: true, logging: false })
-    .then(c => {
-      const a = document.createElement('a');
-      a.download = `내진판정_${new Date().toLocaleDateString('ko-KR').replace(/\. /g,'-').replace('.','')}.jpg`;
-      a.href = c.toDataURL('image/jpeg', 0.95);
-      a.click();
-      toast('✅ JPG 저장 완료');
-    })
-    .catch(() => toast('저장 실패 — 다시 시도해주세요'));
-}
-
-function copyResultText() {
-  if (!G) { toast('판정 결과가 없습니다'); return; }
-  const txt = [
-    '━━━━━━━━━━━━━━━━━━━━━',
-    '⚡ 내진설계 의무대상 판정서',
-    '   MANMIN Ver-5.0',
-    '━━━━━━━━━━━━━━━━━━━━━',
-    `판정:    ${G.mandatory ? '내진설계 의무 적용' : '내진설계 의무 없음'}`,
-    `내진등급: ${G.grade}`,
-    `기준시점: ${G.era}`,
-    '─────────────────────',
-    `준공연도: ${G.year}년`,
-    `구조형식: ${SN[G.struct]||G.struct}`,
-    `지상층수: ${G.floors}층`,
-    `연면적:   ${G.area.toLocaleString()}㎡`,
-    `건물용도: ${UN[G.use]||G.use}`,
-    '─────────────────────',
-    `층수기준: ${G.floors}층 [${G.byFloor?'해당':'미해당'}]`,
-    `면적기준: ${G.area.toLocaleString()}㎡ [${G.byArea?'해당':'미해당'}]`,
-    '━━━━━━━━━━━━━━━━━━━━━',
-    '건축법§48 · 시행령§32 · KDS 41 17 00',
-  ].join('\n');
-  navigator.clipboard.writeText(txt)
-    .then(()  => toast('📋 클립보드에 복사됨'))
-    .catch(()  => toast('복사 실패'));
-}
-
-async function nativeShare() {
-  if (!G) { toast('판정 결과가 없습니다'); return; }
-  const sd = {
-    title: '내진설계 의무대상 판정 결과',
-    text: `[MANMIN 내진판정] ${G.year}년 준공 ${G.floors}층 ${G.area.toLocaleString()}㎡ → ${G.mandatory?'내진설계 의무':'면제'} (${G.grade})`,
-    url: window.location.href
-  };
-  if (navigator.share) {
-    try { await navigator.share(sd); } catch {}
-  } else {
-    navigator.clipboard.writeText(sd.text + '\n' + sd.url)
-      .then(() => toast('🔗 링크가 클립보드에 복사됐습니다'))
-      .catch(() => toast('공유 실패'));
-  }
-}
-
-function openShareTab() {
-  const b = document.querySelectorAll('.tab-btn')[1];
-  goTab('share', b);
-}
+/* v5.0.7 — 쓰지 않는 모바일 미리보기 · 문자 복사 · 공유 함수 삭제 (A4 결과서 탭이 출력 진입점) */
+function buildMobilePreview(){}
+function downloadJPG(){}
+function nativeShare(){}
 
 /* ════════ 탭 전환 ════════ */
 function goTab(id, btn) {
@@ -1804,24 +1807,8 @@ function toggleLaw(id) {
   document.getElementById('lt-'+id).classList.toggle('open');
 }
 
-/* ════════ 리셋 ════════ */
-function resetForm() {
-  const p = document.getElementById('resultPanel');
-  p.classList.remove('show'); p.style.display = 'none';
-  const ph = document.getElementById('resultPlaceholder');
-  if (ph) ph.style.display = '';
-  document.getElementById('yearInput').value   = 2010;
-  document.getElementById('floorInput').value  = 5;
-  document.getElementById('areaInput').value   = 3000;
-  document.getElementById('structType').value  = '';
-  document.getElementById('buildingUse').value = '';
-  syncYear('i', 2010); syncFloor('i', 5);
-  G = null;
-  document.getElementById('shareEmpty').style.display = 'block';
-  document.getElementById('shareReady').style.display = 'none';
-  const b = document.querySelectorAll('.tab-btn')[0];
-  goTab('judge', b);
-}
+/* ════════ 리셋 ════════ — 아래 v5.0 출력 계층의 window.resetForm 이 실제 동작 */
+function resetForm(){}
 
 /* ════════ FAB / MODAL ════════ */
 function openHelp() {
@@ -1874,13 +1861,19 @@ window.resetForm = function(){
   if(p){ p.classList.remove('show'); p.className = 'result-panel'; }
   var ph = document.getElementById('resultPlaceholder');
   if (ph) ph.style.display = '';
-  document.getElementById('yearInput').value   = 2010;
-  document.getElementById('floorInput').value  = 5;
-  document.getElementById('areaInput').value   = 3000;
+  document.getElementById('permitDate').value = seToday();
   document.getElementById('structType').value  = '';
   document.getElementById('buildingUse').value = '';
+  document.getElementById('floorInput').value  = 5;
+  document.getElementById('areaInput').value   = 3000;
+  document.getElementById('impSel').value      = '2';
+  document.getElementById('heightInput').value = 18;
+  document.getElementById('eavesInput').value  = 18;
+  document.getElementById('spanInput').value   = 8;
+  document.getElementById('specialSel').value  = 'NONE';
+  ['chkHeritage','chkStd','chkSoft','chkZone'].forEach(function(id){ document.getElementById(id).checked=false; });
   ['a4ProjName','a4Author'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
-  syncYear('i', 2010); syncFloor('i', 5);
+  syncFloor('i', 5); seUpdateEra();
   G = null;
   if(window.mmSetSum) mmSetSum();
   renderA4();
@@ -1920,42 +1913,44 @@ window.renderA4 = function(){
   set('a4-foot-date', _today());
   var vb = $('a4-verdict'), bb = $('a4-basis-body'), nt = $('a4-notice');
   if(!d){
-    set('a4-in-year','—'); set('a4-in-struct','—'); set('a4-in-floors','—'); set('a4-in-area','—'); set('a4-in-use','—');
+    ['a4-in-year','a4-in-struct','a4-in-floors','a4-in-area','a4-in-use','a4-in-height','a4-in-span','a4-in-special','a4-in-etc'].forEach(function(id){ set(id,'—'); });
     set('a4-g-era','—'); set('a4-g-grade','—'); set('a4-g-desc','—');
     if(vb){ vb.className='a4-verdict'; vb.innerHTML='<div><div class="v-main" style="color:#94a3b8">판정 탭에서 먼저 판정을 실행하세요.</div></div>'; }
     if(bb) bb.innerHTML='<tr><td colspan="3" style="color:#94a3b8;text-align:center;">—</td></tr>';
     if(nt) nt.textContent='—';
     return;
   }
-  set('a4-in-year', d.year+'년 (건축허가 기준)');
-  set('a4-in-struct', (SN[d.struct]||d.struct)+(d.isWood?' — 목구조 기준 적용':''));
+  set('a4-in-year', seDateTxt(d.date)+' (건축허가 신청일)');
+  set('a4-in-struct', (SN[d.struct]||d.struct));
   set('a4-in-floors', d.floors+'층');
   set('a4-in-area', d.area.toLocaleString()+' ㎡');
-  set('a4-in-use', (UN[d.use]||d.use)+(d.byUse?' — 중요도 시설(규모 무관 의무)':''));
-  set('a4-g-era', d.era+' (층수 '+d.fTh+'층 이상 / 연면적 '+d.effATh.toLocaleString()+'㎡ 이상)');
-  set('a4-g-grade', d.grade);
-  set('a4-g-desc', d.gDesc);
+  set('a4-in-height', d.height+' m · '+d.eaves+' m');
+  set('a4-in-span', d.span+' m');
+  set('a4-in-use', (UN[d.use]||d.use)+' · 중요도 '+d.imp);
+  set('a4-in-special', SPN[d.special]||'해당 없음');
+  var etc=[]; if(d.heritage) etc.push('문화유산 박물관 등 5,000㎡ 이상'); if(d.std) etc.push('표준설계도서'); if(d.soft) etc.push('연약지반 조례 지역'); if(d.zone) etc.push('당시 규칙 지진구역 · 중요시설 요건');
+  set('a4-in-etc', etc.length?etc.join(' · '):'해당 없음');
+  set('a4-g-era', d.era.label+' — '+d.era.law);
+  set('a4-g-grade', d.grade+(d.ie?' (중요도계수 '+d.ie.toFixed(1)+')':''));
+  set('a4-g-desc', d.perf);
   if(vb){
     vb.className = 'a4-verdict '+(d.mandatory?'mandatory':'exempt');
     vb.innerHTML = '<div style="font-size:22px;line-height:1">'+(d.mandatory?'⚡':'✅')+'</div>'
       + '<div><div class="v-main">'+(d.mandatory?'내진설계 의무 적용':'내진설계 의무 없음')+'</div>'
-      + '<div class="v-sub">'+(d.mandatory?'건축법 제48조 제2항 · 시행령 제32조 — 내진설계 의무 대상':'시행령 제32조 기준 미해당 — 내진설계 의무 면제')+'</div></div>';
+      + '<div class="v-sub">'+(d.mandatory?'건축법 제48조 제2항 · 시행령 제32조 제2항 — 구조 안전(지진 포함) 확인 · 확인서 제출 대상':'신청일 당시 시행령 제32조 기준 미해당')+'</div></div>';
   }
-  var rows = [
-    { t:'info', law:'시행령 제32조 기준 시점', txt:d.year+'년 준공 — '+d.era+' (층수 '+d.fTh+'층 이상 / 연면적 '+d.effATh.toLocaleString()+'㎡ 이상)', tag:'기준' },
-    { t:d.byFloor?'fail':'pass', law:'시행령 제32조 제2항 제1호', txt:'층수 '+d.floors+'층 — '+d.fTh+'층 이상 기준', tag:d.byFloor?'해당':'미해당' },
-    { t:d.byArea?'fail':'pass',  law:'시행령 제32조 제2항 제2호'+(d.isWood?' (목구조)':''), txt:'연면적 '+d.area.toLocaleString()+'㎡ — '+d.effATh.toLocaleString()+'㎡ 이상 기준', tag:d.byArea?'해당':'미해당' }
-  ];
-  if(d.byUse) rows.push({ t:'fail', law:'시행령 제32조 제2항 제6호', txt:'용도 '+(UN[d.use]||d.use)+' — 중요도가 높은 건축물, 규모 무관 의무 적용', tag:'해당' });
-  if(d.structWarn) rows.push({ t:'warn', law:'KDS 41 17 00 §4.3', txt:d.structWarn, tag:'주의' });
+  var rows = [{ t:'info', law:'적용 시점', txt:seDateTxt(d.date)+' 신청 — '+d.era.label+' · '+d.era.law, tag:'기준' }];
+  d.clauses.forEach(function(c){ rows.push({ t:c.code==='none'?'info':(c.hit?'fail':'pass'), law:c.law, txt:c.txt, tag:c.code==='none'?'기준':(c.hit?'해당':'미해당') }); });
+  if(d.stdAll) rows.push({ t:'pass', law:'시행령 제32조 제2항 단서', txt:'표준설계도서에 따라 건축 — 제출 대상 제외', tag:'제외' });
+  if(d.structWarn) rows.push({ t:'warn', law:d.structWarn.law, txt:d.structWarn.txt, tag:'참고' });
   if(bb) bb.innerHTML = rows.map(function(r){
     return '<tr><td>'+_esc(r.law)+'</td><td>'+_esc(r.txt)+'</td><td class="c"><span class="a4-tag '+r.t+'">'+r.tag+'</span></td></tr>';
   }).join('');
   if(nt) nt.innerHTML = (d.mandatory
-    ? '<strong>⚡ 의무 이행 사항 :</strong> KDS 41 17 00 기준 내진설계 수행 · '+_esc(d.grade)+' 기준 설계지진 적용 · 구조계산서에 내진 내용 포함 후 허가권자 제출 · 감리 이행 확인.'
-    : '<strong>✅ 면제 안내 :</strong> 현행 기준 의무 미해당. 단, 용도변경 · 증축 · 대수선 시 현행 기준으로 재검토 필요.')
-    + '<br/><strong>※ 참고 :</strong> 시행령 제32조 제3항 — 방화 · 방수 · 단열 등 성능 개선을 위한 기존 건축물의 증축 · 대수선은 주요구조부 변경이 없고 구조내력 변경이 경미한 경우 구조 안전 확인 방법을 달리 적용할 수 있다(국토교통부령).'
-    + '<br/><strong>※ 주의 :</strong> 본 판정은 층수 · 연면적 · 용도 기준에 한한 참고용이며, 실제 허가 시 <strong>건축구조기술사 검토</strong>가 필요하다.';
+    ? '<strong>⚡ 이행 사항 :</strong> 설계자가 구조 안전(지진 포함)을 확인하고, 건축주는 착공신고 때 구조안전 및 내진설계 확인서를 허가권자에게 제출(시행령 제32조 제2항 · 구조기준 규칙 제58조). 내진설계는 KDS 41 17 00에 따라 '+_esc(d.grade)+' · 중요도계수 '+d.ie.toFixed(1)+' 적용.'
+    : '<strong>✅ 안내 :</strong> 신청일 당시 시행령 제32조 기준 미해당. 모든 건축물은 지진에 안전한 구조를 가져야 하며(법 제48조 제1항), 증축 · 대수선 · 용도변경 때는 그 신청일 기준으로 다시 판정한다.')
+    + '<br/><strong>※ 참고 :</strong> 시행령 제32조 제3항 — 방화 · 방수 · 단열 등 성능 개선을 위한 기존 건축물의 증축 · 대수선은 요건을 갖추면 구조 안전 확인 방법을 달리 적용할 수 있다(국토교통부령).'
+    + '<br/><strong>※ 주의 :</strong> 본 판정은 입력값에 따른 참고용이며, 실제 허가 시 <strong>건축구조기술사 등 전문가 검토</strong>가 필요하다.';
   var p=$('a4Page'); if(p && typeof markLongTables==='function') markLongTables(p);
 };
 
@@ -2005,7 +2000,7 @@ window.mmSetSum = function(){
   var d=(typeof G!=='undefined')?G:null;
   var f=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
   if(!d){['sb-year','sb-struct','sb-floors','sb-area','sb-verdict','sb-grade'].forEach(function(id){f(id,'—');});return;}
-  f('sb-year', d.year+'년');
+  f('sb-year', seDateTxt(d.date));
   f('sb-struct', SN[d.struct]||d.struct);
   f('sb-floors', d.floors+'층');
   f('sb-area', d.area.toLocaleString()+' ㎡');
