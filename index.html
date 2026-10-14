@@ -165,6 +165,8 @@ body::before {
   white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;}
 .tb:hover{color:#fff;background:rgba(255,255,255,.09);}
 .tb.active{color:#fff;background:#1d4ed8;border-bottom-color:#fbbf24;}
+/* v5.0.8 — 매뉴얼 버튼 : 탭 막대 오른쪽 끝 (작업지시서 §4) */
+.tb.tb-manual{margin-left:auto;text-decoration:none;}
 .tab-panel { display: none; width: 100%; }   /* ⛔ width:100% 필수 — .page-center 가 align-items:center 라 A4 탭이 794px 로 벌어져 375 에서 문서폭 611 (실측 2026-09-03) */
 .tab-panel.active { display: block; }
 /* v5.0-HDR — 요약 스트립 (헤더 3층) */
@@ -940,6 +942,7 @@ input[type=range]{background:#e4e9f0;} input[type=range]::-webkit-slider-thumb{b
     <button class="tb" onclick="goTab('law',this)">📋 법조문</button>
     <button class="tb" onclick="goTab('history',this)">📅 연혁</button>
     <button class="tb" onclick="goTab('guide',this)">📖 기준표</button>
+    <a class="tb tb-manual" href="https://manminkim-eng.github.io/Seismic-Evaluation/manual/" target="_blank" rel="noopener" onclick="return mmOpenManual(event)">📘 매뉴얼</a>
   </div>
 </nav>
 </div><!-- /.hdr-shell -->
@@ -1854,6 +1857,8 @@ window.goTab = function(id, btn){
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 window.openShareTab = function(){ goTab('print'); };
+/* v5.0.8 — 매뉴얼은 온라인에서만 연다 (프리캐시 제외) */
+window.mmOpenManual = function(e){ if(navigator.onLine===false){ if(e) e.preventDefault(); toast('매뉴얼은 인터넷 연결 시 열립니다'); return false; } return true; };
 
 /* 초기화 — 원본 resetForm 은 삭제된 shareEmpty/shareReady 를 참조하므로 재작성 */
 window.resetForm = function(){

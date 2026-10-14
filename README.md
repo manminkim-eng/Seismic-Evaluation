@@ -1,7 +1,13 @@
-# 내진설계 의무대상 판정기 — MANMIN Ver-5.0 (v5.0.7)
+# 내진설계 의무대상 판정기 — MANMIN Ver-5.0 (v5.0.8)
 
 > 건축법 제48조 · 시행령 제32조 제2항(건축허가 신청일 시점별) · 구조기준 규칙 제56조 · 별표 11 · 12 · KDS 41 17 00:2022 기준 내진설계 의무 대상 · 내진등급 판별  
 > GitHub Pages에서 바로 사용 가능한 PWA(Progressive Web App) — https://manminkim-eng.github.io/Seismic-Evaluation/
+
+## v5.0.8 (2026-10-14) — 사용자 매뉴얼
+
+- 탭 막대 오른쪽 끝 「📘 매뉴얼」 버튼 → https://manminkim-eng.github.io/Seismic-Evaluation/manual/ (오프라인이면 안내 토스트, 매뉴얼은 프리캐시 제외)
+- `manual/` — index.html · images(19장) · `내진설계_사용자매뉴얼_Ver-5.0.pdf`(A4 27쪽) · `_tools/`(build.sh : 캡처 → WebP → HTML → PDF → 좁은 화면 점검)
+- sw `naejin-v5.0.8`
 
 ## v5.0.7 (2026-10-14) — 판정 원문 정정
 

@@ -38,7 +38,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE  = 'naejin-v5.0.7';   /* 2026-10-14 v5.0.7 판정 원문 정정 (시행령 제32조 시점별 · 별표 11 · 12 · KDS 41 17 00) */
+const CACHE  = 'naejin-v5.0.8';   /* 2026-10-14 v5.0.8 매뉴얼 버튼 · v5.0.7 판정 원문 정정 */
 const ORPHAN = ['naejin-v2.1.0'];
 const ASSETS = [
   './',
