@@ -46,7 +46,7 @@ const SHOTS=[
  {id:'s16_a4page',clip:'#a4Page',crop:2600,m:[['nth:#a4Page .a4-sub|0','1. 입력 정보'],['nth:#a4Page .a4-sub|1','2. 판정 결과'],['nth:#a4Page .a4-sub|2','3. 판정 근거'],['nth:#a4Page .a4-sub|3','4. 안내 사항'],['nth:#a4Page .a4-sub|4','5. 적용 기준']]},
 ];
 (async()=>{
- const s=await server(repo,PORT);const b=await chromium.launch();
+ const s=await server(repo,PORT);const b=await chromium.launch({args:['--lang=ko-KR'],env:{...process.env,LANG:'ko_KR.UTF-8',LANGUAGE:'ko',LC_ALL:'ko_KR.UTF-8'}});   // 날짜 입력란을 한국식(YYYY. MM. DD.)으로
  const ctx=await b.newContext({viewport:{width:VW,height:VH},deviceScaleFactor:DSF,serviceWorkers:'block',locale:'ko-KR'});await setup(ctx);
  const pg=await ctx.newPage();const errs=[];pg.on('pageerror',e=>errs.push(e.message));
  await pg.addInitScript(FREEZE);
