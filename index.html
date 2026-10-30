@@ -200,12 +200,12 @@ body::before {
   transform: translateX(-50%) translateY(120px);
   width: min(420px, calc(100vw - 2rem));
   background: var(--bg2);
-  border: 1px solid var(--rbd);
+  border: 1px solid rgba(167,139,250,.45);   /* 구조 보라 — 종전 --rbd(경고 빨강) */
   border-radius: var(--rxl);
   padding: 1.125rem 1.25rem;
   display: flex; align-items: center; gap: 1rem;
-  box-shadow: var(--sh4), 0 0 0 1px var(--rbd);
-  z-index: 900;
+  box-shadow: var(--sh4), 0 0 0 1px rgba(167,139,250,.25);
+  z-index: 1250;   /* v5.0.10 — #fab-group(1200) 위. 휴대전화 폭에서 초기화 단추가 설치 · 닫기 단추를 덮던 문제 */
   transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .4s;
   opacity: 0; pointer-events: none;
 }
@@ -216,7 +216,7 @@ body::before {
 #pwa-banner .pwa-icon {
   width: 52px; height: 52px; border-radius: 12px;
   object-fit: cover; flex-shrink: 0;
-  border: 1px solid var(--rbd);
+  border: 1px solid rgba(167,139,250,.45);
 }
 #pwa-banner .pwa-info { flex: 1; min-width: 0; }
 #pwa-banner .pwa-name {
@@ -2246,9 +2246,9 @@ window.exportA4Jpg = function(){
 
 <!-- ════════ PWA 설치 배너 ════════ -->
 <div id="pwa-banner" role="dialog" aria-label="앱 설치 안내">
-  <img src="icons/icon-192x192.png" alt="내진성능 아이콘" class="pwa-icon">
+  <img src="icons/icon-192x192.png" alt="내진판정 아이콘" class="pwa-icon">
   <div class="pwa-info">
-    <div class="pwa-name">내진성능</div>
+    <div class="pwa-name">내진판정</div>
     <div class="pwa-desc">홈 화면에 추가 · 오프라인 지원</div>
   </div>
   <div class="pwa-btns">
@@ -2273,6 +2273,12 @@ if ('serviceWorker' in navigator) {
   const _banner      = document.getElementById('pwa-banner');
   const _installBtn  = document.getElementById('pwa-install-btn');
   const _dismissBtn  = document.getElementById('pwa-dismiss-btn');
+  /* v5.0.10 — iPadOS 13+ Safari 는 Mac 으로 알림 → 터치 지점으로 판별 */
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isInStandalone = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  /* 닫기 · 취소는 이번 방문(탭)만 기억 — 종전 localStorage 영구 기록은 한 번 닫으면 다시 설치할 길이 없었음 */
+  const _DK = 'pwa-dismissed-v3';
+  const _dismissed = function () { try { return sessionStorage.getItem(_DK) === '1'; } catch (e) { return false; } };
 
   /* beforeinstallprompt — 브라우저가 설치 가능 상태일 때 발생 */
   window.addEventListener('beforeinstallprompt', function (e) {
@@ -2280,8 +2286,8 @@ if ('serviceWorker' in navigator) {
     _deferredPrompt = e;
     console.log('[PWA] beforeinstallprompt 수신 ✅');
 
-    /* localStorage 로 닫기 기록 유지 (탭 닫아도 기억) */
-    if (!localStorage.getItem('pwa-dismissed-v2')) {
+    /* 닫기 기록은 sessionStorage(이번 방문만) — v5.0.10 */
+    if (!_dismissed() && !isInStandalone) {
       setTimeout(function () {
         _banner.classList.add('show');
       }, 2000);
@@ -2290,6 +2296,7 @@ if ('serviceWorker' in navigator) {
 
   /* 설치하기 버튼 */
   _installBtn.addEventListener('click', async function () {
+    if (isIOS) { _hideBanner(); return; }   /* iOS 는 안내 확인만 — 종전엔 「이미 설치되었거나…」 오류 문구가 함께 떴음 */
     if (!_deferredPrompt) {
       toast('이미 설치되었거나 브라우저가 설치를 지원하지 않습니다');
       _hideBanner();
@@ -2299,7 +2306,7 @@ if ('serviceWorker' in navigator) {
       _deferredPrompt.prompt();
       const { outcome } = await _deferredPrompt.userChoice;
       if (outcome === 'accepted') {
-        toast('✅ "내진성능" 앱이 설치되었습니다!');
+        toast('✅ "내진판정" 앱이 설치되었습니다!');
       } else {
         toast('설치를 취소했습니다');
       }
@@ -2318,26 +2325,23 @@ if ('serviceWorker' in navigator) {
 
   function _hideBanner() {
     _banner.classList.remove('show');
-    localStorage.setItem('pwa-dismissed-v2', '1');
+    try { sessionStorage.setItem(_DK, '1'); } catch (e) {}
   }
 
   /* 설치 완료 이벤트 */
   window.addEventListener('appinstalled', function () {
-    toast('✅ "내진성능" 홈 화면에 추가 완료!');
+    toast('✅ "내진판정" 홈 화면에 추가 완료!');
     _banner.classList.remove('show');
     console.log('[PWA] 설치 완료 ✅');
   });
 
   /* ── iOS Safari 수동 안내 (beforeinstallprompt 미지원) ── */
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isInStandalone = window.navigator.standalone === true;
-  if (isIOS && !isInStandalone && !localStorage.getItem('pwa-dismissed-v2')) {
+  if (isIOS && !isInStandalone && !_dismissed()) {
     setTimeout(function () {
       /* iOS는 prompt 없이 안내 텍스트만 표시 */
       document.querySelector('#pwa-banner .pwa-desc').textContent =
         'Safari → 공유 버튼 → "홈 화면에 추가"';
       _installBtn.textContent = '확인';
-      _installBtn.addEventListener('click', function () { _hideBanner(); }, { once: true });
       _banner.classList.add('show');
     }, 2500);
   }
