@@ -1,5 +1,5 @@
 {
-  "name": "MANMIN 구조 · 내진설계 의무대상 판정기",
+  "name": "MANMIN 내진판정",
   "short_name": "내진판정",
   "description": "건축법 제48조·시행령 제32조·KDS 41 17 00 기준 내진설계 의무 대상 자동 판별 — MANMIN Ver-5.0",
   "start_url": "./index.html",

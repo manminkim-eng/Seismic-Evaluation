@@ -38,7 +38,7 @@ const mmMatch = (req, opt) => caches.keys()
   .then((ks) => ks.reduce((p, k) => p.then((r) => r || caches.open(k).then((c) => c.match(req, opt))), Promise.resolve(undefined)))
   .then((r) => (r && r.type === 'opaque' && req && req.mode === 'cors') ? undefined : r);
 
-const CACHE  = 'naejin-v5.0.10';   /* 2026-10-31 v5.0.10 설치 배너 단추 가림 · iOS 확인 문구 · iPad 판별 · 마스크 아이콘 · 화면 미리보기 · 2026-10-14 v5.0.8 매뉴얼 버튼 · v5.0.7 판정 원문 정정 */
+const CACHE  = 'naejin-v5.0.11';   /* 2026-10-31 v5.0.10 설치 배너 단추 가림 · iOS 확인 문구 · iPad 판별 · 마스크 아이콘 · 화면 미리보기 · 2026-10-14 v5.0.8 매뉴얼 버튼 · v5.0.7 판정 원문 정정 */
 const ORPHAN = ['naejin-v2.1.0'];
 const ASSETS = [
   './',
