@@ -11,5 +11,5 @@ for f in sorted(glob.glob(raw+'/s*.png')): Image.open(f).convert('RGB').save(M+'
 shutil.copy(raw+'/_marks.json',M+'/images/_marks.json'); shutil.copy(raw+'/_example.json',M+'/_tools/_example.json')
 PY
 MANUAL_DIR="$M" python3 gen_manual_seismic.py
-node pdf_seismic.js "$M" 내진설계_사용자매뉴얼_Ver-5.0.pdf "내진설계 의무대상 판정기 사용자 매뉴얼 Ver-5.0"
+node pdf_seismic.js "$M" 내진설계_사용자매뉴얼_Ver-6.1.pdf "내진설계 의무대상 판정기 사용자 매뉴얼 Ver-6.1"
 node audit_responsive.js "$M/index.html" > "$RAW/_audit.json"
