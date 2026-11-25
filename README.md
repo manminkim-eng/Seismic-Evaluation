@@ -1,5 +1,10 @@
 # 내진설계 의무대상 판정기 — MANMIN Ver-5.0 (v5.0.8)
 
+## v6.1.4 (2026-11-25) — 헤더 고정(MM-HEADER v1.1)
+
+- 헤더 고정 — 공통 원본 MM-HEADER v1.1 주입(태블릿 · 데스크톱만 — 폭 768px · 높이 600px 이상, 휴대폰은 고정 없음 · 머리+탭 sticky · 내리면 제목 한 줄+탭으로 접힘 · 다른 sticky 패널 top 보정) — 계산 · 인쇄 불변 · MIN 「추천안대로 승인」 · 「추천안대로 진행해줘」(모바일 제외).
+- 공통 원본 `67.개발자료[헤더고정]\버전s-1.1` · inject.py · check.py 「일치 v1.1」 · sw 캐시명 v6.1.4 · MM-PRINT · MM-PROJECT 구간 · 사용자 매뉴얼 변경 없음.
+
 ## v6.1.3 (2026-11-12) — html2canvas SRI(정밀검토 B8)
 
 - html2canvas 1.4.1 머리 태그 SRI(integrity sha384 · crossorigin) · 공통 인쇄 원본 MM-PRINT v1.0 → v1.1(지연 로더도 SRI)(정밀검토 B8 · html2canvas SRI) — 화면 · 계산 · 인쇄 불변 · 작업지시서 §25-6-87.
