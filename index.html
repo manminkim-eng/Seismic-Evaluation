@@ -206,12 +206,14 @@ body::before {
   display: flex; align-items: center; gap: 1rem;
   box-shadow: var(--sh4), 0 0 0 1px rgba(167,139,250,.25);
   z-index: 1250;   /* v5.0.10 — #fab-group(1200) 위. 휴대전화 폭에서 초기화 단추가 설치 · 닫기 단추를 덮던 문제 */
-  transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .4s;
+  transition: transform .4s cubic-bezier(.16,1,.3,1), opacity .4s, visibility 0s linear .4s;
   opacity: 0; pointer-events: none;
+  visibility: hidden;   /* v6.1.6 — 숨은 띠(투명)를 MM-FAB 가 '보이는 띠'로 읽어 휴대폰에서 단추 기둥이 73px 떠 있던 문제. 사라짐 애니메이션 뒤에 숨김 */
 }
 #pwa-banner.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1; pointer-events: all;
+  visibility: visible; transition-delay: 0s;
 }
 #pwa-banner .pwa-icon {
   width: 52px; height: 52px; border-radius: 12px;
